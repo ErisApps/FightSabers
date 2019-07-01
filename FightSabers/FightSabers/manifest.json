@@ -1,0 +1,10 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
+  "author": "Shoko84",
+  "description": "Transform your Beat Saber into a RPG game!",
+  "gameVersion": "1.1.0",
+  "id": null,
+  "name": "FightSabers",
+  "version": "0.1.0",
+  "features": []
+}
