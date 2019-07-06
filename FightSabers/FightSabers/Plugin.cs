@@ -1,8 +1,12 @@
-﻿using IPA;
+﻿using System;
+using System.Diagnostics;
+using IPA;
 using IPA.Config;
 using IPA.Utilities;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
+using Utils = FightSabers.Utilities.Utils;
 
 namespace FightSabers
 {
@@ -46,7 +50,11 @@ namespace FightSabers
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
-
+            Logger.log.Info("Scene '" + nextScene.name + "' has been loaded");
+            if (nextScene.name == "GameCore")
+            {
+                MonsterGenerator.Create();
+            }
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
