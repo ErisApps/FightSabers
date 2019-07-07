@@ -21,14 +21,18 @@ namespace FightSabers
         private static readonly Vector3 BaseRotation = new Vector3(0, 0, 0);
         private static readonly Vector3 BaseScale    = new Vector3(0.01f, 0.01f, 0.01f);
 
-        private static readonly Vector2 BaseCanvasSize = new Vector2(100, 50);
+        private static readonly Vector2 BaseCanvasSize = new Vector2(140, 50);
 
         private const           float   NoteCountFontSize     = 8f;
-        private static readonly Vector2 NoteCountNamePosition = new Vector2(35, 28);
+        private static readonly Vector2 NoteCountNamePosition = new Vector2(50, 28);
 
-        private static readonly Vector2 MonsterLabelPosition = new Vector2(0, 15);
-        private static readonly Vector2 MonsterLabelSize     = new Vector2(100, 20);
+        private static readonly Vector2 MonsterLabelPosition = new Vector2(20, 15);
+        private static readonly Vector2 MonsterLabelSize     = new Vector2(140, 20);
         private const           float   MonsterLabelFontSize = 13f;
+
+        private static readonly Vector2 MonsterHpLabelPosition = new Vector2(85, 0);
+        private static readonly Vector2 MonsterHpLabelSize = new Vector2(35, 20);
+        private const           float   MonsterHpLabelFontSize = 11f;
 
         private static readonly Vector2 MonsterLifeBarSize    = new Vector2(100, 10);
         private static readonly Color   MonsterLifeBarBgColor = new Color(0, 0, 0, 0.2f);
@@ -38,6 +42,7 @@ namespace FightSabers
         private  Canvas   _canvas;
         private  TMP_Text _noteCountText;
         private  TMP_Text _monsterLabel;
+        private  TMP_Text _monsterHpLabel;
         internal Image    monsterLifeBarBg;
         internal Image    monsterLifeBar;
         #endregion
@@ -50,7 +55,7 @@ namespace FightSabers
             private set {
                 _monsterName = value;
                 if (_monsterLabel)
-                    _monsterLabel.text = _monsterName;
+                    _monsterLabel.text = _monsterName + " lv" + _monsterDifficulty;
             }
         }
 
@@ -75,6 +80,19 @@ namespace FightSabers
                 _currentHealth = value;
                 if (monsterLifeBar)
                     monsterLifeBar.fillAmount = (float)_currentHealth / maxHealth;
+                if (_monsterHpLabel)
+                    _monsterHpLabel.text = _currentHealth + " HP";
+            }
+        }
+
+        private int _monsterDifficulty;
+
+        public int MonsterDifficulty {
+            get { return _monsterDifficulty;}
+            private set {
+                _monsterDifficulty = value;
+                if (_monsterLabel)
+                    _monsterLabel.text = _monsterName + " lv" + _monsterDifficulty;
             }
         }
         #endregion
@@ -168,8 +186,8 @@ namespace FightSabers
             if (rectTransform != null)
             {
                 rectTransform.sizeDelta = BaseCanvasSize;
-                _noteCountText = Utils.CreateText((RectTransform)_canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
             }
+            _noteCountText = Utils.CreateText((RectTransform)_canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
             rectTransform = _noteCountText.transform as RectTransform;
             if (rectTransform != null)
             {
@@ -177,8 +195,8 @@ namespace FightSabers
                 rectTransform.sizeDelta = MonsterLabelSize;
                 rectTransform.anchoredPosition = NoteCountNamePosition;
                 _noteCountText.fontSize = NoteCountFontSize;
-                _monsterLabel = Utils.CreateText(_canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
             }
+            _monsterLabel = Utils.CreateText(_canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
             rectTransform = _monsterLabel.transform as RectTransform;
             if (rectTransform != null)
             {
@@ -186,8 +204,17 @@ namespace FightSabers
                 rectTransform.anchoredPosition = MonsterLabelPosition;
                 rectTransform.sizeDelta = MonsterLabelSize;
                 _monsterLabel.fontSize = MonsterLabelFontSize;
-                monsterLifeBarBg = new GameObject("Background").AddComponent<Image>();
             }
+            _monsterHpLabel = Utils.CreateText(_canvas.transform as RectTransform, "0 HP", MonsterHpLabelPosition);
+            rectTransform = _monsterHpLabel.transform as RectTransform;
+            if (rectTransform != null)
+            {
+                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.anchoredPosition = MonsterHpLabelPosition;
+                rectTransform.sizeDelta = MonsterHpLabelSize;
+                _monsterHpLabel.fontSize = MonsterHpLabelFontSize;
+            }
+            monsterLifeBarBg = new GameObject("Background").AddComponent<Image>();
             rectTransform = monsterLifeBarBg.transform as RectTransform;
             if (rectTransform != null)
             {
@@ -210,13 +237,15 @@ namespace FightSabers
             monsterLifeBar.color = new Color(1, 0, 0, 0.5f);
         }
 
-        public void ConfigureMonster(string monsterName, uint noteCountLeft, uint maxHp)
+        public IEnumerator ConfigureMonster(string monsterName, uint noteCountLeft, uint maxHp, uint monsterDifficulty)
         {
+            yield return new WaitForEndOfFrame();
             MonsterName = monsterName;
             name = "[FS|" + monsterName + "]";
             NoteCountLeft = (int)noteCountLeft;
             maxHealth = (int)maxHp;
             CurrentHealth = (int)maxHp;
+            MonsterDifficulty = (int)monsterDifficulty;
             new UnityTask(ConfigureEvents());
         }
 

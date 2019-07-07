@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BS_Utils.Gameplay;
+using FightSabers.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,18 +14,20 @@ namespace FightSabers
     {
         public class MonsterSpawnInfo
         {
-            public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, uint noteCount)
+            public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, uint noteCount, uint monsterDifficulty)
             {
                 this.monsterName = monsterName;
                 this.monsterHp = monsterHp;
                 this.spawnTime = spawnTime;
                 this.noteCount = noteCount;
+                this.monsterDifficulty = monsterDifficulty;
             }
 
             public string monsterName;
             public uint   monsterHp;
             public float  spawnTime;
             public uint   noteCount;
+            public uint   monsterDifficulty;
         }
 
         private AudioTimeSyncController _audioTimeSyncController;
@@ -63,9 +66,10 @@ namespace FightSabers
                         Random.InitState(DateTime.Now.Millisecond);
                         var noteCountDuration = (uint)Random.Range((int)(notePeriod.Count * 0.15f), (int)(notePeriod.Count * 0.3f));
                         var noteIndex = Random.Range(0, notePeriod.Count - (int)noteCountDuration);
-                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", (50 + (uint)Random.Range(1, 11) * 5) * noteCountDuration,
+                        var monsterDifficulty = (uint)Random.Range(1, 11);
+                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", (50 + monsterDifficulty * 5) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f,
-                                                                    noteCountDuration);
+                                                                    noteCountDuration, monsterDifficulty);
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
                         Logger.log.Debug(monsterSpawnInfo.monsterName + " will spawn at: " + monsterSpawnInfo.spawnTime + " | and will finish at: " + notePeriod[noteIndex + (int)monsterSpawnInfo.noteCount].time);
                     }
@@ -108,7 +112,6 @@ namespace FightSabers
             foreach (var notePeriod in notePeriods)
                 Logger.log.Debug("notePeriod contains " + notePeriod.Count + " notes");
 
-
             return notePeriods;
         }
 
@@ -122,7 +125,8 @@ namespace FightSabers
                     if (!(_audioTimeSyncController.songTime > monsterSpawnInfo.spawnTime)) continue;
                     createdMonsterInfo = monsterSpawnInfo;
                     _currentMonster = MonsterBehaviour.Create();
-                    _currentMonster.ConfigureMonster(createdMonsterInfo.monsterName, createdMonsterInfo.noteCount, createdMonsterInfo.monsterHp);
+                    new UnityTask(_currentMonster.ConfigureMonster(createdMonsterInfo.monsterName, createdMonsterInfo.noteCount,
+                                                                   createdMonsterInfo.monsterHp, createdMonsterInfo.monsterDifficulty));
                     break;
                 }
                 _monsterSpawnInfos.Remove(createdMonsterInfo);
