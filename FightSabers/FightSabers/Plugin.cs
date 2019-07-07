@@ -6,7 +6,6 @@ using IPA.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
-using Utils = FightSabers.Utilities.Utils;
 
 namespace FightSabers
 {

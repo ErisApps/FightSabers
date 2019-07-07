@@ -80,6 +80,7 @@ namespace FightSabers
         #endregion
 
         private ScoreController _scoreController;
+        private FloatingText    _floatingText;
 
         public static MonsterBehaviour Create()
         {
@@ -119,8 +120,7 @@ namespace FightSabers
             ScoreController.RawScoreWithoutMultiplier(noteCutInfo, noteCutInfo.afterCutSwingRatingCounter,
                                                       out var score, out var afterScore, out var cutDistanceScore);
             Hurt(score + afterScore);
-            if (IsAlive())
-                NotePassed();
+            NotePassed();
         }
 
         private void OnNoteWasMissed(NoteData noteData, int score)
@@ -136,7 +136,6 @@ namespace FightSabers
         {
             while (true)
             {
-                Logger.log.Error("still looking for the scoreController");
                 _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
 
                 if (_scoreController == null || _scoreController == default(ScoreController))
@@ -235,6 +234,7 @@ namespace FightSabers
 
         public void NotePassed()
         {
+            if (!IsAlive()) return;
             NoteCountLeft -= 1;
             if (NoteCountLeft <= 0)
                 DisplayMonsterInformationEnd("He ran away..");
@@ -242,18 +242,20 @@ namespace FightSabers
 
         private void DisplayMonsterInformationEnd(string labelInfo)
         {
-            var floatingText = FloatingText.Create();
-            floatingText.fadeOutText = true;
-            floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
-            floatingText.tweenEndPosition = new Vector3(BasePosition.x, BasePosition.y + 0.75f, BasePosition.z);
-            floatingText.ConfigureText();
-            floatingText.DisplayText(BasePosition, BaseRotation, BaseScale, labelInfo, 3.5f);
+            if (_floatingText != null) return;
+            _canvas.enabled = false;
+            _floatingText = FloatingText.Create();
+            _floatingText.fadeOutText = true;
+            _floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
+            _floatingText.tweenEndPosition = new Vector3(BasePosition.x, BasePosition.y + 0.75f, BasePosition.z);
+            _floatingText.ConfigureText();
+            _floatingText.DisplayText(BasePosition, BaseRotation, BaseScale, labelInfo, 3.5f);
             if (_scoreController)
             {
                 _scoreController.noteWasCutEvent -= OnNoteWasCut;
                 _scoreController.noteWasMissedEvent -= OnNoteWasMissed;
             }
-            Destroy(gameObject);
+            Destroy(gameObject, 4);
         }
     }
 }
