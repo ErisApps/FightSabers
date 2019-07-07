@@ -48,6 +48,7 @@ namespace FightSabers
 
         private void Start()
         {
+            Random.InitState((int)DateTime.Now.Ticks);
             _audioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
             _mainGameSceneSetupData = BS_Utils.Plugin.LevelData;
             _beatmapData = _mainGameSceneSetupData?.GameplayCoreSceneSetupData?.difficultyBeatmap?.beatmapData;
@@ -63,7 +64,6 @@ namespace FightSabers
                     var notePeriods = GetNotesInPeriods(Mathf.CeilToInt(songDuration / 60));
                     foreach (var notePeriod in notePeriods)
                     {
-                        Random.InitState(DateTime.Now.Millisecond);
                         var noteCountDuration = (uint)Random.Range((int)(notePeriod.Count * 0.15f), (int)(notePeriod.Count * 0.3f));
                         var noteIndex = Random.Range(0, notePeriod.Count - (int)noteCountDuration);
                         var monsterDifficulty = (uint)Random.Range(1, 11);
@@ -71,7 +71,9 @@ namespace FightSabers
                                                                     notePeriod[noteIndex].time - 0.25f,
                                                                     noteCountDuration, monsterDifficulty);
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
-                        Logger.log.Debug(monsterSpawnInfo.monsterName + " will spawn at: " + monsterSpawnInfo.spawnTime + " | and will finish at: " + notePeriod[noteIndex + (int)monsterSpawnInfo.noteCount].time);
+                        Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
+                                         " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
+                                         " | and will finish at: " + notePeriod[noteIndex + (int)monsterSpawnInfo.noteCount].time);
                     }
                 }
             }

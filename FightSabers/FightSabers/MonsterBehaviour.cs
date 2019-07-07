@@ -55,7 +55,7 @@ namespace FightSabers
             private set {
                 _monsterName = value;
                 if (_monsterLabel)
-                    _monsterLabel.text = _monsterName + " lv" + _monsterDifficulty;
+                    _monsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
             }
         }
 
@@ -92,7 +92,7 @@ namespace FightSabers
             private set {
                 _monsterDifficulty = value;
                 if (_monsterLabel)
-                    _monsterLabel.text = _monsterName + " lv" + _monsterDifficulty;
+                    _monsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
             }
         }
         #endregion
