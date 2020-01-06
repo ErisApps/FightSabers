@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using DigitalRuby.Tween;
 using FightSabers.Utilities;
@@ -17,9 +13,9 @@ namespace FightSabers
     public class MonsterBehaviour : MonoBehaviour
     {
         #region Constants
-        private static readonly Vector3 BasePosition = new Vector3(0, 3f, 3.75f);
+        private static Vector3 BasePosition = new Vector3(0, 3f, 3.75f);
         private static readonly Vector3 BaseRotation = new Vector3(0, 0, 0);
-        private static readonly Vector3 BaseScale    = new Vector3(0.01f, 0.01f, 0.01f);
+        private static Vector3 BaseScale    = new Vector3(0.01f, 0.01f, 0.01f);
 
         private static readonly Vector2 BaseCanvasSize = new Vector2(140, 50);
 
@@ -77,11 +73,15 @@ namespace FightSabers
         public int CurrentHealth {
             get { return _currentHealth; }
             private set {
+                gameObject.Tween("CurrentHealth" + gameObject.GetInstanceID(), _currentHealth, value,
+                                 0.35f, TweenScaleFunctions.Linear, tween => {
+                                     if (!this) return;
+                                     if (monsterLifeBar)
+                                         monsterLifeBar.fillAmount = tween.CurrentValue / maxHealth;
+                                     if (_monsterHpLabel)
+                                         _monsterHpLabel.text = (int)tween.CurrentValue + " HP";
+                                 });
                 _currentHealth = value;
-                if (monsterLifeBar)
-                    monsterLifeBar.fillAmount = (float)_currentHealth / maxHealth;
-                if (_monsterHpLabel)
-                    _monsterHpLabel.text = _currentHealth + " HP";
             }
         }
 
@@ -95,6 +95,8 @@ namespace FightSabers
                     _monsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
             }
         }
+
+        private bool _is360Level;
         #endregion
 
         private ScoreController _scoreController;
@@ -115,28 +117,27 @@ namespace FightSabers
                 OnNoteWasMissed(noteData, 0);
             else
             {
-                var acsbList = _scoreController.GetPrivateField<List<AfterCutScoreBuffer>>("_afterCutScoreBuffers");
+                var acsbList = _scoreController.GetPrivateField<List<CutScoreBuffer>>("_cutScoreBuffers");
 
-                foreach (AfterCutScoreBuffer acsb in acsbList)
+                foreach (CutScoreBuffer csb in acsbList)
                 {
-                    if (acsb.GetPrivateField<NoteCutInfo>("_noteCutInfo") == noteCutInfo)
+                    if (csb.GetPrivateField<NoteCutInfo>("_noteCutInfo") == noteCutInfo)
                     {
-                        acsb.didFinishEvent += OnNoteWasFullyCut;
+                        csb.didFinishEvent += OnNoteWasFullyCut;
                         break;
                     }
                 }
             }
         }
 
-        private void OnNoteWasFullyCut(AfterCutScoreBuffer acsb)
+        private void OnNoteWasFullyCut(CutScoreBuffer csb)
         {
-            NoteCutInfo noteCutInfo = acsb.GetPrivateField<NoteCutInfo>("_noteCutInfo");
+            var noteCutInfo = csb.GetPrivateField<NoteCutInfo>("_noteCutInfo");
 
-            if (acsb != null)
-                acsb.didFinishEvent -= OnNoteWasFullyCut;
+            if (csb != null)
+                csb.didFinishEvent -= OnNoteWasFullyCut;
 
-            ScoreController.RawScoreWithoutMultiplier(noteCutInfo, noteCutInfo.afterCutSwingRatingCounter,
-                                                      out var score, out var afterScore, out var cutDistanceScore);
+            ScoreController.RawScoreWithoutMultiplier(noteCutInfo, out var score, out var afterScore, out var cutDistanceScore);
             Hurt(score + afterScore);
             NotePassed();
         }
@@ -170,14 +171,26 @@ namespace FightSabers
 
         private void Start()
         {
+            _is360Level = BS_Utils.Plugin.LevelData?.GameplayCoreSceneSetupData?.difficultyBeatmap?.beatmapData?.spawnRotationEventsCount > 0;
             ConfigureVisuals();
             enabled = false;
         }
 
         private void ConfigureVisuals()
         {
-            transform.position = BasePosition;
-            transform.eulerAngles = BaseRotation;
+            if (_is360Level)
+            {
+                var flyingGameHud = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);
+                if (flyingGameHud)
+                {
+                    var flyingContainer = flyingGameHud.transform.Find("Container");
+                    transform.SetParent(flyingContainer);
+                    BaseScale = Vector3.one;
+                    BasePosition = new Vector3(0f, 60f, 0);
+                }
+            }
+            transform.localPosition = BasePosition;
+            transform.localEulerAngles = BaseRotation;
             transform.localScale = BaseScale;
 
             _canvas = gameObject.AddComponent<Canvas>();
@@ -264,6 +277,7 @@ namespace FightSabers
         public void NotePassed()
         {
             if (!IsAlive()) return;
+            //Hurt(Random.Range(10, 26)); // Testing damage without cuts ayy
             NoteCountLeft -= 1;
             if (NoteCountLeft <= 0)
                 DisplayMonsterInformationEnd("He ran away..");
@@ -272,12 +286,14 @@ namespace FightSabers
         private void DisplayMonsterInformationEnd(string labelInfo)
         {
             if (_floatingText != null) return;
-            _canvas.enabled = false;
+                _canvas.enabled = false;
             _floatingText = FloatingText.Create();
             _floatingText.fadeOutText = true;
             _floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
-            _floatingText.tweenEndPosition = new Vector3(BasePosition.x, BasePosition.y + 0.75f, BasePosition.z);
             _floatingText.ConfigureText();
+            if (_is360Level)
+                _floatingText.transform.SetParent(transform.parent);
+            _floatingText.tweenEndPosition = new Vector3(BasePosition.x, BasePosition.y + 0.75f * (_is360Level ? 60f : 1f), BasePosition.z);
             _floatingText.DisplayText(BasePosition, BaseRotation, BaseScale, labelInfo, 3.5f);
             if (_scoreController)
             {

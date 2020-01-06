@@ -67,11 +67,11 @@ namespace FightSabers
                         var noteCountDuration = (uint)Random.Range((int)(notePeriod.Count * 0.15f), (int)(notePeriod.Count * 0.3f));
                         var noteIndex = Random.Range(0, notePeriod.Count - (int)noteCountDuration);
                         var monsterDifficulty = (uint)Random.Range(1, 11);
-                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", (50 + monsterDifficulty * 5) * noteCountDuration,
+                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 5) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f,
                                                                     noteCountDuration, monsterDifficulty);
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
-                        Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
+                        Logger.log.Warn(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
                                          " | and will finish at: " + notePeriod[noteIndex + (int)monsterSpawnInfo.noteCount].time);
                     }

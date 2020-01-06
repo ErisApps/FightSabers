@@ -2,9 +2,18 @@
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "Shoko84",
   "description": "Transform your Beat Saber into a RPG game!",
-  "gameVersion": "1.1.0",
-  "id": null,
-  "name": "FightSabers",
+  "gameVersion": "1.6.0",
+  "id": "FightSabers",
+  "name": "Fight Sabers",
   "version": "0.1.0",
-  "features": []
+  "dependsOn": {
+    "BeatSaberMarkupLanguage": "^1.1.0",
+    "BSIPA": "^3.13.4",
+    "BS Utils": "^1.4.0"
+  },
+  "features": [],
+  "links": {
+    "project-home": "https://github.com/Shoko84/FightSabers/blob/master/README.md",
+    "project-source": "https://github.com/Shoko84/FightSabers"
+  }
 }
