@@ -4,7 +4,7 @@
   "description": "Transform your Beat Saber into a RPG game!",
   "gameVersion": "1.6.0",
   "id": "FightSabers",
-  "name": "Fight Sabers",
+  "name": "FightSabers",
   "version": "0.1.0",
   "dependsOn": {
     "BeatSaberMarkupLanguage": "^1.1.0",

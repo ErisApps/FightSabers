@@ -1,10 +1,9 @@
 ﻿using System;
 using DigitalRuby.Tween;
-using FightSabers.Utilities;
 using TMPro;
 using UnityEngine;
 
-namespace FightSabers
+namespace FightSabers.Utilities
 {
     public class FloatingText : MonoBehaviour
     {
@@ -24,7 +23,7 @@ namespace FightSabers
 
         public static FloatingText Create()
         {
-            return new GameObject("[FS|FloatingText]").AddComponent<FloatingText>();
+            return new GameObject("[FloatingText]").AddComponent<FloatingText>();
         }
 
         public void ConfigureText()

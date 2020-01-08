@@ -67,6 +67,8 @@ namespace FightSabers.Utilities
     {
         /// Delegate for termination subscribers.  manual is true if and only if
         /// the coroutine was stopped with an explicit call to Stop().
+        public delegate void PausedHandler(UnityTask self);
+        public delegate void ResumedHandler(UnityTask self);
         public delegate void FinishedHandler(bool manual, UnityTask self);
 
         private UnityTaskManager.UnityTaskState task;
@@ -77,74 +79,46 @@ namespace FightSabers.Utilities
         /// upon construction.
         public UnityTask(IEnumerator c, bool autoStart = true)
         {
-            Return = new Dictionary<string, object>();
+            returnedValues = new Dictionary<string, object>();
             InitUnityTask(c, autoStart);
         }
 
         public UnityTask()
         {
-            Return = new Dictionary<string, object>();
+            returnedValues = new Dictionary<string, object>();
         }
 
-        public static UnityTask CreateUnityTask< T1 >(Func<UnityTask, T1, IEnumerator> coroutine, T1 arg1, bool autoStart = true)
+        public void CreateUnityTask(IEnumerator c, bool autoStart = true)
+        {
+            InitUnityTask(c, autoStart);
+        }
+
+        public static UnityTask CreateUnityTask<T1>(Func<UnityTask, T1, IEnumerator> coroutine, T1 arg1, bool autoStart = true)
         {
             var unityTask = new UnityTask();
             unityTask.InitUnityTask(coroutine(unityTask, arg1), autoStart);
             return unityTask;
         }
 
-        public static UnityTask CreateUnityTask< T1, T2 >(Func<UnityTask, T1, T2, IEnumerator> coroutine, T1 arg1, T2 arg2, bool autoStart = true)
+        public static UnityTask CreateUnityTask<T1, T2>(Func<UnityTask, T1, T2, IEnumerator> coroutine, T1 arg1, T2 arg2, bool autoStart = true)
         {
             var unityTask = new UnityTask();
             unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2), autoStart);
             return unityTask;
         }
 
-        public static UnityTask CreateUnityTask< T1, T2, T3 >(Func<UnityTask, T1, T2, T3, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, bool autoStart = true)
+        public static UnityTask CreateUnityTask<T1, T2, T3>(Func<UnityTask, T1, T2, T3, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, bool autoStart = true)
         {
             var unityTask = new UnityTask();
             unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3), autoStart);
             return unityTask;
         }
 
-        public static UnityTask CreateUnityTask< T1, T2, T3, T4 >(Func<UnityTask, T1, T2, T3, T4, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, T4 arg4, bool autoStart = true)
-        {
-            var unityTask = new UnityTask();
-            unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3, arg4), autoStart);
-            return unityTask;
-        }
-
-        public static UnityTask CreateUnityTask< T1, T2, T3, T4, T5 >(Func<UnityTask, T1, T2, T3, T4, T5, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, bool autoStart = true)
-        {
-            var unityTask = new UnityTask();
-            unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3, arg4, arg5), autoStart);
-            return unityTask;
-        }
-
-        public static UnityTask CreateUnityTask< T1, T2, T3, T4, T5, T6 >(Func<UnityTask, T1, T2, T3, T4, T5, T6, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, bool autoStart = true)
-        {
-            var unityTask = new UnityTask();
-            unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3, arg4, arg5, arg6), autoStart);
-            return unityTask;
-        }
-
-        public static UnityTask CreateUnityTask< T1, T2, T3, T4, T5, T6, T7 >(Func<UnityTask, T1, T2, T3, T4, T5, T6, T7, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, bool autoStart = true)
-        {
-            var unityTask = new UnityTask();
-            unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3, arg4, arg5, arg6, arg7), autoStart);
-            return unityTask;
-        }
-
-        public static UnityTask CreateUnityTask< T1, T2, T3, T4, T5, T6, T7, T8 >(Func<UnityTask, T1, T2, T3, T4, T5, T6, T7, T8, IEnumerator> coroutine, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, bool autoStart = true)
-        {
-            var unityTask = new UnityTask();
-            unityTask.InitUnityTask(coroutine(unityTask, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8), autoStart);
-            return unityTask;
-        }
-
         private void InitUnityTask(IEnumerator c, bool autoStart)
         {
             task = UnityTaskManager.CreateTask(c);
+            task.Paused += TaskPaused;
+            task.Resumed += TaskResumed;
             task.Finished += TaskFinished;
             if (autoStart)
                 Start();
@@ -152,19 +126,23 @@ namespace FightSabers.Utilities
 
         /// Returns true if and only if the coroutine is running.  Paused tasks
         /// are considered to be running.
-        public bool Running {
+        public bool Running
+        {
             get { return task.Running; }
         }
 
         /// Returns true if and only if the coroutine is currently paused.
-        public bool Paused {
-            get { return task.Paused; }
+        public bool IsPaused
+        {
+            get { return task.IsPaused; }
         }
 
         /// Termination event.  Triggered when the coroutine completes execution.
+        public event PausedHandler Paused;
+        public event ResumedHandler Resumed;
         public event FinishedHandler Finished;
 
-        public Dictionary<string, object> Return { get; }
+        public Dictionary<string, object> returnedValues;
 
         /// Begins execution of the coroutine
         public void Start()
@@ -192,6 +170,16 @@ namespace FightSabers.Utilities
         {
             Finished?.Invoke(manual, this);
         }
+
+        private void TaskPaused()
+        {
+            Paused?.Invoke(this);
+        }
+
+        private void TaskResumed()
+        {
+            Resumed?.Invoke(this);
+        }
     }
 
     internal class UnityTaskManager : MonoBehaviour
@@ -211,10 +199,12 @@ namespace FightSabers.Utilities
 
         public class UnityTaskState
         {
+            public delegate void PausedHandler();
+            public delegate void ResumedHandler();
             public delegate void FinishedHandler(bool manual);
 
             private readonly IEnumerator coroutine;
-            private          bool        stopped;
+            private bool stopped;
 
             public UnityTaskState(IEnumerator c)
             {
@@ -223,18 +213,22 @@ namespace FightSabers.Utilities
 
             public bool Running { get; private set; }
 
-            public bool Paused { get; private set; }
+            public bool IsPaused { get; private set; }
 
+            public event PausedHandler Paused;
+            public event ResumedHandler Resumed;
             public event FinishedHandler Finished;
 
             public void Pause()
             {
-                Paused = true;
+                Paused?.Invoke();
+                IsPaused = true;
             }
 
             public void Unpause()
             {
-                Paused = false;
+                Resumed?.Invoke();
+                IsPaused = false;
             }
 
             public void Start()
@@ -255,10 +249,8 @@ namespace FightSabers.Utilities
                 var e = coroutine;
                 while (Running)
                 {
-                    if (Paused)
-                    {
+                    if (IsPaused)
                         yield return null;
-                    }
                     else
                     {
                         if (e != null && e.MoveNext())
@@ -267,10 +259,7 @@ namespace FightSabers.Utilities
                             Running = false;
                     }
                 }
-
-                var handler = Finished;
-                if (handler != null)
-                    handler(stopped);
+                Finished?.Invoke(stopped);
             }
         }
     }

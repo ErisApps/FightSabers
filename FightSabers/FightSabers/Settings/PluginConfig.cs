@@ -1,4 +1,4 @@
-﻿namespace FightSabers
+﻿namespace FightSabers.Settings
 {
     internal class PluginConfig
     {

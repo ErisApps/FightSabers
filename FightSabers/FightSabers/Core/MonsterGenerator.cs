@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BS_Utils.Gameplay;
 using FightSabers.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace FightSabers
+namespace FightSabers.Core
 {
     public class MonsterGenerator : MonoBehaviour
     {
@@ -66,8 +64,8 @@ namespace FightSabers
                     {
                         var noteCountDuration = (uint)Random.Range((int)(notePeriod.Count * 0.15f), (int)(notePeriod.Count * 0.3f));
                         var noteIndex = Random.Range(0, notePeriod.Count - (int)noteCountDuration);
-                        var monsterDifficulty = (uint)Random.Range(1, 11);
-                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 5) * noteCountDuration,
+                        var monsterDifficulty = (uint)Random.Range(1, 12);
+                        var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f,
                                                                     noteCountDuration, monsterDifficulty);
                         _monsterSpawnInfos.Add(monsterSpawnInfo);

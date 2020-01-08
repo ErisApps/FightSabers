@@ -1,14 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BS_Utils.Utilities;
 using DigitalRuby.Tween;
+using FightSabers.Models;
+using FightSabers.Settings;
 using FightSabers.Utilities;
 using HMUI;
 using TMPro;
 using UnityEngine;
 
-namespace FightSabers
+namespace FightSabers.Core
 {
     public class MonsterBehaviour : MonoBehaviour
     {
@@ -96,6 +99,8 @@ namespace FightSabers
             }
         }
 
+        public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
+
         private bool _is360Level;
         #endregion
 
@@ -138,7 +143,7 @@ namespace FightSabers
                 csb.didFinishEvent -= OnNoteWasFullyCut;
 
             ScoreController.RawScoreWithoutMultiplier(noteCutInfo, out var score, out var afterScore, out var cutDistanceScore);
-            Hurt(score + afterScore);
+            Hurt(score + afterScore + cutDistanceScore);
             NotePassed();
         }
 
@@ -270,17 +275,19 @@ namespace FightSabers
         public void Hurt(int rawScore)
         {
             CurrentHealth -= rawScore;
-            if (!IsAlive())
-                DisplayMonsterInformationEnd("You killed that!");
+            if (IsAlive()) return;
+            CurrentStatus = MonsterStatus.Killed;
+            DisplayMonsterInformationEnd("You killed that!");
         }
 
         public void NotePassed()
         {
             if (!IsAlive()) return;
-            //Hurt(Random.Range(10, 26)); // Testing damage without cuts ayy
+            //Hurt(Random.Range(10, 26)); //TODO: Remove later, FPFC testing
             NoteCountLeft -= 1;
-            if (NoteCountLeft <= 0)
-                DisplayMonsterInformationEnd("He ran away..");
+            if (NoteCountLeft > 0) return;
+            CurrentStatus = MonsterStatus.Flown;
+            DisplayMonsterInformationEnd("He ran away..");
         }
 
         private void DisplayMonsterInformationEnd(string labelInfo)
@@ -299,6 +306,17 @@ namespace FightSabers
             {
                 _scoreController.noteWasCutEvent -= OnNoteWasCut;
                 _scoreController.noteWasMissedEvent -= OnNoteWasMissed;
+            }
+            switch (CurrentStatus)
+            {
+                case MonsterStatus.Killed:
+                    SaveDataManager.instance.SaveData.killMonsterCount += 1;
+                    ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty);
+                    break;
+                case MonsterStatus.Flown:
+                    SaveDataManager.instance.SaveData.flownMonsterCount += 1;
+                    //ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty); //TODO: Remove later, FPFC testing
+                    break;
             }
             Destroy(gameObject, 4);
         }
