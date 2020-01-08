@@ -16,22 +16,22 @@ namespace FightSabers.Core
     public class MonsterBehaviour : MonoBehaviour
     {
         #region Constants
-        private static Vector3 BasePosition = new Vector3(0, 3f, 3.75f);
+        private static          Vector3 BasePosition = new Vector3(0, 3f, 3.75f);
         private static readonly Vector3 BaseRotation = new Vector3(0, 0, 0);
-        private static Vector3 BaseScale    = new Vector3(0.01f, 0.01f, 0.01f);
+        private static          Vector3 BaseScale    = new Vector3(0.01f, 0.01f, 0.01f);
 
         private static readonly Vector2 BaseCanvasSize = new Vector2(140, 50);
 
-        private const           float   NoteCountFontSize     = 8f;
+        private static readonly float   NoteCountFontSize     = 8f;
         private static readonly Vector2 NoteCountNamePosition = new Vector2(50, 28);
 
         private static readonly Vector2 MonsterLabelPosition = new Vector2(20, 15);
         private static readonly Vector2 MonsterLabelSize     = new Vector2(140, 20);
-        private const           float   MonsterLabelFontSize = 13f;
+        private static readonly float   MonsterLabelFontSize = 13f;
 
         private static readonly Vector2 MonsterHpLabelPosition = new Vector2(85, 0);
-        private static readonly Vector2 MonsterHpLabelSize = new Vector2(35, 20);
-        private const           float   MonsterHpLabelFontSize = 11f;
+        private static readonly Vector2 MonsterHpLabelSize     = new Vector2(35, 20);
+        private static readonly float   MonsterHpLabelFontSize = 11f;
 
         private static readonly Vector2 MonsterLifeBarSize    = new Vector2(100, 10);
         private static readonly Color   MonsterLifeBarBgColor = new Color(0, 0, 0, 0.2f);
@@ -91,7 +91,7 @@ namespace FightSabers.Core
         private int _monsterDifficulty;
 
         public int MonsterDifficulty {
-            get { return _monsterDifficulty;}
+            get { return _monsterDifficulty; }
             private set {
                 _monsterDifficulty = value;
                 if (_monsterLabel)
@@ -190,9 +190,14 @@ namespace FightSabers.Core
                 {
                     var flyingContainer = flyingGameHud.transform.Find("Container");
                     transform.SetParent(flyingContainer);
-                    BaseScale = Vector3.one;
                     BasePosition = new Vector3(0f, 60f, 0);
+                    BaseScale = Vector3.one;
                 }
+            }
+            else
+            {
+                BasePosition = new Vector3(0, 3f, 3.75f);
+                BaseScale = new Vector3(0.01f, 0.01f, 0.01f);
             }
             transform.localPosition = BasePosition;
             transform.localEulerAngles = BaseRotation;
@@ -293,7 +298,7 @@ namespace FightSabers.Core
         private void DisplayMonsterInformationEnd(string labelInfo)
         {
             if (_floatingText != null) return;
-                _canvas.enabled = false;
+            _canvas.enabled = false;
             _floatingText = FloatingText.Create();
             _floatingText.fadeOutText = true;
             _floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;

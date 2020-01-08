@@ -56,7 +56,6 @@ namespace FightSabers
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
-            Logger.log.Info("Scene '" + nextScene.name + "' has been loaded");
             if (nextScene.name == "GameCore")
                 MonsterGenerator.Create();
         }
