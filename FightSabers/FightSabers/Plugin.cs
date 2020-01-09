@@ -1,9 +1,11 @@
-﻿using BS_Utils.Utilities;
+﻿using System.Reflection;
+using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Settings;
 using FightSabers.UI;
 using FightSabers.Utilities;
+using Harmony;
 using IPA;
 using IPA.Config;
 using IPA.Utilities;
@@ -44,6 +46,8 @@ namespace FightSabers
 
         public void OnApplicationStart()
         {
+            var harmony = HarmonyInstance.Create("com.Shoko84.beatsaber.FightSabers");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
             BSEvents.menuSceneActive += OnMenuSceneActive;
             BSEvents.gameSceneActive += OnGameSceneActive;
         }

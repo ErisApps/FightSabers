@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BS_Utils.Gameplay;
+using FightSabers.Models.Modifiers;
 using FightSabers.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,31 +13,57 @@ namespace FightSabers.Core
     {
         public class MonsterSpawnInfo
         {
-            public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, uint noteCount, uint monsterDifficulty)
+            public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, float unspawnTime, uint noteCount, uint monsterDifficulty, Type[] modifierTypes)
             {
                 this.monsterName = monsterName;
                 this.monsterHp = monsterHp;
                 this.spawnTime = spawnTime;
+                this.unspawnTime = unspawnTime;
                 this.noteCount = noteCount;
                 this.monsterDifficulty = monsterDifficulty;
+                this.modifierTypes = modifierTypes;
             }
 
             public string monsterName;
             public uint   monsterHp;
             public float  spawnTime;
+            public float  unspawnTime;
             public uint   noteCount;
             public uint   monsterDifficulty;
+            public Type[] modifierTypes;
         }
+
+        public static MonsterGenerator instance { get; private set; }
+
+        public MonsterBehaviour CurrentMonster { get; private set; }
 
         private AudioTimeSyncController _audioTimeSyncController;
         private LevelData               _mainGameSceneSetupData;
         private BeatmapData             _beatmapData;
         private List<MonsterSpawnInfo>  _monsterSpawnInfos;
-        private MonsterBehaviour        _currentMonster;
+
+        #region Events
+
+        public delegate void MonsterStateHandler(object self);
+        public event MonsterStateHandler MonsterAdded;
+        public event MonsterStateHandler MonsterRemoved;
+
+        private void OnMonsterAdded()
+        {
+            MonsterAdded?.Invoke(this);
+        }
+
+        private void OnMonsterRemoved()
+        {
+            MonsterRemoved?.Invoke(this);
+        }
+
+        #endregion
 
         public static MonsterGenerator Create()
         {
-            return new GameObject("[FS|MonsterGenerator]").AddComponent<MonsterGenerator>();
+            instance = new GameObject("[FS|MonsterGenerator]").AddComponent<MonsterGenerator>();
+            return instance;
         }
 
         private void OnDestroy()
@@ -66,12 +93,12 @@ namespace FightSabers.Core
                         var noteIndex = Random.Range(0, notePeriod.Count - (int)noteCountDuration);
                         var monsterDifficulty = (uint)Random.Range(1, 12);
                         var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
-                                                                    notePeriod[noteIndex].time - 0.25f,
-                                                                    noteCountDuration, monsterDifficulty);
+                                                                    notePeriod[noteIndex].time - 0.25f, notePeriod[noteIndex + (int)noteCountDuration].time,
+                                                                    noteCountDuration, monsterDifficulty, new[] { typeof(NoteShrinker) });
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
                         Logger.log.Warn(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
-                                         " | and will finish at: " + notePeriod[noteIndex + (int)monsterSpawnInfo.noteCount].time);
+                                         " | and will finish at: " + monsterSpawnInfo.unspawnTime);
                     }
                 }
             }
@@ -115,18 +142,27 @@ namespace FightSabers.Core
             return notePeriods;
         }
 
+        public void EndCurrentMonsterEncounter()
+        {
+            if (!CurrentMonster) return;
+            Destroy(CurrentMonster.gameObject, 4);
+            OnMonsterRemoved();
+            CurrentMonster = null;
+        }
+
         private void CheckForCreateMonster()
         {
-            if (_audioTimeSyncController && (_currentMonster == null || _currentMonster != null && !_currentMonster.GetComponent<Canvas>().enabled))
+            if (_audioTimeSyncController && (CurrentMonster == null || CurrentMonster != null && !CurrentMonster.GetComponent<Canvas>().enabled))
             {
                 MonsterSpawnInfo createdMonsterInfo = null;
                 foreach (var monsterSpawnInfo in _monsterSpawnInfos)
                 {
                     if (!(_audioTimeSyncController.songTime > monsterSpawnInfo.spawnTime)) continue;
                     createdMonsterInfo = monsterSpawnInfo;
-                    _currentMonster = MonsterBehaviour.Create();
-                    new UnityTask(_currentMonster.ConfigureMonster(createdMonsterInfo.monsterName, createdMonsterInfo.noteCount,
-                                                                   createdMonsterInfo.monsterHp, createdMonsterInfo.monsterDifficulty));
+                    CurrentMonster = MonsterBehaviour.Create();
+                    new UnityTask(CurrentMonster.ConfigureMonster(createdMonsterInfo)).Finished += (manual, self) => {
+                        OnMonsterAdded();
+                    };
                     break;
                 }
                 _monsterSpawnInfos.Remove(createdMonsterInfo);

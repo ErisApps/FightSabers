@@ -84,7 +84,7 @@ namespace FightSabers.UI
             {
                 rectTransform.SetParent(_canvas.transform, false);
                 rectTransform.sizeDelta = new Vector2(160, 16);
-                //monsterLifeBar.material = _noGlow;
+                //MonsterLifeBar.material = _noGlow;
                 var tex = Texture2D.whiteTexture;
                 var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f, 100, 1);
                 _monsterLifeBar.sprite = sprite;

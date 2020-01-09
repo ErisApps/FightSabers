@@ -38,12 +38,12 @@ namespace FightSabers.Core
         #endregion
 
         #region Visuals
-        private  Canvas   _canvas;
-        private  TMP_Text _noteCountText;
-        private  TMP_Text _monsterLabel;
-        private  TMP_Text _monsterHpLabel;
-        internal Image    monsterLifeBarBg;
-        internal Image    monsterLifeBar;
+        public Canvas   Canvas           { get; private set; }
+        public TMP_Text NoteCountText    { get; private set; }
+        public TMP_Text MonsterLabel     { get; private set; }
+        public TMP_Text MonsterHpLabel   { get; private set; }
+        public Image    MonsterLifeBarBg { get; private set; }
+        public Image    MonsterLifeBar   { get; private set; }
         #endregion
 
         #region Properties
@@ -53,8 +53,8 @@ namespace FightSabers.Core
             get { return _monsterName; }
             private set {
                 _monsterName = value;
-                if (_monsterLabel)
-                    _monsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
+                if (MonsterLabel)
+                    MonsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
             }
         }
 
@@ -64,8 +64,8 @@ namespace FightSabers.Core
             get { return _noteCountLeft; }
             private set {
                 _noteCountLeft = value;
-                if (_noteCountText)
-                    _noteCountText.text = _noteCountLeft + " notes left";
+                if (NoteCountText)
+                    NoteCountText.text = _noteCountLeft + " notes left";
             }
         }
 
@@ -79,10 +79,10 @@ namespace FightSabers.Core
                 gameObject.Tween("CurrentHealth" + gameObject.GetInstanceID(), _currentHealth, value,
                                  0.35f, TweenScaleFunctions.Linear, tween => {
                                      if (!this) return;
-                                     if (monsterLifeBar)
-                                         monsterLifeBar.fillAmount = tween.CurrentValue / maxHealth;
-                                     if (_monsterHpLabel)
-                                         _monsterHpLabel.text = (int)tween.CurrentValue + " HP";
+                                     if (MonsterLifeBar)
+                                         MonsterLifeBar.fillAmount = tween.CurrentValue / maxHealth;
+                                     if (MonsterHpLabel)
+                                         MonsterHpLabel.text = (int)tween.CurrentValue + " HP";
                                  });
                 _currentHealth = value;
             }
@@ -94,10 +94,15 @@ namespace FightSabers.Core
             get { return _monsterDifficulty; }
             private set {
                 _monsterDifficulty = value;
-                if (_monsterLabel)
-                    _monsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
+                if (MonsterLabel)
+                    MonsterLabel.text = _monsterName + " lv." + _monsterDifficulty;
             }
         }
+
+        public float SpawnTime { get; private set; }
+        public float UnSpawnTime { get; private set; }
+
+        public Type[] Modifiers { get; private set; }
 
         public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
 
@@ -203,73 +208,76 @@ namespace FightSabers.Core
             transform.localEulerAngles = BaseRotation;
             transform.localScale = BaseScale;
 
-            _canvas = gameObject.AddComponent<Canvas>();
-            _canvas.renderMode = RenderMode.WorldSpace;
-            var rectTransform = _canvas.transform as RectTransform;
+            Canvas = gameObject.AddComponent<Canvas>();
+            Canvas.renderMode = RenderMode.WorldSpace;
+            var rectTransform = Canvas.transform as RectTransform;
             if (rectTransform != null)
             {
                 rectTransform.sizeDelta = BaseCanvasSize;
             }
-            _noteCountText = Utils.CreateText((RectTransform)_canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
-            rectTransform = _noteCountText.transform as RectTransform;
+            NoteCountText = Utils.CreateText((RectTransform)Canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
+            rectTransform = NoteCountText.transform as RectTransform;
             if (rectTransform != null)
             {
-                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.SetParent(Canvas.transform, false);
                 rectTransform.sizeDelta = MonsterLabelSize;
                 rectTransform.anchoredPosition = NoteCountNamePosition;
-                _noteCountText.fontSize = NoteCountFontSize;
+                NoteCountText.fontSize = NoteCountFontSize;
             }
-            _monsterLabel = Utils.CreateText(_canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
-            rectTransform = _monsterLabel.transform as RectTransform;
+            MonsterLabel = Utils.CreateText(Canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
+            rectTransform = MonsterLabel.transform as RectTransform;
             if (rectTransform != null)
             {
-                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.SetParent(Canvas.transform, false);
                 rectTransform.anchoredPosition = MonsterLabelPosition;
                 rectTransform.sizeDelta = MonsterLabelSize;
-                _monsterLabel.fontSize = MonsterLabelFontSize;
+                MonsterLabel.fontSize = MonsterLabelFontSize;
             }
-            _monsterHpLabel = Utils.CreateText(_canvas.transform as RectTransform, "0 HP", MonsterHpLabelPosition);
-            rectTransform = _monsterHpLabel.transform as RectTransform;
+            MonsterHpLabel = Utils.CreateText(Canvas.transform as RectTransform, "0 HP", MonsterHpLabelPosition);
+            rectTransform = MonsterHpLabel.transform as RectTransform;
             if (rectTransform != null)
             {
-                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.SetParent(Canvas.transform, false);
                 rectTransform.anchoredPosition = MonsterHpLabelPosition;
                 rectTransform.sizeDelta = MonsterHpLabelSize;
-                _monsterHpLabel.fontSize = MonsterHpLabelFontSize;
+                MonsterHpLabel.fontSize = MonsterHpLabelFontSize;
             }
-            monsterLifeBarBg = new GameObject("Background").AddComponent<Image>();
-            rectTransform = monsterLifeBarBg.transform as RectTransform;
+            MonsterLifeBarBg = new GameObject("Background").AddComponent<Image>();
+            rectTransform = MonsterLifeBarBg.transform as RectTransform;
             if (rectTransform != null)
             {
-                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.SetParent(Canvas.transform, false);
                 rectTransform.sizeDelta = MonsterLifeBarSize;
-                monsterLifeBarBg.color = MonsterLifeBarBgColor;
-                monsterLifeBar = new GameObject("Loading Bar").AddComponent<Image>();
+                MonsterLifeBarBg.color = MonsterLifeBarBgColor;
+                MonsterLifeBar = new GameObject("Loading Bar").AddComponent<Image>();
             }
-            rectTransform = monsterLifeBar.transform as RectTransform;
+            rectTransform = MonsterLifeBar.transform as RectTransform;
             if (rectTransform != null)
             {
-                rectTransform.SetParent(_canvas.transform, false);
+                rectTransform.SetParent(Canvas.transform, false);
                 rectTransform.sizeDelta = MonsterLifeBarSize;
             }
             var tex = Texture2D.whiteTexture;
             var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f, 100, 1);
-            monsterLifeBar.sprite = sprite;
-            monsterLifeBar.type = Image.Type.Filled;
-            monsterLifeBar.fillMethod = Image.FillMethod.Horizontal;
-            monsterLifeBar.color = new Color(1, 0, 0, 0.5f);
+            MonsterLifeBar.sprite = sprite;
+            MonsterLifeBar.type = Image.Type.Filled;
+            MonsterLifeBar.fillMethod = Image.FillMethod.Horizontal;
+            MonsterLifeBar.color = new Color(1, 0, 0, 0.5f);
         }
 
-        public IEnumerator ConfigureMonster(string monsterName, uint noteCountLeft, uint maxHp, uint monsterDifficulty)
+        public IEnumerator ConfigureMonster(MonsterGenerator.MonsterSpawnInfo monsterInfo)
         {
             yield return new WaitForEndOfFrame();
-            MonsterName = monsterName;
-            name = "[FS|" + monsterName + "]";
-            NoteCountLeft = (int)noteCountLeft;
-            maxHealth = (int)maxHp;
-            CurrentHealth = (int)maxHp;
-            MonsterDifficulty = (int)monsterDifficulty;
-            new UnityTask(ConfigureEvents());
+            MonsterName = monsterInfo.monsterName;
+            NoteCountLeft = (int)monsterInfo.noteCount;
+            maxHealth = (int)monsterInfo.monsterHp;
+            CurrentHealth = (int)monsterInfo.monsterHp;
+            MonsterDifficulty = (int)monsterInfo.monsterDifficulty;
+            SpawnTime = monsterInfo.spawnTime;
+            UnSpawnTime = monsterInfo.unspawnTime;
+            Modifiers = monsterInfo.modifierTypes;
+            name = "[FS|" + MonsterName + "lv." + MonsterDifficulty + "]";
+            yield return new UnityTask(ConfigureEvents());
         }
 
         public bool IsAlive()
@@ -298,7 +306,7 @@ namespace FightSabers.Core
         private void DisplayMonsterInformationEnd(string labelInfo)
         {
             if (_floatingText != null) return;
-            _canvas.enabled = false;
+            Canvas.enabled = false;
             _floatingText = FloatingText.Create();
             _floatingText.fadeOutText = true;
             _floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
@@ -323,7 +331,7 @@ namespace FightSabers.Core
                     //ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty); //TODO: Remove later, FPFC testing
                     break;
             }
-            Destroy(gameObject, 4);
+            MonsterGenerator.instance.EndCurrentMonsterEncounter();
         }
     }
 }
