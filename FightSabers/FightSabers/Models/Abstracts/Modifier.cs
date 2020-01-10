@@ -8,6 +8,7 @@ namespace FightSabers.Models.Abstracts
         public string title { get; set; }
         public string description { get; set; }
         public float strength { get; set; } = 1f;
+        public GameNoteController gameNoteController;
 
         public abstract void EnableModifier();
         public abstract void DisableModifier();

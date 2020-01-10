@@ -1,24 +1,33 @@
 ﻿using Harmony;
 using System;
-using BS_Utils.Utilities;
+using System.Collections.Generic;
 using FightSabers.Core;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Modifiers;
-using UnityEngine;
 
 namespace FightSabers.Patches
 {
     [HarmonyPatch(typeof(GameNoteController))]
     [HarmonyPatch("Awake")]
     [HarmonyPatch(new Type[] { })]
-    class GameNoteControllerInitPatch
+    internal class GameNoteControllerInitPatch
     {
+        public static List<ColorSucker> colorSuckers;
+
         public static void Postfix(GameNoteController __instance)
         {
+            if (colorSuckers == null)
+                colorSuckers = new List<ColorSucker>();
             if (__instance)
             {
                 if (!__instance.noteTransform.gameObject.GetComponent<NoteShrinker>())
-                    __instance.noteTransform.gameObject.AddComponent(typeof(NoteShrinker));
+                    __instance.noteTransform.gameObject.AddComponent<NoteShrinker>().gameNoteController = __instance;
+                if (!__instance.noteTransform.gameObject.GetComponent<ColorSucker>())
+                {
+                    var colorSucker = __instance.noteTransform.gameObject.AddComponent<ColorSucker>();
+                    colorSucker.gameNoteController = __instance;
+                    colorSuckers.Add(colorSucker);
+                }
                 if (MonsterGenerator.instance)
                 {
                     void OnMonsterAdded(object self)

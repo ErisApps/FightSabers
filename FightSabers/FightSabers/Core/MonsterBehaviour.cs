@@ -5,6 +5,7 @@ using System.Linq;
 using BS_Utils.Utilities;
 using DigitalRuby.Tween;
 using FightSabers.Models;
+using FightSabers.Models.Modifiers;
 using FightSabers.Settings;
 using FightSabers.Utilities;
 using HMUI;
@@ -99,14 +100,16 @@ namespace FightSabers.Core
             }
         }
 
-        public float SpawnTime { get; private set; }
+        public float SpawnTime   { get; private set; }
         public float UnSpawnTime { get; private set; }
 
         public Type[] Modifiers { get; private set; }
 
         public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
 
-        private bool _is360Level;
+        private bool    _is360Level;
+        public float LerpValue;
+        public  Vector2 LerpValueRange { get; private set; }
         #endregion
 
         private ScoreController _scoreController;
@@ -121,12 +124,20 @@ namespace FightSabers.Core
         private void OnNoteWasCut(NoteData noteData, NoteCutInfo noteCutInfo, int multiplier)
         {
             if (noteData.noteType == NoteType.Bomb)
+            {
+                LerpValue -= 0.05f;
+                LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
+                ColorSucker.ApplyColorVisualOnNotes(true);
                 return;
+            }
 
             if (!noteCutInfo.allIsOK)
                 OnNoteWasMissed(noteData, 0);
             else
             {
+                LerpValue += 0.075f;
+                LerpValue = LerpValue > LerpValueRange.y ? LerpValueRange.y : LerpValue;
+                ColorSucker.ApplyColorVisualOnNotes(true);
                 var acsbList = _scoreController.GetPrivateField<List<CutScoreBuffer>>("_cutScoreBuffers");
 
                 foreach (CutScoreBuffer csb in acsbList)
@@ -157,6 +168,10 @@ namespace FightSabers.Core
             if (noteData.noteType == NoteType.Bomb)
                 return;
 
+            LerpValue -= 0.05f;
+            LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
+            ColorSucker.ApplyColorVisualOnNotes(true);
+
             NotePassed();
         }
         #endregion
@@ -181,6 +196,8 @@ namespace FightSabers.Core
 
         private void Start()
         {
+            LerpValue = 0.75f;
+            LerpValueRange = new Vector2(0.2f, 1);
             _is360Level = BS_Utils.Plugin.LevelData?.GameplayCoreSceneSetupData?.difficultyBeatmap?.beatmapData?.spawnRotationEventsCount > 0;
             ConfigureVisuals();
             enabled = false;

@@ -1,5 +1,4 @@
-﻿using System;
-using DigitalRuby.Tween;
+﻿using DigitalRuby.Tween;
 using FightSabers.Models.Abstracts;
 using UnityEngine;
 
