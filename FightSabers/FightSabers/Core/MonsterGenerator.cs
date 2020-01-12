@@ -100,7 +100,7 @@ namespace FightSabers.Core
                         var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f, notePeriod[noteIndex + (int)noteCountDuration].time,
                                                                     noteCountDuration, monsterDifficulty,
-                                                                    new[] { typeof(TimeWarper), typeof(NoteShrinker), typeof(ColorSucker) });
+                                                                    new[] { typeof(TimeWarper) });
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
                         Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +

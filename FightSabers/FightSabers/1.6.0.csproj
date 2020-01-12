@@ -94,6 +94,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="Zenject, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\Zenject.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ExperienceSystem.cs" />
