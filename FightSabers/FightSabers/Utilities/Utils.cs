@@ -139,7 +139,7 @@ namespace FightSabers.Utilities
             var tempList = transform.Cast<Transform>().ToList();
             foreach (var child in tempList)
             {
-                Logger.log.Info($"{spacing}{child.name}");
+                Logger.log.Debug($"{spacing}{child.name}");
                 PrintHierarchy(child, "|" + spacing);
             }
         }

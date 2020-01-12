@@ -108,8 +108,15 @@ namespace FightSabers.Core
         public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
 
         private bool    _is360Level;
-        public float LerpValue;
-        public  Vector2 LerpValueRange { get; private set; }
+        #endregion
+
+        #region Specific modifiers properties
+
+        public float   LerpValue;
+        public Vector2 LerpValueRange { get; private set; }
+
+        private TimeWarper _timeWarper;
+
         #endregion
 
         private ScoreController _scoreController;
@@ -125,9 +132,12 @@ namespace FightSabers.Core
         {
             if (noteData.noteType == NoteType.Bomb)
             {
-                LerpValue -= 0.05f;
-                LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
-                ColorSucker.ApplyColorVisualOnNotes(true);
+                if (Modifiers.Contains(typeof(ColorSucker)))
+                {
+                    LerpValue -= 0.05f;
+                    LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
+                    ColorSucker.ApplyColorVisualOnNotes(true);
+                }
                 return;
             }
 
@@ -135,9 +145,12 @@ namespace FightSabers.Core
                 OnNoteWasMissed(noteData, 0);
             else
             {
-                LerpValue += 0.075f;
-                LerpValue = LerpValue > LerpValueRange.y ? LerpValueRange.y : LerpValue;
-                ColorSucker.ApplyColorVisualOnNotes(true);
+                if (Modifiers.Contains(typeof(ColorSucker)))
+                {
+                    LerpValue += 0.075f;
+                    LerpValue = LerpValue > LerpValueRange.y ? LerpValueRange.y : LerpValue;
+                    ColorSucker.ApplyColorVisualOnNotes(true);
+                }
                 var acsbList = _scoreController.GetPrivateField<List<CutScoreBuffer>>("_cutScoreBuffers");
 
                 foreach (CutScoreBuffer csb in acsbList)
@@ -168,13 +181,33 @@ namespace FightSabers.Core
             if (noteData.noteType == NoteType.Bomb)
                 return;
 
-            LerpValue -= 0.05f;
-            LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
-            ColorSucker.ApplyColorVisualOnNotes(true);
+            if (Modifiers.Contains(typeof(ColorSucker)))
+            {
+                LerpValue -= 0.05f;
+                LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
+                ColorSucker.ApplyColorVisualOnNotes(true);
+            }
 
             NotePassed();
         }
         #endregion
+
+        private void ConfigureModifiers()
+        {
+            foreach (var modifier in Modifiers)
+            {
+                if (modifier == typeof(ColorSucker))
+                {
+                    LerpValue = 0.75f;
+                    LerpValueRange = new Vector2(0.2f, 1);
+                }
+                else if (modifier == typeof(TimeWarper))
+                {
+                    _timeWarper = gameObject.AddComponent<TimeWarper>();
+                    _timeWarper.EnableModifier();
+                }
+            }
+        }
 
         private IEnumerator ConfigureEvents()
         {
@@ -196,8 +229,8 @@ namespace FightSabers.Core
 
         private void Start()
         {
-            LerpValue = 0.75f;
-            LerpValueRange = new Vector2(0.2f, 1);
+            //_gsc = Resources.FindObjectsOfTypeAll<GameSongController>().FirstOrDefault();
+            //_gsc.PauseSong();
             _is360Level = BS_Utils.Plugin.LevelData?.GameplayCoreSceneSetupData?.difficultyBeatmap?.beatmapData?.spawnRotationEventsCount > 0;
             ConfigureVisuals();
             enabled = false;
@@ -295,6 +328,7 @@ namespace FightSabers.Core
             Modifiers = monsterInfo.modifierTypes;
             name = "[FS|" + MonsterName + "lv." + MonsterDifficulty + "]";
             yield return new UnityTask(ConfigureEvents());
+            ConfigureModifiers();
         }
 
         public bool IsAlive()
@@ -348,6 +382,8 @@ namespace FightSabers.Core
                     //ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty); //TODO: Remove later, FPFC testing
                     break;
             }
+            
+            _timeWarper?.DisableModifier();
             MonsterGenerator.instance.EndCurrentMonsterEncounter();
         }
     }

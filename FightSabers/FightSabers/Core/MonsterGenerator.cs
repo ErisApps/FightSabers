@@ -99,9 +99,10 @@ namespace FightSabers.Core
                         var monsterDifficulty = (uint)Random.Range(1, 12);
                         var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f, notePeriod[noteIndex + (int)noteCountDuration].time,
-                                                                    noteCountDuration, monsterDifficulty, new[] { typeof(ColorSucker) });
+                                                                    noteCountDuration, monsterDifficulty,
+                                                                    new[] { typeof(TimeWarper), typeof(NoteShrinker) });
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
-                        Logger.log.Warn(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
+                        Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
                                          " | and will finish at: " + monsterSpawnInfo.unspawnTime);
                     }
@@ -157,7 +158,7 @@ namespace FightSabers.Core
 
         private void CheckForCreateMonster()
         {
-            if (_audioTimeSyncController && (CurrentMonster == null || CurrentMonster != null && !CurrentMonster.GetComponent<Canvas>().enabled))
+            if (_audioTimeSyncController && (CurrentMonster == null /*|| CurrentMonster != null && !CurrentMonster.Canvas.enabled*/))
             {
                 MonsterSpawnInfo createdMonsterInfo = null;
                 foreach (var monsterSpawnInfo in _monsterSpawnInfos)
