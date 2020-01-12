@@ -6,6 +6,12 @@ namespace FightSabers.Models.Modifiers
 {
     public class TimeWarper : Modifier
     {
+        private void Awake()
+        {
+            title = "Time warper";
+            description = "Song is playing faster";
+        }
+
         public override void EnableModifier()
         {
             gameObject.Tween("TimeWarping" + gameObject.GetInstanceID(), TimeController.Instance.ManipulatedTime,

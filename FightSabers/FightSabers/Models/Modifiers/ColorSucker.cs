@@ -29,6 +29,12 @@ namespace FightSabers.Models.Modifiers
 
         #region Unity methods
 
+        private void Awake()
+        {
+            title = "Color sucker";
+            description = "Note colors disappears if you miss them";
+        }
+
         private void Start()
         {
             Cnv = GetComponentInParent<ColorNoteVisuals>();
