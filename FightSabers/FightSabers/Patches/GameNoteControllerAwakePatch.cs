@@ -10,7 +10,7 @@ namespace FightSabers.Patches
     [HarmonyPatch(typeof(GameNoteController))]
     [HarmonyPatch("Awake")]
     [HarmonyPatch(new Type[] { })]
-    internal class GameNoteControllerInitPatch
+    internal class GameNoteControllerAwakePatch
     {
         public static List<ColorSucker> colorSuckers;
 

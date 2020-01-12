@@ -64,10 +64,10 @@ namespace FightSabers.Core
         public static MonsterGenerator Create()
         {
             instance = new GameObject("[FS|MonsterGenerator]").AddComponent<MonsterGenerator>();
-            if (GameNoteControllerInitPatch.colorSuckers == null)
-                GameNoteControllerInitPatch.colorSuckers = new List<ColorSucker>();
+            if (GameNoteControllerAwakePatch.colorSuckers == null)
+                GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
             else
-                GameNoteControllerInitPatch.colorSuckers.Clear();
+                GameNoteControllerAwakePatch.colorSuckers.Clear();
             return instance;
         }
 
@@ -100,7 +100,7 @@ namespace FightSabers.Core
                         var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f, notePeriod[noteIndex + (int)noteCountDuration].time,
                                                                     noteCountDuration, monsterDifficulty,
-                                                                    new[] { typeof(TimeWarper), typeof(NoteShrinker) });
+                                                                    new[] { typeof(TimeWarper), typeof(NoteShrinker), typeof(ColorSucker) });
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
                         Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
