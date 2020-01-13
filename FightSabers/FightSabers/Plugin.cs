@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
@@ -18,7 +19,6 @@ namespace FightSabers
     public class Plugin : IBeatSaberPlugin
     {
         #region Properties
-
         internal static Ref<PluginConfig> config;
         internal static IConfigProvider   configProvider;
 
@@ -26,11 +26,9 @@ namespace FightSabers
 
         public static string Name    => "FightSabers";
         public static string Version => "0.1.0a";
-
         #endregion
 
         #region BSIPA events
-
         public void Init(IPALogger logger, [Config.Prefer("json")] IConfigProvider cfgProvider)
         {
             Logger.log = logger;
@@ -67,18 +65,14 @@ namespace FightSabers
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
 
         public void OnSceneUnloaded(Scene scene) { }
-
         #endregion
 
         #region Custom events
-
         private static void MenuLoadFresh()
         {
             SaveDataManager.instance.Setup();
             ExperienceSystem.instance.Setup();
-            ExperienceSystem.instance.ApplyExperienceFinished += delegate {
-                SaveDataManager.instance.ApplyToFile();
-            };
+            ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
             FightSabersProgress.instance.Setup();
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
         }
@@ -95,7 +89,6 @@ namespace FightSabers
             if (CurrentSceneState == SceneState.Game) return;
             CurrentSceneState = SceneState.Game;
         }
-
         #endregion
     }
 }
