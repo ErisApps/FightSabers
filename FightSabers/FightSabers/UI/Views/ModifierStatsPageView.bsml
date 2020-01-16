@@ -1,0 +1,10 @@
+﻿<bg>
+  <vertical child-control-height='false'>
+    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+      <text text='FightSabers' align='Center' font-size='8'/>
+    </horizontal>
+    <horizontal vertical-fit='PreferredSize'>
+      <text text='Modifier stats' align='Center'/>
+    </horizontal>
+  </vertical>
+</bg>

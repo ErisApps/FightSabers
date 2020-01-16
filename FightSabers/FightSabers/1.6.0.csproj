@@ -59,6 +59,9 @@
     <Reference Include="Newtonsoft.Json.12.0.0.0">
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Libs\Newtonsoft.Json.12.0.0.0.dll</HintPath>
     </Reference>
+    <Reference Include="SemVer.1.2.0.0">
+      <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Libs\SemVer.1.2.0.0.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -108,10 +111,22 @@
     <Compile Include="Models\Modifiers\TimeWarper.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
+    <Compile Include="UI\Controllers\ModifierStatsPageController.cs" />
+    <Compile Include="UI\Controllers\CharacterStatsPageController.cs" />
+    <Compile Include="UI\Controllers\ProfilePageController.cs" />
+    <Compile Include="UI\Controllers\QuestPickerPageController.cs" />
+    <Compile Include="UI\Controllers\FightSabersViewController.cs" />
+    <Compile Include="UI\Controllers\MonsterInfoPageController.cs" />
+    <Compile Include="UI\Controllers\SkillTreePageController.cs" />
+    <Compile Include="UI\Controllers\BottomPageController.cs" />
+    <Compile Include="UI\Controllers\CurrentQuestPageController.cs" />
+    <Compile Include="UI\Controllers\OverlayViewController.cs" />
+    <Compile Include="UI\Controllers\HomePageController.cs" />
     <Compile Include="UI\FightSabersProgress.cs" />
     <Compile Include="Models\MonsterStatus.cs" />
     <Compile Include="Models\SceneState.cs" />
     <Compile Include="Settings\SaveDataManager.cs" />
+    <Compile Include="UI\FlowCoordinators\FightSabersFlowCoordinator.cs" />
     <Compile Include="Utilities\FloatingText.cs" />
     <Compile Include="Models\ProfileSaveData.cs" />
     <Compile Include="Core\MonsterBehaviour.cs" />
@@ -126,6 +141,38 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\HomePageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\OverlayView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\SkillTreePageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\CurrentQuestPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\BottomPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\QuestPickerPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\ProfilePageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\ModifierStatsPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\MonsterInfoPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\CharacterStatsPageView.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

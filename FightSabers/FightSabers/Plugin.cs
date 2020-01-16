@@ -1,15 +1,21 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
+using BeatSaberMarkupLanguage;
+using BeatSaberMarkupLanguage.FloatingScreen;
 using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Settings;
 using FightSabers.UI;
+using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
 using Harmony;
 using IPA;
 using IPA.Config;
+using IPA.Loader;
 using IPA.Utilities;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Config = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
@@ -21,11 +27,9 @@ namespace FightSabers
         #region Properties
         internal static Ref<PluginConfig> config;
         internal static IConfigProvider   configProvider;
+        internal static PluginLoader.PluginMetadata fightSabersMetadata;
 
         public static SceneState CurrentSceneState { get; private set; } = SceneState.Menu;
-
-        public static string Name    => "FightSabers";
-        public static string Version => "0.1.0a";
         #endregion
 
         #region BSIPA events
@@ -46,6 +50,7 @@ namespace FightSabers
         {
             var harmony = HarmonyInstance.Create("com.Shoko84.beatsaber.FightSabers");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
+            fightSabersMetadata = PluginManager.AllPlugins.Select(x => x.Metadata).First(x => x.Name == "FightSabers");
             BSEvents.menuSceneActive += OnMenuSceneActive;
             BSEvents.gameSceneActive += OnGameSceneActive;
         }
@@ -58,7 +63,7 @@ namespace FightSabers
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
-            if (nextScene.name == "GameCore")
+            if (Plugin.config.Value.Enabled && nextScene.name == "GameCore")
                 MonsterGenerator.Create();
         }
 
@@ -74,7 +79,10 @@ namespace FightSabers
             ExperienceSystem.instance.Setup();
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
             FightSabersProgress.instance.Setup();
+
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
+            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(45, 9.5f), false, new Vector3(0, 3.35f, 2.4f), Quaternion.Euler(-15, 0, 0));
+            floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), true);
         }
 
         private static void OnMenuSceneActive()

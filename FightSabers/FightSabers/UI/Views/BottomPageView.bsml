@@ -1,0 +1,9 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <horizontal>
+    <button id='quests-btn' interactable='false' text='Quests' pref-width='30' pref-height='15' on-click='quests-page-act' />
+    <button id='skills-btn' interactable='false' text='Skills' pref-width='30' pref-height='15' on-click='skills-page-act' />
+    <button id='home-btn' text='Home' pref-width='30' pref-height='15' on-click='home-page-act' />
+    <button id='profile-btn' interactable='false' text='Profile' pref-width='30' pref-height='15' on-click='profile-page-act' />
+    <button id='stats-btn' interactable='false' text='Stats' pref-width='30' pref-height='15' on-click='stats-page-act' />
+  </horizontal>
+</bg>

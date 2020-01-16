@@ -99,7 +99,7 @@ namespace FightSabers.UI
                 rectTransform.SetParent(_canvas.transform, false);
                 rectTransform.localPosition = new Vector3(0, 15f);
                 _headerText.alignment = TextAlignmentOptions.Center;
-                _headerText.text = $"{Plugin.Name} v{Plugin.Version}";
+                _headerText.text = $"{Plugin.fightSabersMetadata.Name} v{Plugin.fightSabersMetadata.Version}";
                 _headerText.color = Color.white;
                 _headerText.fontSize = 6.5f;
             }
