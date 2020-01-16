@@ -38,6 +38,8 @@ namespace FightSabers.Core
 
         public MonsterBehaviour CurrentMonster { get; private set; }
 
+        private static readonly Type[] _modifierTypes = { typeof(NoteShrinker), typeof(ColorSucker), typeof(TimeWarper) };
+
         private AudioTimeSyncController _audioTimeSyncController;
         private LevelData               _mainGameSceneSetupData;
         private BeatmapData             _beatmapData;
@@ -101,11 +103,15 @@ namespace FightSabers.Core
                         var monsterSpawnInfo = new MonsterSpawnInfo("Uber Cthulhu", ((int)(ScoreController.kMaxCutRawScore / 2f) + monsterDifficulty * 4) * noteCountDuration,
                                                                     notePeriod[noteIndex].time - 0.25f, notePeriod[noteIndex + (int)noteCountDuration].time,
                                                                     noteCountDuration, monsterDifficulty,
-                                                                    new[] { typeof(TimeWarper) });
+                                                                    new[] { _modifierTypes[Random.Range(0, _modifierTypes.Length)] });
                         _monsterSpawnInfos.Add(monsterSpawnInfo);
                         Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
                                          " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
                                          " | and will finish at: " + monsterSpawnInfo.unspawnTime);
+                        Logger.log.Debug("Modifiers applied: ");
+                        foreach (var modifierType in monsterSpawnInfo.modifierTypes)
+                            Logger.log.Debug($"-> {modifierType}");
+                        Logger.log.Debug("-----------------");
                     }
                 }
             }
