@@ -2,6 +2,7 @@
 using System.Collections;
 using FightSabers.Settings;
 using FightSabers.UI;
+using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
 using UnityEngine;
 
@@ -84,17 +85,17 @@ namespace FightSabers.Core
             {
                 if (ExperiencePointsWon >= GetExperienceBeforeLevelUp())
                 {
-                    new UnityTask(FightSabersProgress.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
-                    yield return new WaitUntil(() => !FightSabersProgress.instance.CurrentlyAnimated);
+                    new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
+                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
                     ExperiencePointsWon -= GetExperienceBeforeLevelUp();
                     LevelUp();
-                    yield return new WaitUntil(() => !FightSabersProgress.instance.CurrentlyAnimated);
+                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
                     delayApplied = 0;
                 }
                 else
                 {
-                    new UnityTask(FightSabersProgress.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + ExperiencePointsWon, delayApplied));
-                    yield return new WaitUntil(() => !FightSabersProgress.instance.CurrentlyAnimated);
+                    new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + ExperiencePointsWon, delayApplied));
+                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
                     SaveDataManager.instance.SaveData.currentExp += ExperiencePointsWon;
                     ExperiencePointsWon = 0;
                 }
@@ -113,8 +114,8 @@ namespace FightSabers.Core
 
         private void TestLevel() //TODO: Remove later, FPFC testing
         {
-            ExperienceSystem.instance.AddFightExperience(1155);
-            new UnityTask(ExperienceSystem.instance.ApplyExperience());
+            AddFightExperience(1155);
+            new UnityTask(ApplyExperience());
         }
 
         #endregion

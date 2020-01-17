@@ -1,5 +1,19 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <vertical bg='round-rect-panel' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
-    <button id='switch-fightsabers-btn' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
+    id='main-background'>
+  <vertical spacing='-10'>
+    <horizontal bg='round-rect-panel' horizontal-fit='PreferredSize'>
+      <button id='switch-fightsabers-btn' pref-width='45' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
+    </horizontal>
+    <horizontal>
+      <vertical spacing='2'>
+        <text text='~header-text' align='Top' font-size='3.5'></text>
+        <stack id='progress-bar-stack' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+          <img id='progress-bg-bar-img' pref-width='80' pref-height='8'/>
+          <img id='progress-bar-img' pref-width='80' pref-height='8'/>
+          <text id='current-exp-text' text='~current-exp' align='Center' font-size='4.5'></text>
+        </stack> 
+        <text text='~current-level' align='Top'></text>
+      </vertical>
+    </horizontal>
   </vertical>
 </bg>

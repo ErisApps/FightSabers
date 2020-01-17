@@ -122,7 +122,6 @@
     <Compile Include="UI\Controllers\CurrentQuestPageController.cs" />
     <Compile Include="UI\Controllers\OverlayViewController.cs" />
     <Compile Include="UI\Controllers\HomePageController.cs" />
-    <Compile Include="UI\FightSabersProgress.cs" />
     <Compile Include="Models\MonsterStatus.cs" />
     <Compile Include="Models\SceneState.cs" />
     <Compile Include="Settings\SaveDataManager.cs" />

@@ -17,6 +17,7 @@ using IPA.Loader;
 using IPA.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Config = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
 
@@ -78,11 +79,11 @@ namespace FightSabers
             SaveDataManager.instance.Setup();
             ExperienceSystem.instance.Setup();
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
-            FightSabersProgress.instance.Setup();
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
-            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(45, 9.5f), false, new Vector3(0, 3.35f, 2.4f), Quaternion.Euler(-15, 0, 0));
+            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 60f), true, new Vector3(0, 3.85f, 2.4f), Quaternion.Euler(-15, 0, 0));
             floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), true);
+            floatingScreen.GetComponent<Image>().enabled = false;
         }
 
         private static void OnMenuSceneActive()
