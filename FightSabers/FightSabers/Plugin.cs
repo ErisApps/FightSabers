@@ -2,12 +2,10 @@
 using System.Reflection;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
-using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Settings;
-using FightSabers.UI;
 using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
 using Harmony;
@@ -15,6 +13,7 @@ using IPA;
 using IPA.Config;
 using IPA.Loader;
 using IPA.Utilities;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -81,7 +80,14 @@ namespace FightSabers
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
-            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 60f), true, new Vector3(0, 3.85f, 2.4f), Quaternion.Euler(-15, 0, 0));
+            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true, 
+                                                                     Float3.ToVector3(config.Value.FSPanelPosition),
+                                                                     Quaternion.Euler(Float3.ToVector3(config.Value.FSPanelRotation)));
+            floatingScreen.screenMover.OnRelease += (pos, rot) => {
+                config.Value.FSPanelPosition = new Float3(pos.x, pos.y, pos.z);
+                config.Value.FSPanelRotation = new Float3(rot.eulerAngles.x, rot.eulerAngles.y, rot.eulerAngles.z);
+                configProvider.Store(config.Value);
+            };
             floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), true);
             floatingScreen.GetComponent<Image>().enabled = false;
         }

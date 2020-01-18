@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="Core\ExperienceSystem.cs" />
     <Compile Include="Models\Abstracts\Modifier.cs" />
+    <Compile Include="Models\Float3.cs" />
     <Compile Include="Models\Interfaces\IModifier.cs" />
     <Compile Include="Models\Modifiers\ColorSucker.cs" />
     <Compile Include="Models\Modifiers\NoteShrinker.cs" />
