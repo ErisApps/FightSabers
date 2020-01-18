@@ -42,6 +42,30 @@ namespace FightSabers.UI.Controllers
         [UIObject("main-background")] private GameObject _mainBackground;
         [UIObject("progress-bar-stack")] private GameObject _progressBarStack;
 
+        private bool _experienceContainerState = true;
+        [UIValue("experience-container-state")]
+        public bool experienceContainerState
+        {
+            get { return _experienceContainerState; }
+            set
+            {
+                _experienceContainerState = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private bool _fsDisableContainerState;
+        [UIValue("fs-disable-container-state")]
+        public bool fsDisableContainerState
+        {
+            get { return _fsDisableContainerState; }
+            set
+            {
+                _fsDisableContainerState = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private string _buttonStatus = "Open FightSabers";
         [UIValue("fightsabers-btn-status")]
         public string buttonStatus
@@ -94,7 +118,6 @@ namespace FightSabers.UI.Controllers
         }
         #endregion
 
-
         #region Events
 
         public delegate void BarAnimatedHandler(object self, bool state);
@@ -131,6 +154,8 @@ namespace FightSabers.UI.Controllers
             if (firstActivation)
                 ExperienceSystem.instance.LeveledUp += OnLeveledUp;
 
+            experienceContainerState = Plugin.config.Value.Enabled;
+            fsDisableContainerState = !experienceContainerState;
             //ProgressBar
             var tex = Texture2D.whiteTexture;
             var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f, 100, 1);
@@ -257,6 +282,7 @@ namespace FightSabers.UI.Controllers
         }
 
         #endregion
+
         [UIAction("switch-fightsabers-act")]
         public void ShowModPageClick()
         {

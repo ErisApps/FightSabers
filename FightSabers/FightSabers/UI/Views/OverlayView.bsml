@@ -7,7 +7,7 @@
       <button id='switch-fightsabers-btn' pref-width='45' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
     </horizontal>
     <horizontal>
-      <vertical spacing='2'>
+      <vertical active='~experience-container-state' spacing='2'>
         <text text='~header-text' align='Top' font-size='3.5'></text>
         <stack id='progress-bar-stack' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
           <img id='progress-bg-bar-img' pref-width='80' pref-height='8'/>
@@ -15,6 +15,10 @@
           <text id='current-exp-text' text='~current-exp' align='Center' font-size='4.5'></text>
         </stack> 
         <text text='~current-level' align='Top'></text>
+      </vertical>
+      <vertical active='~fs-disable-container-state'>
+        <text text='FightSabers is disabled!' align='Center' font-size='4.5' color='orange'></text>
+        <text text='No monsters will spawn..' align='Center' font-size='3.5' color='#CFCFCF'></text>
       </vertical>
     </horizontal>
   </vertical>
