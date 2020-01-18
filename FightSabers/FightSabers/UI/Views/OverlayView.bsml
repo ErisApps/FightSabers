@@ -1,6 +1,8 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
     id='main-background'>
-  <vertical spacing='-10'>
+  <vertical spacing='0'>
+    <horizontal />
+    <horizontal />
     <horizontal bg='round-rect-panel' horizontal-fit='PreferredSize'>
       <button id='switch-fightsabers-btn' pref-width='45' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
     </horizontal>
