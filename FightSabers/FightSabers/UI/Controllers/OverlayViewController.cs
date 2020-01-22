@@ -3,7 +3,6 @@ using System.Linq;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
-using BeatSaberMarkupLanguage.ViewControllers;
 using DigitalRuby.Tween;
 using FightSabers.Core;
 using FightSabers.Settings;
@@ -20,7 +19,7 @@ namespace FightSabers.UI.Controllers
     internal class OverlayViewController : FightSabersViewController
     {
         public override string ResourceName    => "FightSabers.UI.Views.OverlayView.bsml";
-        //public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\OverlayView.bsml";
+        public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\OverlayView.bsml";
 
         public static OverlayViewController instance;
 

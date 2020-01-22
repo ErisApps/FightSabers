@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FightSabers.Models;
+using FightSabers.Models.Converters;
 using Newtonsoft.Json;
 
 namespace FightSabers.Settings
@@ -40,8 +41,10 @@ namespace FightSabers.Settings
                 InitializeSaveData(_pathSaveFile);
             else
             {
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new QuestConverter());
                 var content = File.ReadAllText(_pathSaveFile);
-                SaveData = JsonConvert.DeserializeObject<ProfileSaveData>(content);
+                SaveData = JsonConvert.DeserializeObject<ProfileSaveData>(content, settings);
                 if (SaveData != null) return;
                 var newFileName = "FightSabersSaveData" + DateTime.Now.ToString("yy-MM-dd-hh-mm-ss") + ".fs";
                 File.Move(_pathSaveFile, Path.Combine(_pathConfigFolder, newFileName));
@@ -53,7 +56,7 @@ namespace FightSabers.Settings
         public void ApplyToFile()
         {
             if (SaveData == null) return;
-            var jsonData = JsonConvert.SerializeObject(SaveData);
+            var jsonData = JsonConvert.SerializeObject(SaveData, Formatting.Indented);
             if (!string.IsNullOrEmpty(jsonData))
                 File.WriteAllText(_pathSaveFile, jsonData);
         }

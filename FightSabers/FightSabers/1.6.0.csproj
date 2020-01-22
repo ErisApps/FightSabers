@@ -104,9 +104,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ExperienceSystem.cs" />
+    <Compile Include="Core\QuestManager.cs" />
     <Compile Include="Models\Abstracts\Modifier.cs" />
+    <Compile Include="Models\Abstracts\Quest.cs" />
+    <Compile Include="Models\Converters\QuestConverter.cs" />
     <Compile Include="Models\Float3.cs" />
     <Compile Include="Models\Interfaces\IModifier.cs" />
+    <Compile Include="Models\Interfaces\IQuest.cs" />
+    <Compile Include="Models\Quests\LevelUpQuest.cs" />
     <Compile Include="Models\Modifiers\ColorSucker.cs" />
     <Compile Include="Models\Modifiers\NoteShrinker.cs" />
     <Compile Include="Models\Modifiers\TimeWarper.cs" />
@@ -160,7 +165,9 @@
     <EmbeddedResource Include="UI\Views\BottomPageView.bsml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\Views\QuestPickerPageView.bsml" />
+    <EmbeddedResource Include="UI\Views\QuestPickerPageView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\ProfilePageView.bsml" />

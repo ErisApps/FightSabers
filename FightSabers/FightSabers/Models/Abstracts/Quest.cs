@@ -1,0 +1,77 @@
+﻿using System;
+using FightSabers.Core;
+using FightSabers.Models.Interfaces;
+using FightSabers.Utilities;
+using Newtonsoft.Json;
+
+namespace FightSabers.Models.Abstracts
+{
+    public abstract class Quest : IQuest
+    {
+        public string title { get; set; }
+        public string description { get; set; }
+        public string progressHint { get; set; }
+        public string questType { get; set; }
+        public uint expReward { get; set; }
+        public bool isInitialized { get; set; }
+        public bool isActivated { get; set; }
+
+        private float _progress { get; set; }
+        [JsonProperty("progress")]
+        public float Progress {
+            get { return _progress; }
+            set
+            {
+                if (Math.Abs(_progress - value) < 0.001f) return;
+                _progress = value;
+                OnProgressChanged();
+            }
+        }
+
+        #region Events
+
+        public delegate void ProgressHandler(object self);
+        public event ProgressHandler ProgressChanged;
+        public event ProgressHandler QuestCompleted;
+
+        protected void OnProgressChanged()
+        {
+            ProgressChanged?.Invoke(this);
+            Refresh();
+        }
+
+        protected void OnQuestCompleted()
+        {
+            QuestCompleted?.Invoke(this);
+        }
+
+        #endregion
+
+        protected virtual void Prepare(string title, string description, string progressHint, string questType, uint expReward, float progress)
+        {
+            if (isInitialized) return;
+            this.title = title;
+            this.description = description;
+            this.progressHint = progressHint;
+            this.questType = questType;
+            this.expReward = expReward;
+            Progress = progress;
+            isInitialized = true;
+        }
+
+        public virtual void Activate()
+        {
+            if (!isInitialized || isActivated) return;
+            isActivated = true;
+        }
+
+        public virtual void Complete()
+        {
+            ExperienceSystem.instance.AddFightExperience(expReward);
+            new UnityTask(ExperienceSystem.instance.ApplyExperience());
+            OnQuestCompleted();
+        }
+
+        protected abstract void Refresh();
+    }
+}

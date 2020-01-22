@@ -1,10 +1,51 @@
-﻿<bg>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical child-control-height='false'>
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='FightSabers' align='Center' font-size='8'/>
+      <text text='Quest picker' align='Center' font-size='8'/>
     </horizontal>
-    <horizontal vertical-fit='PreferredSize'>
-      <text text='Quest picker' align='Center'/>
+    <horizontal vertical-fit='PreferredSize' spacing='3'>
+      <!-- First -->
+      <stack pref-height='30' horizontal-fit='PreferredSize'>
+        <horizontal>
+          <big-button text='~title-quest-1' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+                      on-click='select-quest-1-act' interactable='~picker-quest-1-active' />
+        </horizontal>
+        <horizontal pref-width='0' pad='2' child-control-height='false'>
+          <text size-delta-y='15' text="~desc-quest-1"
+                align='Center' rich-text='true' word-wrapping='true' overflow-mode='Ellipsis'/>
+        </horizontal>
+        <horizontal pref-height='30'>
+          <text text='~exp-reward-quest-1' font-color='orange' align='Bottom' />
+        </horizontal>
+      </stack>
+      <!-- Second -->
+      <stack pref-height='30' horizontal-fit='PreferredSize'>
+        <horizontal>
+          <big-button text='~title-quest-2' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+                      on-click='select-quest-2-act' interactable='~picker-quest-2-active' />
+        </horizontal>
+        <horizontal pref-width='0' pad='2' child-control-height='false'>
+          <text size-delta-y='15' text="~desc-quest-2"
+                align='Center' rich-text='true' word-wrapping='true' overflow-mode='Ellipsis'/>
+        </horizontal>
+        <horizontal pref-height='30'>
+          <text text='~exp-reward-quest-2' font-color='orange' align='Bottom' />
+        </horizontal>
+      </stack>
+      <!-- Third -->
+      <stack pref-height='30' horizontal-fit='PreferredSize'>
+        <horizontal>
+          <big-button text='~title-quest-3' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+                      on-click='select-quest-3-act' interactable='~picker-quest-3-active' />
+        </horizontal>
+        <horizontal pref-width='0' pad='2' child-control-height='false'>
+          <text size-delta-y='15' text="~desc-quest-3"
+                align='Center' rich-text='true' word-wrapping='true' overflow-mode='Ellipsis'/>
+        </horizontal>
+        <horizontal pref-height='30'>
+          <text text='~exp-reward-quest-3' font-color='orange' align='Bottom' />
+        </horizontal>
+      </stack>
     </horizontal>
   </vertical>
 </bg>

@@ -1,10 +1,15 @@
-﻿<bg>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical child-control-height='false'>
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='FightSabers' align='Center' font-size='8'/>
+      <text text='Current quests' align='Center' font-size='8'/>
     </horizontal>
-    <horizontal vertical-fit='PreferredSize'>
-      <text text='Current quests' align='Center'/>
-    </horizontal>
+    <!--<horizontal vertical-fit='PreferredSize' spacing='3'>
+      --><!-- First --><!--
+      <stack pref-height='50' horizontal-fit='PreferredSize'>
+        <img id='progress-bg-bar-img' pref-width='50' pref-height='7'/>
+        <img id='progress-bar-img' pref-width='50' pref-height='7'/>
+        <text id='current-exp-text' text='0 / 1' align='Center' font-size='4.5'></text>
+      </stack>
+    </horizontal>-->
   </vertical>
 </bg>

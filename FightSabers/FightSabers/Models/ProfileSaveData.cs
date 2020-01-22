@@ -1,4 +1,7 @@
-﻿namespace FightSabers.Models
+﻿using System.Collections.Generic;
+using FightSabers.Models.Interfaces;
+
+namespace FightSabers.Models
 {
     public class ProfileSaveData
     {
@@ -7,5 +10,6 @@
         public uint skillPointRemaining;
         public uint killMonsterCount;
         public uint flownMonsterCount;
+        public List<IQuest> currentQuests = new List<IQuest>();
     }
 }
