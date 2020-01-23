@@ -1,7 +1,6 @@
 ﻿using System;
 using FightSabers.Core;
 using FightSabers.Models.Interfaces;
-using FightSabers.Utilities;
 using Newtonsoft.Json;
 
 namespace FightSabers.Models.Abstracts
@@ -68,7 +67,7 @@ namespace FightSabers.Models.Abstracts
         public virtual void Complete()
         {
             ExperienceSystem.instance.AddFightExperience(expReward);
-            new UnityTask(ExperienceSystem.instance.ApplyExperience());
+            ExperienceSystem.instance.ApplyExperience();
             OnQuestCompleted();
         }
 

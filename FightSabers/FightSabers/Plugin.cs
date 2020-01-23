@@ -79,6 +79,7 @@ namespace FightSabers
         private static void MenuLoadFresh()
         {
             SaveDataManager.instance.Setup();
+            QuestManager.instance.LoadQuests();
             ExperienceSystem.instance.Setup();
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
 
@@ -98,7 +99,7 @@ namespace FightSabers
         private static void OnMenuSceneActive()
         {
             if (CurrentSceneState == SceneState.Menu) return;
-            new UnityTask(ExperienceSystem.instance.ApplyExperience());
+            ExperienceSystem.instance.ApplyExperience();
             CurrentSceneState = SceneState.Menu;
         }
 

@@ -7,7 +7,7 @@
       <!-- First -->
       <stack pref-height='30' horizontal-fit='PreferredSize'>
         <horizontal>
-          <big-button text='~title-quest-1' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+          <big-button id='picker-quest-1-btn' text='~title-quest-1' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
                       on-click='select-quest-1-act' interactable='~picker-quest-1-active' />
         </horizontal>
         <horizontal pref-width='0' pad='2' child-control-height='false'>
@@ -21,7 +21,7 @@
       <!-- Second -->
       <stack pref-height='30' horizontal-fit='PreferredSize'>
         <horizontal>
-          <big-button text='~title-quest-2' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+          <big-button id='picker-quest-2-btn' text='~title-quest-2' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
                       on-click='select-quest-2-act' interactable='~picker-quest-2-active' />
         </horizontal>
         <horizontal pref-width='0' pad='2' child-control-height='false'>
@@ -35,7 +35,7 @@
       <!-- Third -->
       <stack pref-height='30' horizontal-fit='PreferredSize'>
         <horizontal>
-          <big-button text='~title-quest-3' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
+          <big-button id='picker-quest-3-btn' text='~title-quest-3' font-size='6' align='Top' pref-width='45' pref-height='35' size-delta-y='35'
                       on-click='select-quest-3-act' interactable='~picker-quest-3-active' />
         </horizontal>
         <horizontal pref-width='0' pad='2' child-control-height='false'>

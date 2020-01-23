@@ -15,6 +15,7 @@ namespace FightSabers.Core
         public uint  ExperiencePointsWon          { get; private set; }
         public float ExperienceMultiplier         { get; private set; } = 1f;
         public uint  TotalNeededExperienceForNextLevel { get; private set; }
+        public bool IsApplyingExperience { get; private set; }
 
         #endregion
 
@@ -22,6 +23,7 @@ namespace FightSabers.Core
 
         public delegate void ExperienceHandler(object self);
         public event ExperienceHandler LeveledUp;
+        public event ExperienceHandler ApplyExperienceStarted;
         public event ExperienceHandler ApplyExperienceFinished;
 
         private void OnLeveledUp()
@@ -29,8 +31,15 @@ namespace FightSabers.Core
             LeveledUp?.Invoke(this);
         }
 
+        private void OnApplyExperienceStarted()
+        {
+            IsApplyingExperience = true;
+            ApplyExperienceStarted?.Invoke(this);
+        }
+
         private void OnApplyExperienceFinished()
         {
+            IsApplyingExperience = false;
             ApplyExperienceFinished?.Invoke(this);
         }
 
@@ -78,11 +87,19 @@ namespace FightSabers.Core
             ExperiencePointsWon += (uint)(exp * ExperienceMultiplier);
         }
 
-        public IEnumerator ApplyExperience()
+        public void ApplyExperience()
+        {
+            if (IsApplyingExperience) return;
+            OnApplyExperienceStarted();
+            new UnityTask(ApplyExperienceInternal());
+        }
+
+        private IEnumerator ApplyExperienceInternal()
         {
             var delayApplied = 2.5f;
             while (ExperiencePointsWon > 0)
             {
+                Logger.log.Debug($"ExperiencePointsWon: {ExperiencePointsWon}");
                 if (ExperiencePointsWon >= GetExperienceBeforeLevelUp())
                 {
                     new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
@@ -94,10 +111,11 @@ namespace FightSabers.Core
                 }
                 else
                 {
-                    new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + ExperiencePointsWon, delayApplied));
+                    var addingExperience = ExperiencePointsWon;
+                    new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + addingExperience, delayApplied));
                     yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
-                    SaveDataManager.instance.SaveData.currentExp += ExperiencePointsWon;
-                    ExperiencePointsWon = 0;
+                    SaveDataManager.instance.SaveData.currentExp += addingExperience;
+                    ExperiencePointsWon -= addingExperience;
                 }
             }
             OnApplyExperienceFinished();
@@ -115,7 +133,7 @@ namespace FightSabers.Core
         private void TestLevel() //TODO: Remove later, FPFC testing
         {
             AddFightExperience(1155);
-            new UnityTask(ApplyExperience());
+            ApplyExperience();
         }
 
         #endregion

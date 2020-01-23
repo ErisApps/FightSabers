@@ -36,6 +36,12 @@ namespace FightSabers.Models.Quests
             base.Activate();
         }
 
+        public override void Complete()
+        {
+            ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
+            base.Complete();
+        }
+
         public void Prepare(uint currentLevelUpCount = 0, uint toLevelUpCount = 1)
         {
             this.currentLevelUpCount = currentLevelUpCount;
