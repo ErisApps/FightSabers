@@ -81,6 +81,7 @@ namespace FightSabers.Core
 
         private void Start()
         {
+            Random.InitState((int)DateTime.Now.Ticks);
             _audioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
             _mainGameSceneSetupData = BS_Utils.Plugin.LevelData;
             _beatmapData = _mainGameSceneSetupData?.GameplayCoreSceneSetupData?.difficultyBeatmap?.beatmapData;

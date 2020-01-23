@@ -33,6 +33,7 @@ namespace FightSabers.Core
         public event QuestHandler QuestPicked;
         public event QuestArgsHandler QuestCanceled;
         public event QuestArgsHandler QuestCompleted;
+        public event QuestArgsHandler QuestProgressChanged;
 
         private void OnQuestPicked()
         {
@@ -61,6 +62,12 @@ namespace FightSabers.Core
             }
         }
 
+        private void OnQuestProgressChanged(object self)
+        {
+            if (self is Quest quest)
+                QuestProgressChanged?.Invoke(this, quest);
+        }
+
         #endregion
 
         #region Unity methods
@@ -74,12 +81,22 @@ namespace FightSabers.Core
         public void LoadQuests()
         {
             //TODO: Load stored quests from a file
+            Random.InitState((int)DateTime.Now.Ticks);
             for (var i = 0; i < 3; ++i)
             {
                 var quest = new LevelUpQuest();
                 quest.Prepare(0, (uint)Random.Range(1, 4));
                 quest.QuestCompleted += OnQuestCompleted;
+                quest.ProgressChanged += OnQuestProgressChanged;
                 PickableQuests.Add(quest);
+            }
+            foreach (var currentQuest in CurrentQuests)
+            {
+                if (!(currentQuest is Quest quest)) continue;
+                quest.QuestCanceled += OnQuestCanceled;
+                quest.QuestCompleted += OnQuestCompleted;
+                quest.ProgressChanged += OnQuestProgressChanged;
+                quest.Activate(true);
             }
         }
 

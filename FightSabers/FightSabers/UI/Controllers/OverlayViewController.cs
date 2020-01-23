@@ -193,6 +193,11 @@ namespace FightSabers.UI.Controllers
         private void LevelUpAnimation()
         {
             OnBeginAnimated();
+            if (!_currentExpTextComp)
+            {
+                Logger.log.Warn("Current experience text component was null, definitely not expected so skipping the animation");
+                return;
+            }
             AnimateTextPosition();
             new UnityTask(AnimateTextRotation());
             AnimateFontSize();

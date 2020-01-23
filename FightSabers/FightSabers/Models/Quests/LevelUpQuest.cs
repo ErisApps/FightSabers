@@ -1,4 +1,5 @@
-﻿using FightSabers.Core;
+﻿using System;
+using FightSabers.Core;
 using FightSabers.Models.Abstracts;
 
 namespace FightSabers.Models.Quests
@@ -18,7 +19,7 @@ namespace FightSabers.Models.Quests
         {
             currentLevelUpCount += 1;
             Progress = currentLevelUpCount / (float)toLevelUpCount;
-            if (currentLevelUpCount >= toLevelUpCount)
+            if (currentLevelUpCount >= toLevelUpCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
                 Complete();
         }
 
@@ -29,11 +30,14 @@ namespace FightSabers.Models.Quests
             progressHint = $"{currentLevelUpCount} / {toLevelUpCount}";
         }
 
-        public override void Activate()
+        public override void Activate(bool forceInitialize = false)
         {
+            if (!isInitialized && forceInitialize)
+                isInitialized = true;
             if (!isInitialized || isActivated) return;
+            Logger.log.Debug(">>> quest activated!");
             ExperienceSystem.instance.LeveledUp += OnLeveledUp;
-            base.Activate();
+            base.Activate(forceInitialize);
         }
 
         public override void Deactivate()

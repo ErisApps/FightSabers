@@ -256,6 +256,7 @@ namespace FightSabers.UI.Controllers
                 QuestManager.instance.QuestPicked += OnQuestPicked;
                 QuestManager.instance.QuestCanceled += OnQuestCanceled;
                 QuestManager.instance.QuestCompleted += OnQuestCompleted;
+                QuestManager.instance.QuestProgressChanged += OnQuestProgressChanged;
             }
             RefreshWholeUI();
         }
@@ -273,6 +274,13 @@ namespace FightSabers.UI.Controllers
         }
 
         private void OnQuestCompleted(object self, Quest quest)
+        {
+            RefreshWholeUI();
+            if (QuestManager.instance.CanPickQuest)
+                QuestPickerPageController.instance.ChangePickingStatus(true);
+        }
+
+        private void OnQuestProgressChanged(object self, Quest quest)
         {
             RefreshWholeUI();
         }

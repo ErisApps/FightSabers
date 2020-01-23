@@ -55,7 +55,6 @@ namespace FightSabers
             fightSabersMetadata = PluginManager.AllPlugins.Select(x => x.Metadata).First(x => x.Name == "FightSabers");
             BSEvents.menuSceneActive += OnMenuSceneActive;
             BSEvents.gameSceneActive += OnGameSceneActive;
-            Random.InitState((int)DateTime.Now.Ticks);
         }
 
         public void OnApplicationQuit() { }

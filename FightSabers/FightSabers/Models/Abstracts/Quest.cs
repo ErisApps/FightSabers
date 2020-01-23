@@ -64,7 +64,7 @@ namespace FightSabers.Models.Abstracts
             isInitialized = true;
         }
 
-        public virtual void Activate()
+        public virtual void Activate(bool forceInitialize = false)
         {
             if (!isInitialized || isActivated) return;
             isActivated = true;

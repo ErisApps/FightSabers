@@ -40,7 +40,7 @@ namespace FightSabers.Models.Interfaces
         [JsonProperty("progress")]
         float Progress { get; set; }
 
-        void Activate();
+        void Activate(bool forceInitialize = false);
         void Deactivate();
         void Complete();
 
