@@ -7,18 +7,18 @@
       <!-- First -->
       <horizontal pref-height='14' active='~quest-1-container-state'>
         <vertical spacing='4' pref-width='50'>
-          <vertical  pref-width='50'>
+          <vertical pref-width='50'>
             <horizontal child-control-width='false' child-control-height='false'>
               <text text='~title-quest-1' align='Center' font-size='4'
                     size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
             </horizontal>
             <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~desc-quest-1' 
+              <text text='~desc-quest-1'
                     align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
                     size-delta-x='50' size-delta-y='5'/>
             </horizontal>
           </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-1-progress'>
             <img id='progress-bg-bar-quest-1-img' pref-width='50' pref-height='5'/>
             <img id='progress-bar-quest-1-img' pref-width='50' pref-height='5'/>
             <text id='current-progress-quest-1-text' text='~current-progress-quest-1' align='Center' font-size='3'></text>
@@ -34,7 +34,7 @@
       <!-- Second -->
       <horizontal pref-height='14' active='~quest-2-container-state'>
         <vertical spacing='4' pref-width='50'>
-          <vertical  pref-width='50'>
+          <vertical pref-width='50'>
             <horizontal child-control-width='false' child-control-height='false'>
               <text text='~title-quest-2' align='Center' font-size='4'
                     size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
@@ -45,7 +45,7 @@
                     size-delta-x='50' size-delta-y='5'/>
             </horizontal>
           </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-2-progress'>
             <img id='progress-bg-bar-quest-2-img' pref-width='50' pref-height='5'/>
             <img id='progress-bar-quest-2-img' pref-width='50' pref-height='5'/>
             <text id='current-progress-quest-2-text' text='~current-progress-quest-2' align='Center' font-size='3'></text>
@@ -61,7 +61,7 @@
       <!-- Third -->
       <horizontal pref-height='14' active='~quest-3-container-state'>
         <vertical spacing='4' pref-width='50'>
-          <vertical  pref-width='50'>
+          <vertical pref-width='50'>
             <horizontal child-control-width='false' child-control-height='false'>
               <text text='~title-quest-3' align='Center' font-size='4'
                     size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
@@ -72,7 +72,7 @@
                     size-delta-x='50' size-delta-y='5'/>
             </horizontal>
           </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-3-progress'>
             <img id='progress-bg-bar-quest-3-img' pref-width='50' pref-height='5'/>
             <img id='progress-bar-quest-3-img' pref-width='50' pref-height='5'/>
             <text id='current-progress-quest-3-text' text='~current-progress-quest-3' align='Center' font-size='3'></text>

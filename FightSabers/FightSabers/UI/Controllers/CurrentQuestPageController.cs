@@ -68,14 +68,28 @@ namespace FightSabers.UI.Controllers
         private string _currentProgressQuest1Text = "";
 
         [UIValue("current-progress-quest-1")]
-        public string CurrentProgressQuest1Text {
+        public string CurrentProgressQuest1Text
+        {
             get { return _currentProgressQuest1Text; }
-            private set {
+            private set
+            {
                 _currentProgressQuest1Text = value;
                 NotifyPropertyChanged();
             }
         }
+
+        private string _hoverQuest1Progress = "";
+
+        [UIValue("hover-quest-1-progress")]
+        public string HoverQuest1Progress {
+            get { return _hoverQuest1Progress; }
+            private set {
+                _hoverQuest1Progress = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
+
         #region Quest 2
         [UIComponent("progress-bar-quest-2-img")]
         private Image _progressBarImageQuest2;
@@ -129,7 +143,21 @@ namespace FightSabers.UI.Controllers
                 NotifyPropertyChanged();
             }
         }
+
+        private string _hoverQuest2Progress = "";
+
+        [UIValue("hover-quest-2-progress")]
+        public string HoverQuest2Progress
+        {
+            get { return _hoverQuest2Progress; }
+            private set
+            {
+                _hoverQuest2Progress = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
+
         #region Quest 3
         [UIComponent("progress-bar-quest-3-img")]
         private Image _progressBarImageQuest3;
@@ -183,6 +211,19 @@ namespace FightSabers.UI.Controllers
                 NotifyPropertyChanged();
             }
         }
+
+        private string _hoverQuest3Progress = "";
+
+        [UIValue("hover-quest-3-progress")]
+        public string HoverQuest3Progress
+        {
+            get { return _hoverQuest3Progress; }
+            private set
+            {
+                _hoverQuest3Progress = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
         #endregion
 
@@ -224,7 +265,6 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-
         private void RefreshQuestUI([NotNull] Image progressBg, [NotNull] Image progressBar, int questIdx, [NotNull] IQuest quest)
         {
             if (progressBg  == null) throw new ArgumentNullException(nameof(progressBg));
@@ -244,10 +284,9 @@ namespace FightSabers.UI.Controllers
             progressBar.material = null;
             //Title
             this.SetProperty($"TitleQuest{questIdx}Text", quest.title);
-            //Description
             this.SetProperty($"DescQuest{questIdx}Text", quest.description);
-            //Current progress
             this.SetProperty($"CurrentProgressQuest{questIdx}Text", quest.progressHint);
+            this.SetProperty($"HoverQuest{questIdx}Progress", $"Reward: <color=#FFA500>{quest.expReward} EXP</color>");
             //UI state
             this.SetProperty($"Quest{questIdx}ContainerState", true);
         }
