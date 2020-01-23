@@ -36,6 +36,13 @@ namespace FightSabers.Models.Quests
             base.Activate();
         }
 
+        public override void Deactivate()
+        {
+            if (!isInitialized || !isActivated) return;
+            ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
+            base.Deactivate();
+        }
+
         public override void Complete()
         {
             ExperienceSystem.instance.LeveledUp -= OnLeveledUp;

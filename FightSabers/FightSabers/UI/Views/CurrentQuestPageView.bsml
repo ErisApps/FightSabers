@@ -27,8 +27,8 @@
         <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
           <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
                   interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Give up' font-size='3' word-wrapping='false' glow-color='red'
-                  interactable='false' hover-hint='Not yet implemented!'/>
+          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+                  on-click='quest-1-cancel-act'/>
         </vertical>
       </horizontal>
       <!-- Second -->
@@ -54,8 +54,8 @@
         <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
           <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
                   interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Give up' font-size='3' word-wrapping='false' glow-color='red'
-                  interactable='false' hover-hint='Not yet implemented!'/>
+          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+                  on-click='quest-2-cancel-act'/>
         </vertical>
       </horizontal>
       <!-- Third -->
@@ -81,8 +81,8 @@
         <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
           <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
                   interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Give up' font-size='3' word-wrapping='false' glow-color='red'
-                  interactable='false' hover-hint='Not yet implemented!'/>
+          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+                  on-click='quest-3-cancel-act'/>
         </vertical>
       </horizontal>
     </vertical>

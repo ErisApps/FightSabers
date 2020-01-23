@@ -41,6 +41,7 @@ namespace FightSabers.Models.Interfaces
         float Progress { get; set; }
 
         void Activate();
+        void Deactivate();
         void Complete();
 
         #endregion

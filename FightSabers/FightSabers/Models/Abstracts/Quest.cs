@@ -31,12 +31,18 @@ namespace FightSabers.Models.Abstracts
 
         public delegate void ProgressHandler(object self);
         public event ProgressHandler ProgressChanged;
+        public event ProgressHandler QuestCanceled;
         public event ProgressHandler QuestCompleted;
 
         protected void OnProgressChanged()
         {
             ProgressChanged?.Invoke(this);
             Refresh();
+        }
+
+        protected void OnQuestCanceled()
+        {
+            QuestCanceled?.Invoke(this);
         }
 
         protected void OnQuestCompleted()
@@ -62,6 +68,13 @@ namespace FightSabers.Models.Abstracts
         {
             if (!isInitialized || isActivated) return;
             isActivated = true;
+        }
+
+        public virtual void Deactivate()
+        {
+            if (!isInitialized || !isActivated) return;
+            isActivated = false;
+            OnQuestCanceled();
         }
 
         public virtual void Complete()

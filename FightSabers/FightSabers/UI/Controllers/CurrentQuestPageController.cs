@@ -227,6 +227,26 @@ namespace FightSabers.UI.Controllers
         #endregion
         #endregion
 
+        #region Events
+        [UIAction("quest-1-cancel-act")]
+        private void Quest1Canceled()
+        {
+            QuestManager.instance.CancelQuest(0);
+        }
+
+        [UIAction("quest-2-cancel-act")]
+        private void Quest2Canceled()
+        {
+            QuestManager.instance.CancelQuest(1);
+        }
+
+        [UIAction("quest-3-cancel-act")]
+        private void Quest3Canceled()
+        {
+            QuestManager.instance.CancelQuest(2);
+        }
+        #endregion
+
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
             base.DidActivate(firstActivation, type);
@@ -234,6 +254,7 @@ namespace FightSabers.UI.Controllers
             if (firstActivation)
             {
                 QuestManager.instance.QuestPicked += OnQuestPicked;
+                QuestManager.instance.QuestCanceled += OnQuestCanceled;
                 QuestManager.instance.QuestCompleted += OnQuestCompleted;
             }
             RefreshWholeUI();
@@ -242,6 +263,13 @@ namespace FightSabers.UI.Controllers
         private void OnQuestPicked(object self)
         {
             RefreshWholeUI();
+        }
+
+        private void OnQuestCanceled(object self, Quest quest)
+        {
+            RefreshWholeUI();
+            if (QuestManager.instance.CanPickQuest)
+                QuestPickerPageController.instance.ChangePickingStatus(true);
         }
 
         private void OnQuestCompleted(object self, Quest quest)

@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
 using FightSabers.Models.Quests;
 using FightSabers.Settings;
 using FightSabers.Utilities;
+using JetBrains.Annotations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace FightSabers.Core
 {
@@ -28,6 +31,7 @@ namespace FightSabers.Core
         public delegate void QuestHandler(object self);
         public delegate void QuestArgsHandler(object self, Quest quest);
         public event QuestHandler QuestPicked;
+        public event QuestArgsHandler QuestCanceled;
         public event QuestArgsHandler QuestCompleted;
 
         private void OnQuestPicked()
@@ -35,9 +39,26 @@ namespace FightSabers.Core
             QuestPicked?.Invoke(this);
         }
 
-        private void OnQuestCompleted(Quest quest)
+        private void OnQuestCanceled(object self)
         {
-            QuestCompleted?.Invoke(this, quest);
+            if (self is Quest quest)
+            {
+                quest.QuestCanceled -= OnQuestCanceled;
+                SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
+                SaveDataManager.instance.ApplyToFile();
+                QuestCanceled?.Invoke(this, quest);
+            }
+        }
+
+        private void OnQuestCompleted(object self)
+        {
+            if (self is Quest quest)
+            {
+                quest.QuestCompleted -= OnQuestCompleted;
+                SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
+                SaveDataManager.instance.ApplyToFile();
+                QuestCompleted?.Invoke(this, quest);
+            }
         }
 
         #endregion
@@ -62,14 +83,22 @@ namespace FightSabers.Core
             }
         }
 
-        private void OnQuestCompleted(object self)
+        public void CancelQuest(int idx)
         {
-            if (self is Quest quest)
+            if (idx < 0 || CurrentQuests == null || idx >= CurrentQuests.Count || !(CurrentQuests[idx] is IQuest quest)) return;
+            CancelQuest(quest);
+        }
+
+        public void CancelQuest([NotNull] IQuest quest)
+        {
+            if (quest == null) throw new ArgumentNullException(nameof(quest));
+            var idx = CurrentQuests.FindIndex(q => q == quest);
+            if (idx >= 0)
             {
-                quest.QuestCompleted -= OnQuestCompleted;
+                quest.Deactivate();
                 SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
                 SaveDataManager.instance.ApplyToFile();
-                OnQuestCompleted(quest);
+                OnQuestCanceled(quest);
             }
         }
 
@@ -79,12 +108,11 @@ namespace FightSabers.Core
             PickQuest(quest);
         }
 
-        public void PickQuest(IQuest quest)
+        public void PickQuest([NotNull] IQuest quest)
         {
-            if (quest == null) return;
+            if (quest == null) throw new ArgumentNullException(nameof(quest));
             //PickableQuests.Remove(quest);
             var idx = PickableQuests.FindIndex(q => q == quest);
-            Logger.log.Debug(idx.ToString());
             if (idx >= 0)
             {
                 PickableQuests[idx] = null;

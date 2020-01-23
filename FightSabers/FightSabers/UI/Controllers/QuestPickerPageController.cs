@@ -14,6 +14,8 @@ namespace FightSabers.UI.Controllers
         [UIParams] private BSMLParserParams parserParams;
 
         #region Properties
+        public static QuestPickerPageController instance;
+
         [UIComponent("picker-quest-1-btn")] private Button _pickerQuest1Btn;
         [UIComponent("picker-quest-2-btn")] private Button _pickerQuest2Btn;
         [UIComponent("picker-quest-3-btn")] private Button _pickerQuest3Btn;
@@ -54,7 +56,7 @@ namespace FightSabers.UI.Controllers
         #endregion
 
         #region Titles
-        private string _titleQuest1 = "None";
+        private string _titleQuest1 = "";
 
         [UIValue("title-quest-1")]
         public string titleQuest1 {
@@ -65,7 +67,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _titleQuest2 = "None";
+        private string _titleQuest2 = "";
 
         [UIValue("title-quest-2")]
         public string titleQuest2 {
@@ -76,7 +78,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _titleQuest3 = "None";
+        private string _titleQuest3 = "";
 
         [UIValue("title-quest-3")]
         public string titleQuest3 {
@@ -89,7 +91,7 @@ namespace FightSabers.UI.Controllers
         #endregion
 
         #region Descriptions
-        private string _descQuest1 = "None";
+        private string _descQuest1 = "";
 
         [UIValue("desc-quest-1")]
         public string descQuest1 {
@@ -100,7 +102,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _descQuest2 = "None";
+        private string _descQuest2 = "";
 
         [UIValue("desc-quest-2")]
         public string descQuest2 {
@@ -111,7 +113,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _descQuest3 = "None";
+        private string _descQuest3 = "";
 
         [UIValue("desc-quest-3")]
         public string descQuest3 {
@@ -124,7 +126,7 @@ namespace FightSabers.UI.Controllers
         #endregion
 
         #region Exp rewards
-        private string _expRewardQuest1 = "None";
+        private string _expRewardQuest1 = "";
 
         [UIValue("exp-reward-quest-1")]
         public string expRewardQuest1 {
@@ -135,7 +137,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _expRewardQuest2 = "None";
+        private string _expRewardQuest2 = "";
 
         [UIValue("exp-reward-quest-2")]
         public string expRewardQuest2 {
@@ -146,7 +148,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _expRewardQuest3 = "None";
+        private string _expRewardQuest3 = "";
 
         [UIValue("exp-reward-quest-3")]
         public string expRewardQuest3 {
@@ -164,6 +166,9 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(0);
             pickerQuest1Active = false;
+            titleQuest1 = "Quest picked!";
+            descQuest1 = "";
+            expRewardQuest1 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
         }
@@ -173,6 +178,9 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(1);
             pickerQuest2Active = false;
+            titleQuest2 = "Quest picked!";
+            descQuest2 = "";
+            expRewardQuest2 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
         }
@@ -182,13 +190,18 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(2);
             pickerQuest3Active = false;
+            titleQuest3 = "Quest picked!";
+            descQuest3 = "";
+            expRewardQuest3 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
         }
 
-        private void ChangePickingStatus(bool status)
+        public void ChangePickingStatus(bool status)
         {
-            pickerQuest1Active = pickerQuest2Active = pickerQuest3Active = status;
+            pickerQuest1Active = QuestManager.instance.PickableQuests.Count > 0 && QuestManager.instance.PickableQuests[0] != null && status;
+            pickerQuest2Active = QuestManager.instance.PickableQuests.Count > 1 && QuestManager.instance.PickableQuests[1] != null && status;
+            pickerQuest3Active = QuestManager.instance.PickableQuests.Count > 2 && QuestManager.instance.PickableQuests[2] != null && status;
         }
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
@@ -197,6 +210,8 @@ namespace FightSabers.UI.Controllers
 
             if (firstActivation)
             {
+                instance = this;
+
                 var iconImage = _pickerQuest1Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
                 if (_pickerQuest1Btn != null && iconImage)
                     iconImage.enabled = false;
@@ -209,26 +224,26 @@ namespace FightSabers.UI.Controllers
                 for (var i = 0; i < QuestManager.instance.PickableQuests.Count; i++)
                 {
                     var pickableQuest = QuestManager.instance.PickableQuests[i];
-                    if (pickableQuest == null) continue;
+                    //if (pickableQuest == null) continue;
                     switch (i)
                     {
                         case 0:
-                            titleQuest1 = pickableQuest.title;
-                            descQuest1 = pickableQuest.description;
-                            expRewardQuest1 = $"{pickableQuest.expReward} EXP";
-                            pickerQuest1Active = true;
+                            titleQuest1 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                            descQuest1 = pickableQuest      != null ? pickableQuest.description : "";
+                            expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                            pickerQuest1Active = pickableQuest != null;
                             break;
                         case 1:
-                            titleQuest2 = pickableQuest.title;
-                            descQuest2 = pickableQuest.description;
-                            expRewardQuest2 = $"{pickableQuest.expReward} EXP";
-                            pickerQuest2Active = true;
+                            titleQuest2 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                            descQuest2 = pickableQuest      != null ? pickableQuest.description : "";
+                            expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                            pickerQuest2Active = pickableQuest != null;
                             break;
                         case 2:
-                            titleQuest3 = pickableQuest.title;
-                            descQuest3 = pickableQuest.description;
-                            expRewardQuest3 = $"{pickableQuest.expReward} EXP";
-                            pickerQuest3Active = true;
+                            titleQuest3 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                            descQuest3 = pickableQuest      != null ? pickableQuest.description : "";
+                            expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                            pickerQuest3Active = pickableQuest != null;
                             break;
                     }
                 }
