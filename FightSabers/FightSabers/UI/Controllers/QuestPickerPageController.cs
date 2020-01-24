@@ -56,7 +56,7 @@ namespace FightSabers.UI.Controllers
         #endregion
 
         #region Titles
-        private string _titleQuest1 = "";
+        private string _titleQuest1 = "Quest not available";
 
         [UIValue("title-quest-1")]
         public string titleQuest1 {
@@ -67,7 +67,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _titleQuest2 = "";
+        private string _titleQuest2 = "Quest not available";
 
         [UIValue("title-quest-2")]
         public string titleQuest2 {
@@ -78,7 +78,7 @@ namespace FightSabers.UI.Controllers
             }
         }
 
-        private string _titleQuest3 = "";
+        private string _titleQuest3 = "Quest not available";
 
         [UIValue("title-quest-3")]
         public string titleQuest3 {

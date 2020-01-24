@@ -18,7 +18,9 @@ namespace FightSabers.Core
             get { return SaveDataManager.instance.SaveData.currentQuests; }
         }
 
-        public List<IQuest> PickableQuests { get; private set; }
+        public List<IQuest> PickableQuests {
+            get { return SaveDataManager.instance.SaveData.pickableQuests; }
+        }
 
         public bool CanPickQuest {
             get { return SaveDataManager.instance.SaveData.currentQuests.Count < 3; }
@@ -28,10 +30,9 @@ namespace FightSabers.Core
         #endregion
 
         #region Events
-
-        public delegate void QuestHandler(object self);
+        public delegate void QuestHandler(object     self);
         public delegate void QuestArgsHandler(object self, Quest quest);
-        public event QuestHandler QuestPicked;
+        public event QuestHandler     QuestPicked;
         public event QuestArgsHandler QuestCanceled;
         public event QuestArgsHandler QuestCompleted;
         public event QuestArgsHandler QuestProgressChanged;
@@ -68,13 +69,11 @@ namespace FightSabers.Core
             if (self is Quest quest)
                 QuestProgressChanged?.Invoke(this, quest);
         }
-
         #endregion
 
         #region Unity methods
         private void Awake()
         {
-            PickableQuests = new List<IQuest>();
             PossibleQuestTypes = new[] { typeof(LevelUpQuest), typeof(MonsterDamageQuest) };
         }
         #endregion
@@ -82,26 +81,7 @@ namespace FightSabers.Core
         #region Methods
         public void LoadQuests()
         {
-            //TODO: Load stored quests from a file
             Random.InitState((int)DateTime.Now.Ticks);
-            for (var i = 0; i < 3; ++i)
-            {
-                var type = PossibleQuestTypes[Random.Range(0, PossibleQuestTypes.Length)];
-                if (Activator.CreateInstance(type) is Quest quest)
-                {
-                    switch (quest) {
-                        case LevelUpQuest levelUpQuest:
-                            levelUpQuest.Prepare(0, (uint)Random.Range(1, 4));
-                            break;
-                        case MonsterDamageQuest monsterDamageQuest:
-                            monsterDamageQuest.Prepare(0, (uint)(Random.Range(250, 500) * 100));
-                            break;
-                    }
-                    quest.QuestCompleted += OnQuestCompleted;
-                    quest.ProgressChanged += OnQuestProgressChanged;
-                    PickableQuests.Add(quest);
-                }
-            }
             foreach (var currentQuest in CurrentQuests)
             {
                 if (!(currentQuest is Quest quest)) continue;
@@ -109,6 +89,35 @@ namespace FightSabers.Core
                 quest.QuestCompleted += OnQuestCompleted;
                 quest.ProgressChanged += OnQuestProgressChanged;
                 quest.Activate(true);
+            }
+            foreach (var pickableQuest in PickableQuests)
+            {
+                if (!(pickableQuest is Quest quest)) continue;
+                quest.ForceInitialize();
+                quest.QuestCompleted += OnQuestCompleted;
+                quest.ProgressChanged += OnQuestProgressChanged;
+            }
+        }
+
+        public void AddNewPickableQuest()
+        {
+            if (PickableQuests.Count >= 3) return;
+            var type = PossibleQuestTypes[Random.Range(0, PossibleQuestTypes.Length)];
+            if (Activator.CreateInstance(type) is Quest quest)
+            {
+                switch (quest)
+                {
+                    case LevelUpQuest levelUpQuest:
+                        levelUpQuest.Prepare(0, (uint)Random.Range(1, 4));
+                        break;
+                    case MonsterDamageQuest monsterDamageQuest:
+                        monsterDamageQuest.Prepare(0, (uint)(Random.Range(250, 500) * 100));
+                        break;
+                }
+                quest.QuestCompleted += OnQuestCompleted;
+                quest.ProgressChanged += OnQuestProgressChanged;
+                PickableQuests.Add(quest);
+                SaveDataManager.instance.ApplyToFile();
             }
         }
 
@@ -125,7 +134,6 @@ namespace FightSabers.Core
         }
 
         #region Quest managing
-
         public void CancelQuest(int idx)
         {
             if (idx < 0 || CurrentQuests == null || idx >= CurrentQuests.Count || !(CurrentQuests[idx] is IQuest quest)) return;
@@ -136,13 +144,11 @@ namespace FightSabers.Core
         {
             if (quest == null) throw new ArgumentNullException(nameof(quest));
             var idx = CurrentQuests.FindIndex(q => q == quest);
-            if (idx >= 0)
-            {
-                quest.Deactivate();
-                SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
-                SaveDataManager.instance.ApplyToFile();
-                OnQuestCanceled(quest);
-            }
+            if (idx < 0) return;
+            quest.Deactivate();
+            SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
+            SaveDataManager.instance.ApplyToFile();
+            OnQuestCanceled(quest);
         }
 
         public void PickQuest(int idx)
@@ -154,17 +160,14 @@ namespace FightSabers.Core
         public void PickQuest([NotNull] IQuest quest)
         {
             if (quest == null) throw new ArgumentNullException(nameof(quest));
-            //PickableQuests.Remove(quest);
             var idx = PickableQuests.FindIndex(q => q == quest);
-            if (idx >= 0)
-            {
-                PickableQuests[idx] = null;
-                quest.Activate();
-                SaveDataManager.instance.SaveData.currentQuests.Add(quest);
-                SaveDataManager.instance.ApplyToFile();
-                OnQuestPicked();
-                //new UnityTask(TestComplete(quest, 2f));
-            }
+            if (idx < 0) return;
+            PickableQuests[idx] = null;
+            quest.Activate();
+            SaveDataManager.instance.SaveData.currentQuests.Add(quest);
+            SaveDataManager.instance.ApplyToFile();
+            OnQuestPicked();
+            //new UnityTask(TestComplete(quest, 2f));
         }
 
         private IEnumerator TestComplete(IQuest quest, float delay)
@@ -172,7 +175,6 @@ namespace FightSabers.Core
             yield return new WaitForSeconds(delay);
             quest.Complete();
         }
-
         #endregion
         #endregion
     }

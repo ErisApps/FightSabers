@@ -60,7 +60,7 @@ namespace FightSabers.Models.Quests
         {
             this.currentDamageCount = currentDamageCount;
             this.toDamageCount = toDamageCount;
-            base.Prepare("Demon slayer", $"Make a total of <color=#ffa500ff>{toDamageCount}</color> damage to a monster!",
+            base.Prepare("Frenzy slicer", $"Make a total of <color=#ffa500ff>{toDamageCount}</color> damage to a monster!",
                          $"{currentDamageCount} / {toDamageCount}",
                          GetType().ToString(), toDamageCount / 1000,
                          currentDamageCount / (float)toDamageCount);

@@ -386,6 +386,8 @@ namespace FightSabers.Core
             {
                 case MonsterStatus.Killed:
                     SaveDataManager.instance.SaveData.killMonsterCount += 1;
+                    if (SaveDataManager.instance.SaveData.killMonsterCount % 4 == 0)
+                        QuestManager.instance.AddNewPickableQuest();
                     ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty);
                     break;
                 case MonsterStatus.Flown:
