@@ -74,7 +74,7 @@ namespace FightSabers.Core
         #region Unity methods
         private void Awake()
         {
-            PossibleQuestTypes = new[] { typeof(LevelUpQuest), typeof(MonsterDamageQuest) };
+            PossibleQuestTypes = new[] { typeof(LevelUpQuest), typeof(MonsterDamageQuest), typeof(MonsterKillQuest) };
         }
         #endregion
 
@@ -90,6 +90,9 @@ namespace FightSabers.Core
                 quest.ProgressChanged += OnQuestProgressChanged;
                 quest.Activate(true);
             }
+            AddNewPickableQuest(typeof(LevelUpQuest));
+            AddNewPickableQuest(typeof(MonsterDamageQuest));
+            AddNewPickableQuest(typeof(MonsterKillQuest));
             foreach (var pickableQuest in PickableQuests)
             {
                 if (!(pickableQuest is Quest quest)) continue;
@@ -103,6 +106,12 @@ namespace FightSabers.Core
         {
             if (PickableQuests.Count >= 3) return;
             var type = PossibleQuestTypes[Random.Range(0, PossibleQuestTypes.Length)];
+            AddNewPickableQuest(type);
+        }
+
+        public void AddNewPickableQuest(Type type)
+        {
+            if (PickableQuests.Count >= 3) return;
             if (Activator.CreateInstance(type) is Quest quest)
             {
                 switch (quest)
@@ -112,6 +121,9 @@ namespace FightSabers.Core
                         break;
                     case MonsterDamageQuest monsterDamageQuest:
                         monsterDamageQuest.Prepare(0, (uint)(Random.Range(250, 500) * 100));
+                        break;
+                    case MonsterKillQuest monsterKillQuest:
+                        monsterKillQuest.Prepare(0, (uint)Random.Range(5, 10));
                         break;
                 }
                 quest.QuestCompleted += OnQuestCompleted;

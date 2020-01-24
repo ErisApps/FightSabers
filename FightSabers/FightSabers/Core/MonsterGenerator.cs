@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BS_Utils.Gameplay;
+using FightSabers.Models;
 using FightSabers.Models.Modifiers;
 using FightSabers.Patches;
 using FightSabers.Utilities;
@@ -47,21 +48,20 @@ namespace FightSabers.Core
 
         #region Events
 
-        public delegate void MonsterStateHandler(object self);
+        public delegate void MonsterStateHandler(object self, MonsterStatus status);
         public event MonsterStateHandler MonsterAdded;
         public event MonsterStateHandler MonsterRemoved;
         public event MonsterBehaviour.MonsterHitHandler MonsterHurt;
 
         private void OnMonsterAdded()
         {
-            MonsterAdded?.Invoke(this);
+            MonsterAdded?.Invoke(this, MonsterStatus.Alive);
         }
 
-        private void OnMonsterRemoved()
+        private void OnMonsterRemoved(MonsterStatus status)
         {
-            MonsterRemoved?.Invoke(this);
+            MonsterRemoved?.Invoke(this, status);
         }
-
 
         private void OnMonsterHurt(object self, int damage)
         {
@@ -166,7 +166,7 @@ namespace FightSabers.Core
         {
             if (!CurrentMonster) return;
             Destroy(CurrentMonster.gameObject, 4);
-            OnMonsterRemoved();
+            OnMonsterRemoved(CurrentMonster.CurrentStatus);
             CurrentMonster = null;
         }
 

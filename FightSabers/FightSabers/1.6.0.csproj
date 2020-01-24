@@ -116,6 +116,7 @@
     <Compile Include="Models\Modifiers\NoteShrinker.cs" />
     <Compile Include="Models\Modifiers\TimeWarper.cs" />
     <Compile Include="Models\Quests\MonsterDamageQuest.cs" />
+    <Compile Include="Models\Quests\MonsterKillQuest.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
     <Compile Include="UI\Controllers\ModifierStatsPageController.cs" />

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using FightSabers.Core;
+using FightSabers.Models;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Modifiers;
 
@@ -30,7 +31,7 @@ namespace FightSabers.Patches
                 }
                 if (MonsterGenerator.instance)
                 {
-                    void OnMonsterAdded(object self)
+                    void OnMonsterAdded(object self, MonsterStatus status)
                     {
                         //Logger.log.Debug(">>>>>> Enabling modifiers to " + MonsterGenerator.instance.CurrentMonster.gameObject.name);
                         foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.Modifiers)
@@ -40,7 +41,7 @@ namespace FightSabers.Patches
                         }
                     }
 
-                    void OnMonsterRemoved(object self)
+                    void OnMonsterRemoved(object self, MonsterStatus status)
                     {
                         //Logger.log.Debug(">>>>>> Disabling modifiers to " + MonsterGenerator.instance.CurrentMonster.gameObject.name);
                         foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.Modifiers)
