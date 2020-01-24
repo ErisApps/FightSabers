@@ -27,8 +27,8 @@ namespace FightSabers
     public class Plugin : IBeatSaberPlugin
     {
         #region Properties
-        internal static Ref<PluginConfig> config;
-        internal static IConfigProvider   configProvider;
+        internal static Ref<PluginConfig>           config;
+        internal static IConfigProvider             configProvider;
         internal static PluginLoader.PluginMetadata fightSabersMetadata;
 
         public static SceneState CurrentSceneState { get; private set; } = SceneState.Menu;
@@ -63,11 +63,7 @@ namespace FightSabers
 
         public void OnUpdate() { }
 
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
-        {
-            if (Plugin.config.Value.Enabled && nextScene.name == "GameCore")
-                MonsterGenerator.Create();
-        }
+        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
 
@@ -83,7 +79,7 @@ namespace FightSabers
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
-            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true, 
+            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true,
                                                                      Float3.ToVector3(config.Value.FSPanelPosition),
                                                                      Quaternion.Euler(Float3.ToVector3(config.Value.FSPanelRotation)));
             floatingScreen.screenMover.OnRelease += (pos, rot) => {
@@ -98,13 +94,22 @@ namespace FightSabers
         private static void OnMenuSceneActive()
         {
             if (CurrentSceneState == SceneState.Menu) return;
-            ExperienceSystem.instance.ApplyExperience();
+            if (config.Value.Enabled)
+            {
+                ExperienceSystem.instance.ApplyExperience();
+                QuestManager.instance.UnlinkGameEventsForActivatedQuests();
+            }
             CurrentSceneState = SceneState.Menu;
         }
 
         private static void OnGameSceneActive()
         {
             if (CurrentSceneState == SceneState.Game) return;
+            if (config.Value.Enabled)
+            {
+                MonsterGenerator.Create();
+                QuestManager.instance.LinkGameEventsForActivatedQuests();
+            }
             CurrentSceneState = SceneState.Game;
         }
         #endregion

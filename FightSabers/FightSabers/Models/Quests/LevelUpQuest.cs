@@ -35,9 +35,8 @@ namespace FightSabers.Models.Quests
             if (!isInitialized && forceInitialize)
                 isInitialized = true;
             if (!isInitialized || isActivated) return;
-            Logger.log.Debug(">>> quest activated!");
+            Logger.log.Debug(">>> Specific quest activated!");
             ExperienceSystem.instance.LeveledUp += OnLeveledUp;
-            base.Activate(forceInitialize);
         }
 
         public override void Deactivate()
@@ -51,13 +50,14 @@ namespace FightSabers.Models.Quests
         {
             ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
             base.Complete();
+            ExperienceSystem.instance.ApplyExperience();
         }
 
         public void Prepare(uint currentLevelUpCount = 0, uint toLevelUpCount = 1)
         {
             this.currentLevelUpCount = currentLevelUpCount;
             this.toLevelUpCount = toLevelUpCount;
-            base.Prepare($"Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!", 
+            base.Prepare("Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!", 
                          $"{currentLevelUpCount} / {toLevelUpCount}",
                          GetType().ToString(), 15 * toLevelUpCount,
                          currentLevelUpCount / (float)toLevelUpCount);

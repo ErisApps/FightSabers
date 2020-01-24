@@ -5,7 +5,6 @@ using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
 using FightSabers.Models.Quests;
 using FightSabers.Settings;
-using FightSabers.Utilities;
 using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -24,6 +23,8 @@ namespace FightSabers.Core
         public bool CanPickQuest {
             get { return SaveDataManager.instance.SaveData.currentQuests.Count < 3; }
         }
+
+        public Type[] PossibleQuestTypes { get; private set; }
         #endregion
 
         #region Events
@@ -74,6 +75,7 @@ namespace FightSabers.Core
         private void Awake()
         {
             PickableQuests = new List<IQuest>();
+            PossibleQuestTypes = new[] { typeof(LevelUpQuest), typeof(MonsterDamageQuest) };
         }
         #endregion
 
@@ -84,11 +86,21 @@ namespace FightSabers.Core
             Random.InitState((int)DateTime.Now.Ticks);
             for (var i = 0; i < 3; ++i)
             {
-                var quest = new LevelUpQuest();
-                quest.Prepare(0, (uint)Random.Range(1, 4));
-                quest.QuestCompleted += OnQuestCompleted;
-                quest.ProgressChanged += OnQuestProgressChanged;
-                PickableQuests.Add(quest);
+                var type = PossibleQuestTypes[Random.Range(0, PossibleQuestTypes.Length)];
+                if (Activator.CreateInstance(type) is Quest quest)
+                {
+                    switch (quest) {
+                        case LevelUpQuest levelUpQuest:
+                            levelUpQuest.Prepare(0, (uint)Random.Range(1, 4));
+                            break;
+                        case MonsterDamageQuest monsterDamageQuest:
+                            monsterDamageQuest.Prepare(0, (uint)(Random.Range(250, 500) * 100));
+                            break;
+                    }
+                    quest.QuestCompleted += OnQuestCompleted;
+                    quest.ProgressChanged += OnQuestProgressChanged;
+                    PickableQuests.Add(quest);
+                }
             }
             foreach (var currentQuest in CurrentQuests)
             {
@@ -99,6 +111,20 @@ namespace FightSabers.Core
                 quest.Activate(true);
             }
         }
+
+        public void LinkGameEventsForActivatedQuests()
+        {
+            foreach (var currentQuest in CurrentQuests)
+                currentQuest.LinkGameEvents();
+        }
+
+        public void UnlinkGameEventsForActivatedQuests()
+        {
+            foreach (var currentQuest in CurrentQuests)
+                currentQuest.UnlinkGameEvents();
+        }
+
+        #region Quest managing
 
         public void CancelQuest(int idx)
         {
@@ -146,6 +172,8 @@ namespace FightSabers.Core
             yield return new WaitForSeconds(delay);
             quest.Complete();
         }
+
+        #endregion
         #endregion
     }
 }

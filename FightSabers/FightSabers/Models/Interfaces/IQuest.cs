@@ -36,6 +36,16 @@ namespace FightSabers.Models.Interfaces
         /// </summary>
         [JsonIgnore]
         bool isActivated { get; set; }
+        /// <summary>
+        /// Is the quest completed?
+        /// </summary>
+        [JsonIgnore]
+        bool isCompleted { get; set; }
+        /// <summary>
+        /// Does the quest has game events activated?
+        /// </summary>
+        [JsonIgnore]
+        bool hasGameEventsActivated { get; set; }
 
         [JsonProperty("progress")]
         float Progress { get; set; }
@@ -43,6 +53,8 @@ namespace FightSabers.Models.Interfaces
         void Activate(bool forceInitialize = false);
         void Deactivate();
         void Complete();
+        void LinkGameEvents();
+        void UnlinkGameEvents();
 
         #endregion
     }

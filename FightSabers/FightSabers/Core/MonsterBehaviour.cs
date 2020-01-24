@@ -11,6 +11,7 @@ using FightSabers.Utilities;
 using HMUI;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace FightSabers.Core
 {
@@ -128,6 +129,15 @@ namespace FightSabers.Core
         }
 
         #region Events
+
+        public delegate void MonsterHitHandler(object self, int damage);
+        public event MonsterHitHandler MonsterHurt;
+
+        private void OnMonsterHurt(int damage)
+        {
+            MonsterHurt?.Invoke(this, damage);
+        }
+
         private void OnNoteWasCut(NoteData noteData, NoteCutInfo noteCutInfo, int multiplier)
         {
             if (noteData.noteType == NoteType.Bomb)
@@ -339,6 +349,7 @@ namespace FightSabers.Core
         public void Hurt(int rawScore)
         {
             CurrentHealth -= rawScore;
+            OnMonsterHurt(rawScore);
             if (IsAlive()) return;
             CurrentStatus = MonsterStatus.Killed;
             DisplayMonsterInformationEnd("You killed that!");

@@ -14,6 +14,8 @@ namespace FightSabers.Models.Abstracts
         public uint expReward { get; set; }
         public bool isInitialized { get; set; }
         public bool isActivated { get; set; }
+        public bool isCompleted { get; set; }
+        public bool hasGameEventsActivated { get; set; }
 
         private float _progress { get; set; }
         [JsonProperty("progress")]
@@ -47,6 +49,7 @@ namespace FightSabers.Models.Abstracts
 
         protected void OnQuestCompleted()
         {
+            isCompleted = true;
             QuestCompleted?.Invoke(this);
         }
 
@@ -66,7 +69,10 @@ namespace FightSabers.Models.Abstracts
 
         public virtual void Activate(bool forceInitialize = false)
         {
+            if (!isInitialized && forceInitialize)
+                isInitialized = true;
             if (!isInitialized || isActivated) return;
+            Logger.log.Debug(">>> Base quest activated!");
             isActivated = true;
         }
 
@@ -80,8 +86,17 @@ namespace FightSabers.Models.Abstracts
         public virtual void Complete()
         {
             ExperienceSystem.instance.AddFightExperience(expReward);
-            ExperienceSystem.instance.ApplyExperience();
             OnQuestCompleted();
+        }
+
+        public virtual void LinkGameEvents()
+        {
+            hasGameEventsActivated = true;
+        }
+
+        public virtual void UnlinkGameEvents()
+        {
+            hasGameEventsActivated = false;
         }
 
         protected abstract void Refresh();

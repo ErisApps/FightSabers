@@ -50,6 +50,7 @@ namespace FightSabers.Core
         public delegate void MonsterStateHandler(object self);
         public event MonsterStateHandler MonsterAdded;
         public event MonsterStateHandler MonsterRemoved;
+        public event MonsterBehaviour.MonsterHitHandler MonsterHurt;
 
         private void OnMonsterAdded()
         {
@@ -59,6 +60,12 @@ namespace FightSabers.Core
         private void OnMonsterRemoved()
         {
             MonsterRemoved?.Invoke(this);
+        }
+
+
+        private void OnMonsterHurt(object self, int damage)
+        {
+            MonsterHurt?.Invoke(self, damage);
         }
 
         #endregion
@@ -173,6 +180,7 @@ namespace FightSabers.Core
                     if (!(_audioTimeSyncController.songTime > monsterSpawnInfo.spawnTime)) continue;
                     createdMonsterInfo = monsterSpawnInfo;
                     CurrentMonster = MonsterBehaviour.Create();
+                    CurrentMonster.MonsterHurt += OnMonsterHurt;
                     new UnityTask(CurrentMonster.ConfigureMonster(createdMonsterInfo)).Finished += (manual, self) => {
                         OnMonsterAdded();
                     };
