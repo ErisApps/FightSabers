@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
@@ -8,19 +7,16 @@ using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Settings;
 using FightSabers.UI.Controllers;
-using FightSabers.Utilities;
 using Harmony;
 using IPA;
 using IPA.Config;
 using IPA.Loader;
 using IPA.Utilities;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Config = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
-using Random = UnityEngine.Random;
 
 namespace FightSabers
 {

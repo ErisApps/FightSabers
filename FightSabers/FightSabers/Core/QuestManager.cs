@@ -90,9 +90,6 @@ namespace FightSabers.Core
                 quest.ProgressChanged += OnQuestProgressChanged;
                 quest.Activate(true);
             }
-            AddNewPickableQuest(typeof(LevelUpQuest));
-            AddNewPickableQuest(typeof(MonsterDamageQuest));
-            AddNewPickableQuest(typeof(MonsterKillQuest));
             foreach (var pickableQuest in PickableQuests)
             {
                 if (!(pickableQuest is Quest quest)) continue;
