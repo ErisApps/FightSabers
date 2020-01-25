@@ -11,16 +11,17 @@ namespace FightSabers.Core
     public class ExperienceSystem : PersistentSingleton<ExperienceSystem>
     {
         #region Properties
-
-        public uint  ExperiencePointsWon          { get; private set; }
-        public float ExperienceMultiplier         { get; private set; } = 1f;
+        public uint  ExperiencePointsWon               { get; private set; }
+        public float ExperienceMultiplier              { get; private set; } = 1f;
         public uint  TotalNeededExperienceForNextLevel { get; private set; }
-        public bool IsApplyingExperience { get; private set; }
+        public bool  IsApplyingExperience              { get; private set; }
 
+        public bool HasOverflowedExperience {
+            get { return SaveDataManager.instance.SaveData.currentExp >= TotalNeededExperienceForNextLevel; }
+        }
         #endregion
 
         #region Events
-
         public delegate void ExperienceHandler(object self);
         public event ExperienceHandler LeveledUp;
         public event ExperienceHandler ApplyExperienceStarted;
@@ -42,11 +43,9 @@ namespace FightSabers.Core
             IsApplyingExperience = false;
             ApplyExperienceFinished?.Invoke(this);
         }
-
         #endregion
 
         #region Methods
-
         public void Setup()
         {
             RefreshTotalNeededExperience();
@@ -87,16 +86,28 @@ namespace FightSabers.Core
             ExperiencePointsWon += (uint)(exp * ExperienceMultiplier);
         }
 
-        public void ApplyExperience()
+        public void FixOverflowedExperience()
+        {
+            if (!HasOverflowedExperience) return;
+            while (HasOverflowedExperience)
+            {
+                SaveDataManager.instance.SaveData.level += 1;
+                SaveDataManager.instance.SaveData.currentExp -= TotalNeededExperienceForNextLevel;
+                SaveDataManager.instance.SaveData.skillPointRemaining += 1;
+                RefreshTotalNeededExperience();
+            }
+            SaveDataManager.instance.ApplyToFile();
+        }
+
+        public void ApplyExperience(float delayApplied = 2.5f)
         {
             if (IsApplyingExperience) return;
             OnApplyExperienceStarted();
-            new UnityTask(ApplyExperienceInternal());
+            new UnityTask(ApplyExperienceInternal(delayApplied));
         }
 
-        private IEnumerator ApplyExperienceInternal()
+        private IEnumerator ApplyExperienceInternal(float delayApplied = 2.5f)
         {
-            var delayApplied = 2.5f;
             while (ExperiencePointsWon > 0)
             {
                 Logger.log.Debug($"ExperiencePointsWon: {ExperiencePointsWon}");
@@ -119,6 +130,8 @@ namespace FightSabers.Core
                 }
             }
             OnApplyExperienceFinished();
+            for (var i = 0; HasOverflowedExperience && i < 5; ++i)
+                Logger.log.Error("This should never happen but the experience system is broken for this session. Please DM me if you're seeing this!");
         }
 
         public void LevelUp()
@@ -135,7 +148,6 @@ namespace FightSabers.Core
             AddFightExperience(1155);
             ApplyExperience();
         }
-
         #endregion
     }
 }

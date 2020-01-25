@@ -72,6 +72,7 @@ namespace FightSabers
             SaveDataManager.instance.Setup();
             QuestManager.instance.LoadQuests();
             ExperienceSystem.instance.Setup();
+            ExperienceSystem.instance.FixOverflowedExperience();
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
