@@ -171,7 +171,7 @@ namespace FightSabers.Core
             if (quest == null) throw new ArgumentNullException(nameof(quest));
             var idx = PickableQuests.FindIndex(q => q == quest);
             if (idx < 0) return;
-            PickableQuests[idx] = null;
+            PickableQuests.Remove(quest);
             quest.Activate();
             SaveDataManager.instance.SaveData.currentQuests.Add(quest);
             SaveDataManager.instance.ApplyToFile();

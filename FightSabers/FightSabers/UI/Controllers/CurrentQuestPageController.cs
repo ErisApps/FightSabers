@@ -3,6 +3,7 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using BS_Utils.Utilities;
 using FightSabers.Core;
+using FightSabers.Models;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
 using JetBrains.Annotations;
@@ -287,7 +288,8 @@ namespace FightSabers.UI.Controllers
 
         private void RefreshWholeUI()
         {
-            Logger.log.Debug($"QuestManager.instance.CurrentQuests.Count: {QuestManager.instance.CurrentQuests.Count}");
+            if (Plugin.CurrentSceneState == SceneState.Game) return;
+            Logger.log.Debug($"CurrentQuests.Count: {QuestManager.instance.CurrentQuests.Count}");
             for (var i = 0; i < 3; ++i)
             {
                 if (QuestManager.instance.CurrentQuests.Count > i && QuestManager.instance.CurrentQuests[i] is IQuest quest)
