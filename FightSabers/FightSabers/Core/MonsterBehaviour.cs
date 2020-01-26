@@ -60,6 +60,8 @@ namespace FightSabers.Core
             }
         }
 
+        public int NoteCountDuration { get; private set; }
+
         private int _noteCountLeft;
 
         public int NoteCountLeft {
@@ -144,7 +146,7 @@ namespace FightSabers.Core
             {
                 if (Modifiers.Contains(typeof(ColorSucker)))
                 {
-                    LerpValue -= 0.05f;
+                    LerpValue -= 0.1f;
                     LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
                     ColorSucker.ApplyColorVisualOnNotes(true);
                 }
@@ -157,7 +159,7 @@ namespace FightSabers.Core
             {
                 if (Modifiers.Contains(typeof(ColorSucker)))
                 {
-                    LerpValue += 0.075f;
+                    LerpValue += 0.8f / (NoteCountDuration * 0.85f);
                     LerpValue = LerpValue > LerpValueRange.y ? LerpValueRange.y : LerpValue;
                     ColorSucker.ApplyColorVisualOnNotes(true);
                 }
@@ -193,7 +195,7 @@ namespace FightSabers.Core
 
             if (Modifiers.Contains(typeof(ColorSucker)))
             {
-                LerpValue -= 0.05f;
+                LerpValue -= 0.1f;
                 LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
                 ColorSucker.ApplyColorVisualOnNotes(true);
             }
@@ -330,6 +332,7 @@ namespace FightSabers.Core
             yield return new WaitForEndOfFrame();
             MonsterName = monsterInfo.monsterName;
             NoteCountLeft = (int)monsterInfo.noteCount;
+            NoteCountDuration = NoteCountLeft;
             maxHealth = (int)monsterInfo.monsterHp;
             CurrentHealth = (int)monsterInfo.monsterHp;
             MonsterDifficulty = (int)monsterInfo.monsterDifficulty;

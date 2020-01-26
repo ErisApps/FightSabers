@@ -13,6 +13,7 @@ namespace FightSabers.Models.Modifiers
 
         public ColorNoteVisuals   Cnv { get; private set; }
         public GameNoteController Gnc { get; private set; }
+        public float StartingColorValue = 0.2f;
 
         private bool _isDisappearingArrow;
 
@@ -84,7 +85,7 @@ namespace FightSabers.Models.Modifiers
             if (!Cnv)
                 Cnv = transform.parent.GetComponent<ColorNoteVisuals>();
             Cnv.didInitEvent += OnDidInitEvent;
-            MonsterGenerator.instance.CurrentMonster.LerpValue = 0.5f;
+            MonsterGenerator.instance.CurrentMonster.LerpValue = StartingColorValue;
             ApplyColorVisualOnNotes(true);
         }
 
