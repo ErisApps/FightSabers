@@ -47,5 +47,8 @@
         </horizontal>
       </stack>
     </horizontal>
+    <horizontal vertical-fit='PreferredSize' child-control-height='false'>
+      <text size-delta-y='0' text='~quest-pick-status' font-size='4.5' font-align='Center' rich-text='true'/>
+    </horizontal>
   </vertical>
 </bg>

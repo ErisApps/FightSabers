@@ -272,6 +272,7 @@ namespace FightSabers.UI.Controllers
             RefreshWholeUI();
             if (QuestManager.instance.CanPickQuest)
                 QuestPickerPageController.instance.ChangePickingStatus(true);
+            QuestPickerPageController.instance.RefreshPickStatusText();
         }
 
         private void OnQuestCompleted(object self, Quest quest)
@@ -279,6 +280,7 @@ namespace FightSabers.UI.Controllers
             RefreshWholeUI();
             if (QuestManager.instance.CanPickQuest)
                 QuestPickerPageController.instance.ChangePickingStatus(true);
+            QuestPickerPageController.instance.RefreshPickStatusText();
         }
 
         private void OnQuestProgressChanged(object self, Quest quest)

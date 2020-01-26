@@ -20,6 +20,17 @@ namespace FightSabers.UI.Controllers
         [UIComponent("picker-quest-2-btn")] private Button _pickerQuest2Btn;
         [UIComponent("picker-quest-3-btn")] private Button _pickerQuest3Btn;
 
+        private string _questPickStatus = "Loading..";
+
+        [UIValue("quest-pick-status")]
+        public string QuestPickStatus {
+            get { return _questPickStatus; }
+            private set {
+                _questPickStatus = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         #region Interact states
         private bool _pickerQuest1Active;
 
@@ -166,11 +177,10 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(0);
             pickerQuest1Active = false;
-            titleQuest1 = "Quest picked!";
-            descQuest1 = "";
-            expRewardQuest1 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
+            RefreshPickStatusText();
+            RefreshPickableQuestContent();
         }
 
         [UIAction("select-quest-2-act")]
@@ -178,11 +188,10 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(1);
             pickerQuest2Active = false;
-            titleQuest2 = "Quest picked!";
-            descQuest2 = "";
-            expRewardQuest2 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
+            RefreshPickStatusText();
+            RefreshPickableQuestContent();
         }
 
         [UIAction("select-quest-3-act")]
@@ -190,11 +199,10 @@ namespace FightSabers.UI.Controllers
         {
             QuestManager.instance.PickQuest(2);
             pickerQuest3Active = false;
-            titleQuest3 = "Quest picked!";
-            descQuest3 = "";
-            expRewardQuest3 = "";
             if (!QuestManager.instance.CanPickQuest)
                 ChangePickingStatus(false);
+            RefreshPickStatusText();
+            RefreshPickableQuestContent();
         }
 
         public void ChangePickingStatus(bool status)
@@ -202,6 +210,41 @@ namespace FightSabers.UI.Controllers
             pickerQuest1Active = QuestManager.instance.PickableQuests.Count > 0 && QuestManager.instance.PickableQuests[0] != null && status;
             pickerQuest2Active = QuestManager.instance.PickableQuests.Count > 1 && QuestManager.instance.PickableQuests[1] != null && status;
             pickerQuest3Active = QuestManager.instance.PickableQuests.Count > 2 && QuestManager.instance.PickableQuests[2] != null && status;
+        }
+
+        public void RefreshPickableQuestContent()
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                var pickableQuest = i >= QuestManager.instance.PickableQuests.Count ? null : QuestManager.instance.PickableQuests[i];
+                switch (i)
+                {
+                    case 0:
+                        titleQuest1 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                        descQuest1 = pickableQuest      != null ? pickableQuest.description : "";
+                        expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                        pickerQuest1Active = pickableQuest != null;
+                        break;
+                    case 1:
+                        titleQuest2 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                        descQuest2 = pickableQuest      != null ? pickableQuest.description : "";
+                        expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                        pickerQuest2Active = pickableQuest != null;
+                        break;
+                    case 2:
+                        titleQuest3 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
+                        descQuest3 = pickableQuest      != null ? pickableQuest.description : "";
+                        expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+                        pickerQuest3Active = pickableQuest != null;
+                        break;
+                }
+            }
+        }
+
+        public void RefreshPickStatusText()
+        {
+            var pickableQuestAmount = 3 - QuestManager.instance.CurrentQuests.Count;
+            QuestPickStatus = pickableQuestAmount <= 0 ? "<color=#e74c3c>Your quest list is full!</color>" : $"You can still pick <color=#ffa500ff>{pickableQuestAmount}</color> quest{(pickableQuestAmount != 1 ? "s" : "")}!";
         }
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
@@ -221,34 +264,10 @@ namespace FightSabers.UI.Controllers
                 iconImage = _pickerQuest3Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
                 if (_pickerQuest3Btn != null && iconImage)
                     iconImage.enabled = false;
-                for (var i = 0; i < QuestManager.instance.PickableQuests.Count; i++)
-                {
-                    var pickableQuest = QuestManager.instance.PickableQuests[i];
-                    //if (pickableQuest == null) continue;
-                    switch (i)
-                    {
-                        case 0:
-                            titleQuest1 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
-                            descQuest1 = pickableQuest      != null ? pickableQuest.description : "";
-                            expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
-                            pickerQuest1Active = pickableQuest != null;
-                            break;
-                        case 1:
-                            titleQuest2 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
-                            descQuest2 = pickableQuest      != null ? pickableQuest.description : "";
-                            expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
-                            pickerQuest2Active = pickableQuest != null;
-                            break;
-                        case 2:
-                            titleQuest3 = pickableQuest     != null ? pickableQuest.title : "Quest not available";
-                            descQuest3 = pickableQuest      != null ? pickableQuest.description : "";
-                            expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
-                            pickerQuest3Active = pickableQuest != null;
-                            break;
-                    }
-                }
+                RefreshPickableQuestContent();
                 if (!QuestManager.instance.CanPickQuest)
                     ChangePickingStatus(false);
+                RefreshPickStatusText();
             }
         }
     }
