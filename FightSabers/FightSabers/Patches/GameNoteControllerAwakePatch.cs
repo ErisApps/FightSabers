@@ -33,8 +33,7 @@ namespace FightSabers.Patches
                 {
                     void OnMonsterAdded(object self, MonsterStatus status)
                     {
-                        //Logger.log.Debug(">>>>>> Enabling modifiers to " + MonsterGenerator.instance.CurrentMonster.gameObject.name);
-                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.Modifiers)
+                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.ModifierManager.modifiers)
                         {
                             if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
                                 modifier.EnableModifier();
@@ -43,8 +42,7 @@ namespace FightSabers.Patches
 
                     void OnMonsterRemoved(object self, MonsterStatus status)
                     {
-                        //Logger.log.Debug(">>>>>> Disabling modifiers to " + MonsterGenerator.instance.CurrentMonster.gameObject.name);
-                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.Modifiers)
+                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.ModifierManager.modifiers)
                         {
                             if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
                                 modifier.DisableModifier();

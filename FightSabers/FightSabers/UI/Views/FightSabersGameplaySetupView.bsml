@@ -1,0 +1,7 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <modifier-container>
+    <modifier source='#BatteryIcon' text='Note Shrinker' value='note-shrinker' apply-on-change='true'></modifier>
+    <modifier source='#NoBombsIcon' text='Color Sucker' value='color-sucker' apply-on-change='true'></modifier>
+    <modifier source='#FasterSongIcon' text='Time Warper' value='time-warper' apply-on-change='true'></modifier>
+  </modifier-container>
+</bg>

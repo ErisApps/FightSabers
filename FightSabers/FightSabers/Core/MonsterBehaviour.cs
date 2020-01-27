@@ -60,8 +60,6 @@ namespace FightSabers.Core
             }
         }
 
-        public int NoteCountDuration { get; private set; }
-
         private int _noteCountLeft;
 
         public int NoteCountLeft {
@@ -106,7 +104,7 @@ namespace FightSabers.Core
         public float SpawnTime   { get; private set; }
         public float UnSpawnTime { get; private set; }
 
-        public Type[] Modifiers { get; private set; }
+        public ModifierManager ModifierManager { get; private set; }
 
         public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
 
@@ -115,10 +113,6 @@ namespace FightSabers.Core
 
         #region Specific modifiers properties
 
-        public float   LerpValue;
-        public Vector2 LerpValueRange { get; private set; }
-
-        private TimeWarper _timeWarper;
 
         #endregion
 
@@ -144,12 +138,7 @@ namespace FightSabers.Core
         {
             if (noteData.noteType == NoteType.Bomb)
             {
-                if (Modifiers.Contains(typeof(ColorSucker)))
-                {
-                    LerpValue -= 0.1f;
-                    LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
-                    ColorSucker.ApplyColorVisualOnNotes(true);
-                }
+                ModifierManager.ReduceColorSuckerColorness();
                 return;
             }
 
@@ -157,12 +146,7 @@ namespace FightSabers.Core
                 OnNoteWasMissed(noteData, 0);
             else
             {
-                if (Modifiers.Contains(typeof(ColorSucker)))
-                {
-                    LerpValue += 0.8f / (NoteCountDuration * 0.85f);
-                    LerpValue = LerpValue > LerpValueRange.y ? LerpValueRange.y : LerpValue;
-                    ColorSucker.ApplyColorVisualOnNotes(true);
-                }
+                ModifierManager.ImproveColorSuckerColorness();
                 var acsbList = _scoreController.GetPrivateField<List<CutScoreBuffer>>("_cutScoreBuffers");
 
                 foreach (CutScoreBuffer csb in acsbList)
@@ -192,34 +176,10 @@ namespace FightSabers.Core
         {
             if (noteData.noteType == NoteType.Bomb)
                 return;
-
-            if (Modifiers.Contains(typeof(ColorSucker)))
-            {
-                LerpValue -= 0.1f;
-                LerpValue = LerpValue < LerpValueRange.x ? LerpValueRange.x : LerpValue;
-                ColorSucker.ApplyColorVisualOnNotes(true);
-            }
-
+            ModifierManager.ReduceColorSuckerColorness();
             NotePassed();
         }
         #endregion
-
-        private void ConfigureModifiers()
-        {
-            foreach (var modifier in Modifiers)
-            {
-                if (modifier == typeof(ColorSucker))
-                {
-                    LerpValue = 0.75f;
-                    LerpValueRange = new Vector2(0.2f, 1);
-                }
-                else if (modifier == typeof(TimeWarper))
-                {
-                    _timeWarper = gameObject.AddComponent<TimeWarper>();
-                    _timeWarper.EnableModifier();
-                }
-            }
-        }
 
         private IEnumerator ConfigureEvents()
         {
@@ -330,18 +290,19 @@ namespace FightSabers.Core
         public IEnumerator ConfigureMonster(MonsterGenerator.MonsterSpawnInfo monsterInfo)
         {
             yield return new WaitForEndOfFrame();
+            ModifierManager = gameObject.AddComponent<ModifierManager>();
+            ModifierManager.modifiers = monsterInfo.modifierTypes;
             MonsterName = monsterInfo.monsterName;
             NoteCountLeft = (int)monsterInfo.noteCount;
-            NoteCountDuration = NoteCountLeft;
+            ModifierManager.noteCountDuration = NoteCountLeft;
             maxHealth = (int)monsterInfo.monsterHp;
             CurrentHealth = (int)monsterInfo.monsterHp;
             MonsterDifficulty = (int)monsterInfo.monsterDifficulty;
             SpawnTime = monsterInfo.spawnTime;
             UnSpawnTime = monsterInfo.unspawnTime;
-            Modifiers = monsterInfo.modifierTypes;
             name = "[FS|" + MonsterName + "lv." + MonsterDifficulty + "]";
             yield return new UnityTask(ConfigureEvents());
-            ConfigureModifiers();
+            ModifierManager.ConfigureModifiers();
         }
 
         public bool IsAlive()
@@ -399,7 +360,7 @@ namespace FightSabers.Core
                     break;
             }
             
-            _timeWarper?.DisableModifier();
+            ModifierManager.timeWarper?.DisableModifier();
             MonsterGenerator.instance.EndCurrentMonsterEncounter();
         }
     }

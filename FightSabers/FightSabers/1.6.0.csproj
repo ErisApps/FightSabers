@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ExperienceSystem.cs" />
+    <Compile Include="Core\ModifierManager.cs" />
     <Compile Include="Core\QuestManager.cs" />
     <Compile Include="Models\Abstracts\Modifier.cs" />
     <Compile Include="Models\Abstracts\Quest.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Models\Quests\MonsterKillQuest.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
+    <Compile Include="UI\Controllers\FightSabersGameplaySetup.cs" />
     <Compile Include="UI\Controllers\ModifierStatsPageController.cs" />
     <Compile Include="UI\Controllers\CharacterStatsPageController.cs" />
     <Compile Include="UI\Controllers\ProfilePageController.cs" />
@@ -182,6 +184,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\CharacterStatsPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\FightSabersGameplaySetupView.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

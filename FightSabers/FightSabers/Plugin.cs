@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
+using BeatSaberMarkupLanguage.GameplaySetup;
 using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
+using FightSabers.Models.Modifiers;
+using FightSabers.Patches;
 using FightSabers.Settings;
 using FightSabers.UI.Controllers;
 using Harmony;
@@ -51,6 +55,7 @@ namespace FightSabers
             fightSabersMetadata = PluginManager.AllPlugins.Select(x => x.Metadata).First(x => x.Name == "FightSabers");
             BSEvents.menuSceneActive += OnMenuSceneActive;
             BSEvents.gameSceneActive += OnGameSceneActive;
+            GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", FightSabersGameplaySetup.instance);
         }
 
         public void OnApplicationQuit() { }
@@ -104,6 +109,10 @@ namespace FightSabers
             if (CurrentSceneState == SceneState.Game) return;
             if (config.Value.Enabled)
             {
+                if (GameNoteControllerAwakePatch.colorSuckers == null)
+                    GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
+                else
+                    GameNoteControllerAwakePatch.colorSuckers.Clear();
                 MonsterGenerator.Create();
                 QuestManager.instance.LinkGameEventsForActivatedQuests();
             }

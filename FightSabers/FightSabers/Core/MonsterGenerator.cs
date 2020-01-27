@@ -74,10 +74,6 @@ namespace FightSabers.Core
         {
             ScoreSubmission.DisableSubmission("FightSabers");
             instance = new GameObject("[FS|MonsterGenerator]").AddComponent<MonsterGenerator>();
-            if (GameNoteControllerAwakePatch.colorSuckers == null)
-                GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
-            else
-                GameNoteControllerAwakePatch.colorSuckers.Clear();
             return instance;
         }
 
