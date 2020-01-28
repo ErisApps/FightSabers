@@ -5,6 +5,7 @@ using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Modifiers;
+using FightSabers.UI.Controllers;
 
 namespace FightSabers.Patches
 {
@@ -22,11 +23,17 @@ namespace FightSabers.Patches
             if (__instance)
             {
                 if (!__instance.noteTransform.gameObject.GetComponent<NoteShrinker>())
-                    __instance.noteTransform.gameObject.AddComponent<NoteShrinker>().gameNoteController = __instance;
+                {
+                    var noteShrinker = __instance.noteTransform.gameObject.AddComponent<NoteShrinker>();
+                    noteShrinker.gameNoteController = __instance;
+                    noteShrinker.strength = ModifierManager.instance.noteShrinkerStrength;
+
+                }
                 if (!__instance.noteTransform.gameObject.GetComponent<ColorSucker>())
                 {
                     var colorSucker = __instance.noteTransform.gameObject.AddComponent<ColorSucker>();
                     colorSucker.gameNoteController = __instance;
+                    colorSucker.strength = ModifierManager.instance.colorSuckerStrength;
                     colorSuckers.Add(colorSucker);
                 }
 
@@ -50,7 +57,7 @@ namespace FightSabers.Patches
 
                 if (!Plugin.config.Value.Enabled)
                 {
-                    ModifierManager.instance.noteCountDuration = 35;
+                    ModifierManager.instance.noteCountDuration = (int)Math.Ceiling(35 * FightSabersGameplaySetup.instance.ColorSuckerStrength);
                     foreach (var monsterModifier in ModifierManager.instance.modifiers)
                     {
                         if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)

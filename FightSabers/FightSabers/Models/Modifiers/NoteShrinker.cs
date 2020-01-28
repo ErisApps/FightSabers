@@ -23,6 +23,7 @@ namespace FightSabers.Models.Modifiers
             strength = strength < 0 ? 1 : strength;
             ScaleApplied = BaseScaleApplied * (1 / strength);
             ScaleApplied = ScaleApplied.x >= 1 ? Vector3.one : ScaleApplied;
+            ScaleApplied = ScaleApplied.x <= 0 ? new Vector3(Mathf.Abs(ScaleApplied.x), Mathf.Abs(ScaleApplied.y), Mathf.Abs(ScaleApplied.z)) : ScaleApplied;
             _oldScale = transform.localScale;
             var t = gameObject.Tween("ShrinkerScaleTransition" + gameObject.GetInstanceID(), transform.localScale, ScaleApplied, 0.35f,
                                      TweenScaleFunctions.Linear, tween => { transform.localScale = tween.CurrentValue; });

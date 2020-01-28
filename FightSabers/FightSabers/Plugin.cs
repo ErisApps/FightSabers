@@ -142,6 +142,9 @@ namespace FightSabers
                 if (FightSabersGameplaySetup.instance.TimeWarperEnabled)
                     modifiers.Add(typeof(TimeWarper));
                 modifierManager.modifiers = modifiers.ToArray();
+                modifierManager.noteShrinkerStrength = FightSabersGameplaySetup.instance.NoteShrinkerStrength;
+                modifierManager.colorSuckerStrength = FightSabersGameplaySetup.instance.ColorSuckerStrength;
+                modifierManager.timeWarperStrength = FightSabersGameplaySetup.instance.TimeWarperStrength;
                 new UnityTask(modifierManager.ConfigureModifiers(0.05f));
                 var scoreControllerManager = go.AddComponent<ScoreControllerManager>();
                 scoreControllerManager.BombCut += self => {

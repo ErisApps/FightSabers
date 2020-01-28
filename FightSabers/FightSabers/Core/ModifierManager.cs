@@ -15,6 +15,10 @@ namespace FightSabers.Core
 
         public int noteCountDuration;
 
+        public float noteShrinkerStrength = 1f;
+        public float colorSuckerStrength = 1f;
+        public float timeWarperStrength = 1f;
+
         public float   lerpValue;
         public Vector2 LerpValueRange { get; private set; }
 
@@ -36,6 +40,7 @@ namespace FightSabers.Core
                 else if (modifier == typeof(TimeWarper))
                 {
                     timeWarper = gameObject.AddComponent<TimeWarper>();
+                    timeWarper.strength = timeWarperStrength;
                     timeWarper.EnableModifier();
                 }
             }
