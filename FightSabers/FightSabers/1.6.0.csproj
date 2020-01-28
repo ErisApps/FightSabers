@@ -106,6 +106,7 @@
     <Compile Include="Core\ExperienceSystem.cs" />
     <Compile Include="Core\ModifierManager.cs" />
     <Compile Include="Core\QuestManager.cs" />
+    <Compile Include="Core\ScoreControllerManager.cs" />
     <Compile Include="Models\Abstracts\Modifier.cs" />
     <Compile Include="Models\Abstracts\Quest.cs" />
     <Compile Include="Models\Converters\QuestConverter.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using FightSabers.Models.Modifiers;
 using UnityEngine;
@@ -22,8 +23,9 @@ namespace FightSabers.Core
             instance = this;
         }
 
-        public void ConfigureModifiers()
+        public IEnumerator ConfigureModifiers(float delay = 0)
         {
+            yield return new WaitForSeconds(delay);
             foreach (var modifier in modifiers)
             {
                 if (modifier == typeof(ColorSucker))

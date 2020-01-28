@@ -29,26 +29,36 @@ namespace FightSabers.Patches
                     colorSucker.gameNoteController = __instance;
                     colorSuckers.Add(colorSucker);
                 }
-                if (MonsterGenerator.instance)
-                {
-                    void OnMonsterAdded(object self, MonsterStatus status)
-                    {
-                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.ModifierManager.modifiers)
-                        {
-                            if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
-                                modifier.EnableModifier();
-                        }
-                    }
 
-                    void OnMonsterRemoved(object self, MonsterStatus status)
+                void OnMonsterAdded(object self, MonsterStatus status)
+                {
+                    foreach (var monsterModifier in ModifierManager.instance.modifiers)
                     {
-                        foreach (var monsterModifier in MonsterGenerator.instance.CurrentMonster.ModifierManager.modifiers)
-                        {
-                            if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
-                                modifier.DisableModifier();
-                        }
+                        if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
+                            modifier.EnableModifier();
                     }
-                    
+                }
+
+                void OnMonsterRemoved(object self, MonsterStatus status)
+                {
+                    foreach (var monsterModifier in ModifierManager.instance.modifiers)
+                    {
+                        if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
+                            modifier.DisableModifier();
+                    }
+                }
+
+                if (!Plugin.config.Value.Enabled)
+                {
+                    ModifierManager.instance.noteCountDuration = 35;
+                    foreach (var monsterModifier in ModifierManager.instance.modifiers)
+                    {
+                        if (__instance.noteTransform.gameObject.GetComponent(monsterModifier) is Modifier modifier)
+                            modifier.EnableModifier();
+                    }
+                }
+                else if (MonsterGenerator.instance)
+                {
                     MonsterGenerator.instance.MonsterAdded += OnMonsterAdded;
                     MonsterGenerator.instance.MonsterRemoved += OnMonsterRemoved;
                 }

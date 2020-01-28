@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.GameplaySetup;
+using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using FightSabers.Core;
 using FightSabers.Models;
@@ -11,6 +13,7 @@ using FightSabers.Models.Modifiers;
 using FightSabers.Patches;
 using FightSabers.Settings;
 using FightSabers.UI.Controllers;
+using FightSabers.Utilities;
 using Harmony;
 using IPA;
 using IPA.Config;
@@ -107,14 +110,49 @@ namespace FightSabers
         private static void OnGameSceneActive()
         {
             if (CurrentSceneState == SceneState.Game) return;
+            if (GameNoteControllerAwakePatch.colorSuckers == null)
+                GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
+            else
+                GameNoteControllerAwakePatch.colorSuckers.Clear();
+            if (config.Value.Enabled && (FightSabersGameplaySetup.instance.ColorSuckerEnabled  ||
+                                         FightSabersGameplaySetup.instance.NoteShrinkerEnabled ||
+                                         FightSabersGameplaySetup.instance.TimeWarperEnabled))
+            {
+                config.Value.Enabled = false;
+                OverlayViewController.instance.fsDisableContainerState = !config.Value.Enabled;
+                OverlayViewController.instance.experienceContainerState = config.Value.Enabled;
+                configProvider.Store(config.Value);
+            }
             if (config.Value.Enabled)
             {
-                if (GameNoteControllerAwakePatch.colorSuckers == null)
-                    GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
-                else
-                    GameNoteControllerAwakePatch.colorSuckers.Clear();
+                ScoreSubmission.DisableSubmission("FightSabers");
                 MonsterGenerator.Create();
                 QuestManager.instance.LinkGameEventsForActivatedQuests();
+            }
+            else if (FightSabersGameplaySetup.instance.ColorSuckerEnabled || FightSabersGameplaySetup.instance.NoteShrinkerEnabled || FightSabersGameplaySetup.instance.TimeWarperEnabled)
+            {
+                ScoreSubmission.DisableSubmission("FightSabers");
+                var go = new GameObject("[FS|ModifierManager]");
+                var modifierManager = go.AddComponent<ModifierManager>();
+                var modifiers = new List<Type>();
+                if (FightSabersGameplaySetup.instance.ColorSuckerEnabled)
+                    modifiers.Add(typeof(ColorSucker));
+                if (FightSabersGameplaySetup.instance.NoteShrinkerEnabled)
+                    modifiers.Add(typeof(NoteShrinker));
+                if (FightSabersGameplaySetup.instance.TimeWarperEnabled)
+                    modifiers.Add(typeof(TimeWarper));
+                modifierManager.modifiers = modifiers.ToArray();
+                new UnityTask(modifierManager.ConfigureModifiers(0.05f));
+                var scoreControllerManager = go.AddComponent<ScoreControllerManager>();
+                scoreControllerManager.BombCut += self => {
+                    modifierManager.ReduceColorSuckerColorness();
+                };
+                scoreControllerManager.NoteCut += self => {
+                    modifierManager.ImproveColorSuckerColorness();
+                };
+                scoreControllerManager.NoteMissed += self => {
+                    modifierManager.ReduceColorSuckerColorness();
+                };
             }
             CurrentSceneState = SceneState.Game;
         }

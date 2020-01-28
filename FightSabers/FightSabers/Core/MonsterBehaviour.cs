@@ -104,20 +104,18 @@ namespace FightSabers.Core
         public float SpawnTime   { get; private set; }
         public float UnSpawnTime { get; private set; }
 
-        public ModifierManager ModifierManager { get; private set; }
+        public ScoreControllerManager ScoreControllerManager { get; private set; }
+        public ModifierManager        ModifierManager        { get; private set; }
 
         public MonsterStatus CurrentStatus { get; private set; } = MonsterStatus.Alive;
 
-        private bool    _is360Level;
+        private bool _is360Level;
         #endregion
 
         #region Specific modifiers properties
-
-
         #endregion
 
-        private ScoreController _scoreController;
-        private FloatingText    _floatingText;
+        private FloatingText _floatingText;
 
         public static MonsterBehaviour Create()
         {
@@ -125,7 +123,6 @@ namespace FightSabers.Core
         }
 
         #region Events
-
         public delegate void MonsterHitHandler(object self, int damage);
         public event MonsterHitHandler MonsterHurt;
 
@@ -133,71 +130,7 @@ namespace FightSabers.Core
         {
             MonsterHurt?.Invoke(this, damage);
         }
-
-        private void OnNoteWasCut(NoteData noteData, NoteCutInfo noteCutInfo, int multiplier)
-        {
-            if (noteData.noteType == NoteType.Bomb)
-            {
-                ModifierManager.ReduceColorSuckerColorness();
-                return;
-            }
-
-            if (!noteCutInfo.allIsOK)
-                OnNoteWasMissed(noteData, 0);
-            else
-            {
-                ModifierManager.ImproveColorSuckerColorness();
-                var acsbList = _scoreController.GetPrivateField<List<CutScoreBuffer>>("_cutScoreBuffers");
-
-                foreach (CutScoreBuffer csb in acsbList)
-                {
-                    if (csb.GetPrivateField<NoteCutInfo>("_noteCutInfo") == noteCutInfo)
-                    {
-                        csb.didFinishEvent += OnNoteWasFullyCut;
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void OnNoteWasFullyCut(CutScoreBuffer csb)
-        {
-            var noteCutInfo = csb.GetPrivateField<NoteCutInfo>("_noteCutInfo");
-
-            if (csb != null)
-                csb.didFinishEvent -= OnNoteWasFullyCut;
-
-            ScoreController.RawScoreWithoutMultiplier(noteCutInfo, out var score, out var afterScore, out var cutDistanceScore);
-            Hurt(score + afterScore + cutDistanceScore);
-            NotePassed();
-        }
-
-        private void OnNoteWasMissed(NoteData noteData, int score)
-        {
-            if (noteData.noteType == NoteType.Bomb)
-                return;
-            ModifierManager.ReduceColorSuckerColorness();
-            NotePassed();
-        }
         #endregion
-
-        private IEnumerator ConfigureEvents()
-        {
-            while (true)
-            {
-                _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-
-                if (_scoreController == null || _scoreController == default(ScoreController))
-                    yield return new WaitForSeconds(0.1f);
-                else
-                {
-                    _scoreController.noteWasCutEvent += OnNoteWasCut;
-                    _scoreController.noteWasMissedEvent += OnNoteWasMissed;
-                    enabled = true;
-                    break;
-                }
-            }
-        }
 
         private void Start()
         {
@@ -301,8 +234,19 @@ namespace FightSabers.Core
             SpawnTime = monsterInfo.spawnTime;
             UnSpawnTime = monsterInfo.unspawnTime;
             name = "[FS|" + MonsterName + "lv." + MonsterDifficulty + "]";
-            yield return new UnityTask(ConfigureEvents());
-            ModifierManager.ConfigureModifiers();
+            new UnityTask(ModifierManager.ConfigureModifiers());
+            ScoreControllerManager = gameObject.AddComponent<ScoreControllerManager>();
+            ScoreControllerManager.ScoreControllerInitialized += self => enabled = true;
+            ScoreControllerManager.BombCut += self => { ModifierManager.ReduceColorSuckerColorness(); };
+            ScoreControllerManager.NoteCut += self => { ModifierManager.ImproveColorSuckerColorness(); };
+            ScoreControllerManager.NoteFullyCut += (self, score) => {
+                Hurt(score);
+                NotePassed();
+            };
+            ScoreControllerManager.NoteMissed += self => {
+                ModifierManager.ReduceColorSuckerColorness();
+                NotePassed();
+            };
         }
 
         public bool IsAlive()
@@ -341,11 +285,6 @@ namespace FightSabers.Core
                 _floatingText.transform.SetParent(transform.parent);
             _floatingText.tweenEndPosition = new Vector3(BasePosition.x, BasePosition.y + 0.75f * (_is360Level ? 60f : 1f), BasePosition.z);
             _floatingText.DisplayText(BasePosition, BaseRotation, BaseScale, labelInfo, 3.5f);
-            if (_scoreController)
-            {
-                _scoreController.noteWasCutEvent -= OnNoteWasCut;
-                _scoreController.noteWasMissedEvent -= OnNoteWasMissed;
-            }
             switch (CurrentStatus)
             {
                 case MonsterStatus.Killed:
@@ -359,8 +298,9 @@ namespace FightSabers.Core
                     //ExperienceSystem.instance.AddFightExperience(9 + (uint)_monsterDifficulty); //TODO: Remove later, FPFC testing
                     break;
             }
-            
+
             ModifierManager.timeWarper?.DisableModifier();
+            Destroy(ScoreControllerManager);
             MonsterGenerator.instance.EndCurrentMonsterEncounter();
         }
     }
