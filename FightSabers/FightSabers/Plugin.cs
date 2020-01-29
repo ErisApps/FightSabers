@@ -104,6 +104,8 @@ namespace FightSabers
                 ExperienceSystem.instance.ApplyExperience();
                 QuestManager.instance.UnlinkGameEventsForActivatedQuests();
             }
+            if (ModifierManager.instance)
+                ModifierManager.instance.modifiers = new Type[]{};
             CurrentSceneState = SceneState.Menu;
         }
 

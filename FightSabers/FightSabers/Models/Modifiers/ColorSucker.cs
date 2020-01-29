@@ -58,7 +58,7 @@ namespace FightSabers.Models.Modifiers
         {
             if (!Cnv)
                 Cnv = transform.parent.GetComponent<ColorNoteVisuals>();
-            var color = lerpMode ? Color.Lerp(Color.grey, Cnv.noteColor, ModifierManager.instance.lerpValue) : Cnv.noteColor;
+            var color = lerpMode ? Color.Lerp(Color.grey, Cnv.noteColor, ModifierManager.instance != null ? ModifierManager.instance.lerpValue : 0.2f) : Cnv.noteColor;
             if (!_isDisappearingArrow)
             {
                 var arrowSpriteRenderer = Cnv.GetPrivateField<SpriteRenderer>("_arrowGlowSpriteRenderer");
@@ -85,7 +85,8 @@ namespace FightSabers.Models.Modifiers
             if (!Cnv)
                 Cnv = transform.parent.GetComponent<ColorNoteVisuals>();
             Cnv.didInitEvent += OnDidInitEvent;
-            ModifierManager.instance.lerpValue = StartingColorValue;
+            if (ModifierManager.instance)
+                ModifierManager.instance.lerpValue = StartingColorValue;
             ApplyColorVisualOnNotes(true);
         }
 
