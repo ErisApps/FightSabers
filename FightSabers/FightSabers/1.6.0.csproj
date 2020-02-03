@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Core\ExclusiveContent\ExclusiveContentManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusiveAvatarsManager.cs" />
+    <Compile Include="Core\ExclusiveContent\ExclusiveNotesManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusivePlatformsManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusiveSabersManager.cs" />
     <Compile Include="Core\ExperienceSystem.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Models\Quests\MonsterKillQuest.cs" />
     <Compile Include="Models\RewardItems\PlatformReward.cs" />
     <Compile Include="Models\RewardItems\AvatarReward.cs" />
+    <Compile Include="Models\RewardItems\NoteReward.cs" />
     <Compile Include="Models\RewardItems\SaberReward.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
@@ -228,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Rewards\Ooka Miko.avatar" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Rewards\Minecraft.bloq" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

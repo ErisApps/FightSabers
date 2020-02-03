@@ -16,7 +16,8 @@ namespace FightSabers.Core.ExclusiveContent
             BaseRewardItems = new List<IRewardItem> {
                 new SaberReward { name = "Skeleton Arm", unlockHint = "" },
                 new PlatformReward { name = "Light Disc" , unlockHint = "" },
-                new AvatarReward { name = "Ooka Miko" , unlockHint = "" }
+                new AvatarReward { name = "Ooka Miko" , unlockHint = "" },
+                new NoteReward { name = "Minecraft" , unlockHint = "" }
             };
             if (SaveDataManager.instance.SaveData.rewardableItems       == null ||
                 SaveDataManager.instance.SaveData.rewardableItems.Count != BaseRewardItems.Count)
