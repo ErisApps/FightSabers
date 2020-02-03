@@ -14,8 +14,9 @@ namespace FightSabers.Core.ExclusiveContent
         private void Awake()
         {
             BaseRewardItems = new List<IRewardItem> {
-                new SaberReward { name = "Skeleton Arm", unlockHint = "Reach level 5!" },
-                new PlatformReward { name = "Light Disc" , unlockHint = "Reach level 5!" }
+                new SaberReward { name = "Skeleton Arm", unlockHint = "" },
+                new PlatformReward { name = "Light Disc" , unlockHint = "" },
+                new AvatarReward { name = "Ooka Miko" , unlockHint = "" }
             };
             if (SaveDataManager.instance.SaveData.rewardableItems       == null ||
                 SaveDataManager.instance.SaveData.rewardableItems.Count != BaseRewardItems.Count)
