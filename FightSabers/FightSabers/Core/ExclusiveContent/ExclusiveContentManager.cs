@@ -17,7 +17,8 @@ namespace FightSabers.Core.ExclusiveContent
                 new SaberReward { name = "Skeleton Arm", unlockHint = "" },
                 new PlatformReward { name = "Light Disc" , unlockHint = "" },
                 new AvatarReward { name = "Ooka Miko" , unlockHint = "" },
-                new NoteReward { name = "Minecraft" , unlockHint = "" }
+                new NoteReward { name = "Minecraft" , unlockHint = "" },
+                new WallReward { name = "AYAYA" , unlockHint = "" }
             };
             if (SaveDataManager.instance.SaveData.rewardableItems       == null ||
                 SaveDataManager.instance.SaveData.rewardableItems.Count != BaseRewardItems.Count)
@@ -41,6 +42,11 @@ namespace FightSabers.Core.ExclusiveContent
 
         public void LoadExclusiveContent()
         {
+            ExclusiveSabersManager.TouchInstance();
+            ExclusivePlatformsManager.TouchInstance();
+            ExclusiveAvatarsManager.TouchInstance();
+            ExclusiveNotesManager.TouchInstance();
+            ExclusiveWallsManager.TouchInstance();
             HasLoadedExclusiveContent = true;
         }
     }

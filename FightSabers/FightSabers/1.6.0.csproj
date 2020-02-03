@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Core\ExclusiveContent\ExclusiveContentManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusiveAvatarsManager.cs" />
+    <Compile Include="Core\ExclusiveContent\ExclusiveWallsManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusiveNotesManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusivePlatformsManager.cs" />
     <Compile Include="Core\ExclusiveContent\ExclusiveSabersManager.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Models\Modifiers\TimeWarper.cs" />
     <Compile Include="Models\Quests\MonsterDamageQuest.cs" />
     <Compile Include="Models\Quests\MonsterKillQuest.cs" />
+    <Compile Include="Models\RewardItems\WallReward.cs" />
     <Compile Include="Models\RewardItems\PlatformReward.cs" />
     <Compile Include="Models\RewardItems\AvatarReward.cs" />
     <Compile Include="Models\RewardItems\NoteReward.cs" />
@@ -233,6 +235,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Rewards\Minecraft.bloq" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Rewards\AYAYA.pixie" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
