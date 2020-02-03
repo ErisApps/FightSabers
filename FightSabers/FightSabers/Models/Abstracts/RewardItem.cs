@@ -15,5 +15,10 @@ namespace FightSabers.Models.Abstracts
         public abstract void UnlockItem();
         public abstract void LockItem();
         #endregion
+
+        protected RewardItem()
+        {
+            rewardType = GetType().ToString();
+        }
     }
 }
