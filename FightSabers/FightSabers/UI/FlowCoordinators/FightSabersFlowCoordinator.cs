@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.UI.Controllers;
 using HMUI;
 
@@ -15,7 +13,8 @@ namespace FightSabers.UI.FlowCoordinators
             Skills,
             Profile,
             Quests,
-            Statistics
+            Statistics,
+            Shop
         }
 
         public FlowCoordinator      oldCoordinator;
@@ -74,6 +73,13 @@ namespace FightSabers.UI.FlowCoordinators
                     ProvideInitialViewControllers(controller, null, null, bottomController);
                     SetLeftScreenViewController(BeatSaberUI.CreateViewController<MonsterInfoPageController>(), false);
                     SetRightScreenViewController(BeatSaberUI.CreateViewController<ModifierStatsPageController>(), false);
+                    break;
+                case PageStatus.Shop:
+                    controller = BeatSaberUI.CreateViewController<ShopMainPageController>();
+                    ReplaceTopViewController(controller, null, false, ViewController.SlideAnimationDirection.Left);
+                    SetLeftScreenViewController(null);
+                    SetRightScreenViewController(BeatSaberUI.CreateViewController<ShopItemPreviewPageController>());
+                    ProvideInitialViewControllers(controller, null, null, bottomController);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(status), status, null);

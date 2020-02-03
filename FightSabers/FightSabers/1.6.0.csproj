@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Plugins\BS_Utils.dll</HintPath>
     </Reference>
+    <Reference Include="CustomSaber">
+      <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\Plugins\CustomSaber.dll</HintPath>
+    </Reference>
     <Reference Include="HMLib">
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\HMLib.dll</HintPath>
     </Reference>
@@ -77,6 +80,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Managed\UnityEngine.AudioModule.dll</HintPath>
@@ -103,24 +110,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ExclusiveContent\ExclusiveContentManager.cs" />
+    <Compile Include="Core\ExclusiveContent\ExclusiveSabersManager.cs" />
     <Compile Include="Core\ExperienceSystem.cs" />
     <Compile Include="Core\ModifierManager.cs" />
     <Compile Include="Core\QuestManager.cs" />
     <Compile Include="Core\ScoreControllerManager.cs" />
     <Compile Include="Models\Abstracts\Modifier.cs" />
     <Compile Include="Models\Abstracts\Quest.cs" />
+    <Compile Include="Models\Abstracts\RewardItem.cs" />
+    <Compile Include="Models\Converters\RewardItemConverter.cs" />
     <Compile Include="Models\Converters\QuestConverter.cs" />
+    <Compile Include="Models\CustomSaberData.cs" />
     <Compile Include="Models\Float3.cs" />
     <Compile Include="Models\Interfaces\IModifier.cs" />
     <Compile Include="Models\Interfaces\IQuest.cs" />
+    <Compile Include="Models\Interfaces\IRewardItem.cs" />
     <Compile Include="Models\Quests\LevelUpQuest.cs" />
     <Compile Include="Models\Modifiers\ColorSucker.cs" />
     <Compile Include="Models\Modifiers\NoteShrinker.cs" />
     <Compile Include="Models\Modifiers\TimeWarper.cs" />
     <Compile Include="Models\Quests\MonsterDamageQuest.cs" />
     <Compile Include="Models\Quests\MonsterKillQuest.cs" />
+    <Compile Include="Models\RewardItems\SaberReward.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
+    <Compile Include="UI\Controllers\ShopItemPreviewPageController.cs" />
+    <Compile Include="UI\Controllers\ShopMainPageController.cs" />
     <Compile Include="UI\Controllers\FightSabersGameplaySetup.cs" />
     <Compile Include="UI\Controllers\ModifierStatsPageController.cs" />
     <Compile Include="UI\Controllers\CharacterStatsPageController.cs" />
@@ -137,6 +153,7 @@
     <Compile Include="Models\SceneState.cs" />
     <Compile Include="Settings\SaveDataManager.cs" />
     <Compile Include="UI\FlowCoordinators\FightSabersFlowCoordinator.cs" />
+    <Compile Include="Utilities\FileUtils.cs" />
     <Compile Include="Utilities\FloatingText.cs" />
     <Compile Include="Models\ProfileSaveData.cs" />
     <Compile Include="Core\MonsterBehaviour.cs" />
@@ -153,7 +170,9 @@
     <EmbeddedResource Include="manifest.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\Views\HomePageView.bsml" />
+    <EmbeddedResource Include="UI\Views\HomePageView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\OverlayView.bsml">
@@ -188,6 +207,17 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\FightSabersGameplaySetupView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\ShopMainPageView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\ShopItemPreviewPageView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Rewards\Skeleton Arm.saber" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

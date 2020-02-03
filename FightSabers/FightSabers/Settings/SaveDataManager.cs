@@ -43,6 +43,7 @@ namespace FightSabers.Settings
             {
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new QuestConverter());
+                settings.Converters.Add(new RewardItemConverter());
                 var content = File.ReadAllText(_pathSaveFile);
                 SaveData = JsonConvert.DeserializeObject<ProfileSaveData>(content, settings);
                 if (SaveData != null) return;

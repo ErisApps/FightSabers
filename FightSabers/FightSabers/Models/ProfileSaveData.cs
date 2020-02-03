@@ -12,5 +12,6 @@ namespace FightSabers.Models
         public uint flownMonsterCount;
         public List<IQuest> currentQuests = new List<IQuest>();
         public List<IQuest> pickableQuests = new List<IQuest>();
+        public List<IRewardItem> rewardableItems = new List<IRewardItem>();
     }
 }

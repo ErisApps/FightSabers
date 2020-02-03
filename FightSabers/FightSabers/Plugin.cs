@@ -8,6 +8,7 @@ using BeatSaberMarkupLanguage.GameplaySetup;
 using BS_Utils.Gameplay;
 using BS_Utils.Utilities;
 using FightSabers.Core;
+using FightSabers.Core.ExclusiveContent;
 using FightSabers.Models;
 using FightSabers.Models.Modifiers;
 using FightSabers.Patches;
@@ -78,6 +79,7 @@ namespace FightSabers
         private static void MenuLoadFresh()
         {
             SaveDataManager.instance.Setup();
+            ExclusiveContentManager.instance.LoadExclusiveContent();
             QuestManager.instance.LoadQuests();
             ExperienceSystem.instance.Setup();
             ExperienceSystem.instance.FixOverflowedExperience();

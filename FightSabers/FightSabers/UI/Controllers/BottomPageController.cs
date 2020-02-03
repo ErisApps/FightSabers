@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.MenuButtons;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using FightSabers.UI.FlowCoordinators;
-using UnityEngine.UI;
 
 namespace FightSabers.UI.Controllers
 {
@@ -19,16 +16,25 @@ namespace FightSabers.UI.Controllers
         {
             flowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Quests);
         }
+
         [UIAction("skills-page-act")]
         private void SkillsPageClicked()
         {
             flowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Skills);
         }
+
         [UIAction("home-page-act")]
         private void HomePageClicked()
         {
             flowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Home);
         }
+
+        [UIAction("shop-page-act")]
+        private void ShopPageClicked()
+        {
+            flowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Shop);
+        }
+
         [UIAction("profile-page-act")]
         private void ProfilePageClicked()
         {
