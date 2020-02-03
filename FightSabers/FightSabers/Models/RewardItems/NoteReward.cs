@@ -10,7 +10,7 @@ namespace FightSabers.Models.RewardItems
     {
         public override void UnlockItem()
         {
-            if (unlockState) return;
+            if (!ExclusiveContentManager.instance.HasLoadedExclusiveContent || !ExclusiveNotesManager.CustomNoteInstalled || unlockState) return;
             FileUtils.WriteResourceToFile($"FightSabers.Rewards.{name}.bloq", Path.Combine(ExclusiveNotesManager.NotesAssetPath, $"{name}.bloq"));
             unlockState = true;
             SaveDataManager.instance.ApplyToFile();
@@ -18,7 +18,7 @@ namespace FightSabers.Models.RewardItems
 
         public override void LockItem()
         {
-            if (!unlockState) return;
+            if (!ExclusiveContentManager.instance.HasLoadedExclusiveContent || !ExclusiveNotesManager.CustomNoteInstalled || !unlockState) return;
             var filePath = Path.Combine(ExclusiveNotesManager.NotesAssetPath, $"{name}.bloq");
             if (File.Exists(filePath))
                 File.Delete(filePath);

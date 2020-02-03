@@ -10,7 +10,7 @@ namespace FightSabers.Models.RewardItems
     {
         public override void UnlockItem()
         {
-            if (unlockState) return;
+            if (!ExclusiveContentManager.instance.HasLoadedExclusiveContent || !ExclusivePlatformsManager.CustomPlatformInstalled || unlockState) return;
             FileUtils.WriteResourceToFile($"FightSabers.Rewards.{name}.plat", Path.Combine(ExclusivePlatformsManager.PlatformsAssetPath, $"{name}.plat"));
             unlockState = true;
             SaveDataManager.instance.ApplyToFile();
@@ -18,7 +18,7 @@ namespace FightSabers.Models.RewardItems
 
         public override void LockItem()
         {
-            if (!unlockState) return;
+            if (!ExclusiveContentManager.instance.HasLoadedExclusiveContent || !ExclusivePlatformsManager.CustomPlatformInstalled || !unlockState) return;
             var filePath = Path.Combine(ExclusivePlatformsManager.PlatformsAssetPath, $"{name}.plat");
             if (File.Exists(filePath))
                 File.Delete(filePath);
