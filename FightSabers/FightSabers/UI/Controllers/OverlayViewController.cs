@@ -41,6 +41,18 @@ namespace FightSabers.UI.Controllers
         [UIObject("main-background")] private GameObject _mainBackground;
         [UIObject("progress-bar-stack")] private GameObject _progressBarStack;
 
+        public string _coinCount;
+        [UIValue("coin-count")]
+        public string CoinCount
+        {
+            get { return _coinCount; }
+            private set
+            {
+                _coinCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private bool _experienceContainerState = true;
         [UIValue("experience-container-state")]
         public bool experienceContainerState
@@ -173,6 +185,7 @@ namespace FightSabers.UI.Controllers
             //Current exp
             currentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
             new UnityTask(FillExperienceBar(0, SaveDataManager.instance.SaveData.currentExp, 3.5f));
+            CoinCount = $"FightCoins: {SaveDataManager.instance.SaveData.fightCoinsAmount}";
         }
 
         #region Animation methods

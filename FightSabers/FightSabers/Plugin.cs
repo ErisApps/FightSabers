@@ -86,7 +86,7 @@ namespace FightSabers
             ExperienceSystem.instance.ApplyExperienceFinished += delegate { SaveDataManager.instance.ApplyToFile(); };
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
-            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true,
+            var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 57f), true,
                                                                      Float3.ToVector3(config.Value.FSPanelPosition),
                                                                      Quaternion.Euler(Float3.ToVector3(config.Value.FSPanelRotation)));
             floatingScreen.screenMover.OnRelease += (pos, rot) => {

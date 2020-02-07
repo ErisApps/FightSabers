@@ -245,6 +245,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\coin.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "FightSabers.dll" "D:\Program Files\Steam\steamapps\common\Beat Saber\Plugins"</PostBuildEvent>

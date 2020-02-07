@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BS_Utils.Utilities;
 using FightSabers.Utilities;
 using UnityEngine;
@@ -13,6 +10,7 @@ namespace FightSabers.Core
     public class ScoreControllerManager : MonoBehaviour
     {
         public bool IsInitialized { get; private set; }
+        public int CurrentScore { get; private set; }
 
         private ScoreController _scoreController;
 
@@ -25,6 +23,7 @@ namespace FightSabers.Core
         public event ScoreHandler NoteMissed;
         public event ScoreHandler NoteCut;
         public event ScoreArgsHandler NoteFullyCut;
+        public event ScoreHandler ScoreChanged;
 
         private void OnScoreControllerInitialized()
         {
@@ -51,10 +50,16 @@ namespace FightSabers.Core
             NoteFullyCut?.Invoke(this, cutScore);
         }
 
+        private void OnScoreDidChange()
+        {
+            ScoreChanged?.Invoke(this);
+        }
+
         #endregion
 
         private void Start()
         {
+            BSEvents.scoreDidChange += ScoreDidChange;
             new UnityTask(ConfigureEvents());
         }
 
@@ -63,6 +68,7 @@ namespace FightSabers.Core
             if (!_scoreController) return;
             _scoreController.noteWasCutEvent -= OnNoteWasCut;
             _scoreController.noteWasMissedEvent -= OnNoteWasMissed;
+            BSEvents.scoreDidChange -= ScoreDidChange;
         }
 
         private IEnumerator ConfigureEvents()
@@ -125,6 +131,12 @@ namespace FightSabers.Core
             if (noteData.noteType == NoteType.Bomb)
                 return;
             OnNoteMissed();
+        }
+
+        private void ScoreDidChange(int score)
+        {
+            CurrentScore = score;
+            OnScoreDidChange();
         }
     }
 }

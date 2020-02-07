@@ -106,7 +106,6 @@ namespace FightSabers.UI.Controllers
             {
                 IsGeneratingPreview = true;
                 ClearSabers();
-
                 var customSaber = ExclusiveSabersManager.instance.ExclusiveSaberData[saberName];
                 if (customSaber == null) return;
                 PreparePreviewObject();

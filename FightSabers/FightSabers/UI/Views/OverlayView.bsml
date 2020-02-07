@@ -22,4 +22,8 @@
       </vertical>
     </horizontal>
   </vertical>
+  <horizontal anchor-min-x='0.47' anchor-max-y='0.05' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <img src='FightSabers.Images.coin.png' pref-width='6' pref-height='6' />
+    <text font-size='3.5' text='~coin-count' align='Center'/>
+  </horizontal>
 </bg>

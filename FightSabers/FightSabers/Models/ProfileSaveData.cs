@@ -7,6 +7,7 @@ namespace FightSabers.Models
     {
         public uint level = 1;
         public uint currentExp;
+        public int fightCoinsAmount;
         public uint skillPointRemaining;
         public uint killMonsterCount;
         public uint flownMonsterCount;
