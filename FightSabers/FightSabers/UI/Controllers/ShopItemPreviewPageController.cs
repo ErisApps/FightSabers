@@ -1,9 +1,10 @@
 ﻿using System;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
-using CustomSaber.Utilities;
 using FightSabers.Core.ExclusiveContent;
-using FightSabers.Models;
+using FightSabers.Models.Abstracts;
+using FightSabers.Models.Interfaces;
+using FightSabers.Models.RewardItems;
 using UnityEngine;
 
 namespace FightSabers.UI.Controllers
@@ -12,7 +13,7 @@ namespace FightSabers.UI.Controllers
     {
         public override string ResourceName => "FightSabers.UI.Views.ShopItemPreviewPageView.bsml";
         public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\ShopItemPreviewPageView.bsml";
-
+        
         public bool IsGeneratingPreview { get; private set; }
 
         private GameObject _preview;
@@ -30,14 +31,8 @@ namespace FightSabers.UI.Controllers
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
             base.DidActivate(firstActivation, type);
-
-            if (!_preview)
-            {
-                _preview = new GameObject();
-                _preview.transform.position = new Vector3(2.2f, 1.3f, 1.0f);
-                _preview.transform.Rotate(0.0f, 330.0f, 0.0f);
-            }
-            //GenerateSaberPreview("Skeleton Arm"); //TODO: Previewing sabers test
+            
+            PreparePreviewObject();
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
@@ -78,6 +73,32 @@ namespace FightSabers.UI.Controllers
 
         #region Sabers preview
 
+        public void OpenPreview(IRewardItem rewardItem)
+        {
+            switch (rewardItem)
+            {
+                case SaberReward _:
+                    GenerateSaberPreview(rewardItem.name);
+                    break;
+                case AvatarReward _:
+                case NoteReward _:
+                case PlatformReward _:
+                case WallReward _:
+                case RewardItem _:
+                    break;
+            }
+        }
+
+        private void PreparePreviewObject()
+        {
+            if (!_preview)
+            {
+                _preview = new GameObject();
+                _preview.transform.position = new Vector3(2.2f, 1.3f, 1.0f);
+                _preview.transform.Rotate(0.0f, 330.0f, 0.0f);
+            }
+        }
+
         private void GenerateSaberPreview(string saberName)
         {
             if (IsGeneratingPreview) return;
@@ -88,6 +109,7 @@ namespace FightSabers.UI.Controllers
 
                 var customSaber = ExclusiveSabersManager.instance.ExclusiveSaberData[saberName];
                 if (customSaber == null) return;
+                PreparePreviewObject();
                 _sabers = CreatePreviewSaber(customSaber.Sabers, _preview.transform, sabersPos);
                 PositionPreview(saberLeftPos, _sabers?.transform.Find("LeftSaber").gameObject);
                 PositionPreview(saberRightPos, _sabers?.transform.Find("RightSaber").gameObject);

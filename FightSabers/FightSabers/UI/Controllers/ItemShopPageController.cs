@@ -164,6 +164,13 @@ namespace FightSabers.UI.Controllers
             }
         }
 
+        [UIAction("close-modal")]
+        private void CloseModal()
+        {
+            parserParams.EmitEvent("close-modal");
+            flowCoordinatorOwner.DisplayShopItemPreview(false);
+        }
+
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
             base.DidDeactivate(deactivationType);
@@ -201,6 +208,8 @@ namespace FightSabers.UI.Controllers
                 _controllerOwner.ItemPrice = _rewardItem.unlockState ? "<color=#00ff00ff><i>Already unlocked!</i></color>" : "Price: " + _itemPriceText.text;
                 _controllerOwner.ItemOwnedLabel = _rewardItem.unlockState ? "Owned" : "Buy";
                 _controllerOwner.ItemOwnedState = !_rewardItem.unlockState;
+                if (_rewardItem is SaberReward)
+                    _controllerOwner.flowCoordinatorOwner.DisplayShopItemPreview(true, _rewardItem);
                 _controllerOwner.parserParams.EmitEvent("show-new");
             }
 

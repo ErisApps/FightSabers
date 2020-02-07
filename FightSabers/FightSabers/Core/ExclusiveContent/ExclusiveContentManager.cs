@@ -15,11 +15,11 @@ namespace FightSabers.Core.ExclusiveContent
         private void Awake()
         {
             BaseRewardItems = new List<IRewardItem> {
-                new SaberReward("Skeleton Arm", "Spooky skeletons, send shivers done your spine!", "", RewardItem.UnlockType.Coins, 10),
-                new PlatformReward("Light Disc", "Disco light!", "", RewardItem.UnlockType.Coins, 10),
-                new AvatarReward("Ooka Miko", "A super cute anime avatar because we're all weebs after all, aren't we?", "", RewardItem.UnlockType.Coins, 10),
-                new NoteReward("Minecraft", "Slice that dirt!", "", RewardItem.UnlockType.Coins, 10),
-                new WallReward("AYAYA", "A-YA-YA!", "", RewardItem.UnlockType.Coins, 10)
+                new SaberReward("Skeleton Arm", "Spooky skeletons, send shivers done your spine!", "Unlock it at the shop!", RewardItem.UnlockType.Coins, 10),
+                new PlatformReward("Light Disc", "Disco light!", "Unlock it at the shop!", RewardItem.UnlockType.Coins, 10),
+                new AvatarReward("Ooka Miko", "A super cute anime avatar because we're all weebs after all, aren't we?", "Unlock it at the shop!", RewardItem.UnlockType.Coins, 10),
+                new NoteReward("Minecraft", "Slice that dirt!", "Unlock it at the shop!", RewardItem.UnlockType.Coins, 10),
+                new WallReward("AYAYA", "A-YA-YA!", "Unlock it at the shop!", RewardItem.UnlockType.Coins, 10)
             };
             if (SaveDataManager.instance.SaveData.rewardableItems       == null ||
                 SaveDataManager.instance.SaveData.rewardableItems.Count != BaseRewardItems.Count)

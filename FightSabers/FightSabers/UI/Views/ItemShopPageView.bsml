@@ -12,7 +12,7 @@
         </horizontal>
         <horizontal>
           <horizontal>
-            <button text='Close' click-event='close-modal' pref-width='20' word-wrapping='false'/>
+            <button text='Close' on-click='close-modal' pref-width='20' word-wrapping='false'/>
           </horizontal>
           <horizontal>
             <text text='~modal-item-price' align='Center'/>
