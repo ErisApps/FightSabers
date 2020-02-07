@@ -1,0 +1,52 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <vertical child-control-height='false'>
+    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+      <text text='~header-shop' align='Center' font-size='8'/>
+    </horizontal>
+    <modal show-event='show-new' hide-event='close-modal' size-delta-x='120' size-delta-y='45' click-off-closes='true'>
+      <vertical child-control-height='false'>
+        <horizontal spacing='5'>
+          <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
+            <text text='~modal-item-name' align='Center' font-size='6'></text>
+          </horizontal>
+        </horizontal>
+        <horizontal>
+          <horizontal>
+            <button text='Close' click-event='close-modal' pref-width='20' word-wrapping='false'/>
+          </horizontal>
+          <horizontal>
+            <text text='~modal-item-price' align='Center'/>
+          </horizontal>
+          <horizontal anchor-min-y='0.2' anchor-max-y='0.3'>
+            <button text='~modal-item-owned-label' pref-width='20' word-wrapping='false' interactable='~modal-item-owned-state'/>
+          </horizontal>
+        </horizontal>
+        <horizontal child-control-width='false' background='round-rect-panel' pad='2'>
+          <text size-delta-x='100'
+                text="~modal-item-desc"
+                word-wrapping='true' overflow-mode='Ellipsis' align='Center' italics='true' />
+        </horizontal>
+      </vertical>
+    </modal>
+  </vertical>
+  <horizontal vertical-fit='PreferredSize'>
+    <page-button dir='Left' click-event='shop-list#PageUp'/>
+    <custom-list id='shop-list' contents='shop-list-content' clickable-cells='false'
+                 cell-size='30' visible-cells='4' list-direction='Horizontal'>
+      <stack vertical-fit='PreferredSize'>
+        <horizontal>
+          <big-button id='item' text='' click-event='show-new'/>
+        </horizontal>
+        <horizontal pref-width='0' pad='2' child-control-height='false'>
+          <text id='item-name' size-delta-y='15' font-size="5"
+                align='Top' rich-text='true' word-wrapping='true' overflow-mode='Ellipsis'/>
+        </horizontal>
+        <horizontal pref-height='20'>
+          <text id='item-price' rich-text='true' align='Bottom' />
+        </horizontal>
+      </stack>
+    </custom-list>
+    <page-button dir='Right' click-event='shop-list#PageDown'/>
+  </horizontal>
+  <button text='Back' on-click='back-act'/>
+</bg>

@@ -15,7 +15,7 @@ namespace FightSabers.Core.ExclusiveContent
 
         private void Awake()
         {
-            CustomNoteInstalled = PluginManager.AllPlugins.Any(info => info.Metadata.Name == "Custom Notes");
+            CustomNoteInstalled = PluginManager.AllPlugins.Any(info => info.Metadata.Name == "CustomNotes");
             ExclusiveNoteData = new Dictionary<string, string> {
                 { "Minecraft", "FightSabers.Rewards.Minecraft.bloq" }
             };

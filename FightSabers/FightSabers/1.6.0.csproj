@@ -143,6 +143,7 @@
     <Compile Include="Models\RewardItems\SaberReward.cs" />
     <Compile Include="Patches\GameNoteControllerAwakePatch.cs" />
     <Compile Include="TimeController.cs" />
+    <Compile Include="UI\Controllers\ItemShopPageController.cs" />
     <Compile Include="UI\Controllers\ShopItemPreviewPageController.cs" />
     <Compile Include="UI\Controllers\ShopMainPageController.cs" />
     <Compile Include="UI\Controllers\FightSabersGameplaySetup.cs" />
@@ -238,6 +239,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Rewards\AYAYA.pixie" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Views\ItemShopPageView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,7 +1,36 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical child-control-height='false'>
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='Shop' align='Center' font-size='8'/>
+      <text text='Shop' align='Center' font-size='8' />
+    </horizontal>
+    <horizontal>
+      <grid cell-size-x='40' cell-size-y='25' child-align='MiddleCenter' spacing-x='5' spacing-y='5'>
+        <stack>
+          <big-button id='sabers-btn' text='' on-click='sabers-btn-act' interactable='~sabers-btn-state' hover-hint='~sabers-hover-hint' />
+          <text text='Sabers' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+        <stack>
+          <big-button id='platforms-btn' text='' on-click='platforms-btn-act' interactable='~platforms-btn-state' hover-hint='~platforms-hover-hint' />
+          <text text='Platforms' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+        <stack>
+          <big-button id='avatars-btn' text='' on-click='avatars-btn-act' interactable='~avatars-btn-state' hover-hint='~avatars-hover-hint' />
+          <text text='Avatars' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+        <stack>
+          <big-button id='notes-btn' text='' on-click='notes-btn-act' interactable='~notes-btn-state' hover-hint='~notes-hover-hint' />
+          <text text='Notes' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+        <stack>
+          <big-button id='walls-btn' text='' on-click='walls-btn-act' interactable='~walls-btn-state' hover-hint='~walls-hover-hint' />
+          <text text='Walls' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+        <stack>
+          <big-button id='items-btn' text='' interactable='false' hover-hint='Work in progress!' />
+          <text text='Items' font-size='6' align='Center' all-uppercase='true'/>
+        </stack>
+      </grid>
     </horizontal>
   </vertical>
 </bg>

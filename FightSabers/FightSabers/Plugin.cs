@@ -47,7 +47,7 @@ namespace FightSabers
 
             config = cfgProvider.MakeLink<PluginConfig>((p, v) => {
                 if (v.Value == null || v.Value.RegenerateConfig)
-                    p.Store(v.Value = new PluginConfig() { RegenerateConfig = false });
+                    p.Store(v.Value = new PluginConfig { RegenerateConfig = false });
                 config = v;
             });
         }

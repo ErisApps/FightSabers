@@ -8,6 +8,8 @@ namespace FightSabers.Models.RewardItems
 {
     public class AvatarReward : RewardItem
     {
+        public AvatarReward(string name        = "", string description = "", string unlockHint = "", UnlockType unlockType = UnlockType.Coins,
+                              object unlockValue = null) : base(name, description, unlockHint, unlockType, unlockValue) { }
         public override void UnlockItem()
         {
             if (!ExclusiveContentManager.instance.HasLoadedExclusiveContent || !ExclusiveAvatarsManager.CustomAvatarInstalled || unlockState) return;
