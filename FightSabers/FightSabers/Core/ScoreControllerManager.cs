@@ -10,7 +10,7 @@ namespace FightSabers.Core
     public class ScoreControllerManager : MonoBehaviour
     {
         public bool IsInitialized { get; private set; }
-        public int CurrentScore { get; private set; }
+        //public int CurrentScore { get; private set; } //TODO: Not needing it for now
 
         private ScoreController _scoreController;
 
@@ -59,7 +59,7 @@ namespace FightSabers.Core
 
         private void Start()
         {
-            BSEvents.scoreDidChange += ScoreDidChange;
+            //BSEvents.scoreDidChange += ScoreDidChange;
             new UnityTask(ConfigureEvents());
         }
 
@@ -68,7 +68,7 @@ namespace FightSabers.Core
             if (!_scoreController) return;
             _scoreController.noteWasCutEvent -= OnNoteWasCut;
             _scoreController.noteWasMissedEvent -= OnNoteWasMissed;
-            BSEvents.scoreDidChange -= ScoreDidChange;
+            //BSEvents.scoreDidChange -= ScoreDidChange;
         }
 
         private IEnumerator ConfigureEvents()
@@ -133,10 +133,10 @@ namespace FightSabers.Core
             OnNoteMissed();
         }
 
-        private void ScoreDidChange(int score)
-        {
-            CurrentScore = score;
-            OnScoreDidChange();
-        }
+        //private void ScoreDidChange(int score)
+        //{
+        //    CurrentScore = score;
+        //    OnScoreDidChange();
+        //}
     }
 }

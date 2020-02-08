@@ -131,23 +131,38 @@ namespace FightSabers.UI.Controllers
 
         #region Events
 
-        public delegate void BarAnimatedHandler(object self, bool state);
-        public event BarAnimatedHandler BeginAnimated;
-        public event BarAnimatedHandler EndAnimated;
+        public delegate void AnimatedHandler(object self, bool state);
+        public event AnimatedHandler BarBeginAnimated;
+        public event AnimatedHandler BarEndAnimated;
+        public event AnimatedHandler CoinCountBeginAnimated;
+        public event AnimatedHandler CoinCountEndAnimated;
 
-        public float ProgressSpeed     { get; } = 2.5f;
-        public bool  CurrentlyAnimated { get; private set; }
+        public float BarProgressSpeed     { get; } = 2.5f;
+        public bool BarCurrentlyAnimated { get; private set; }
+        public bool CoinCountCurrentlyAnimated { get; private set; }
 
-        private void OnBeginAnimated()
+        private void OnBarBeginAnimated()
         {
-            CurrentlyAnimated = true;
-            BeginAnimated?.Invoke(this, CurrentlyAnimated);
+            BarCurrentlyAnimated = true;
+            BarBeginAnimated?.Invoke(this, BarCurrentlyAnimated);
         }
 
-        private void OnEndAnimated()
+        private void OnBarEndAnimated()
         {
-            CurrentlyAnimated = false;
-            EndAnimated?.Invoke(this, CurrentlyAnimated);
+            BarCurrentlyAnimated = false;
+            BarEndAnimated?.Invoke(this, BarCurrentlyAnimated);
+        }
+
+        private void OnCoinCountBeginAnimated()
+        {
+            CoinCountCurrentlyAnimated = true;
+            CoinCountBeginAnimated?.Invoke(this, CoinCountCurrentlyAnimated);
+        }
+
+        private void OnCoinCountEndAnimated()
+        {
+            CoinCountCurrentlyAnimated = false;
+            CoinCountEndAnimated?.Invoke(this, CoinCountCurrentlyAnimated);
         }
 
         private void OnLeveledUp(object self)
@@ -184,28 +199,41 @@ namespace FightSabers.UI.Controllers
             currentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
             //Current exp
             currentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+            CoinCount = "FightCoins: 0";
             new UnityTask(FillExperienceBar(0, SaveDataManager.instance.SaveData.currentExp, 3.5f));
-            CoinCount = $"FightCoins: {SaveDataManager.instance.SaveData.fightCoinsAmount}";
+            new UnityTask(FillCoinCount(0, SaveDataManager.instance.SaveData.fightCoinsAmount, 3.5f));
         }
 
         #region Animation methods
 
+        public IEnumerator FillCoinCount(int currentCoins, int toCoins, float delayBefore = 0f)
+        {
+            OnCoinCountBeginAnimated();
+            yield return new WaitForSeconds(delayBefore);
+            gameObject.Tween("FillCoinCount" + gameObject.GetInstanceID(), currentCoins, toCoins, 3,
+                             TweenScaleFunctions.SineEaseIn, tween => {
+                                 CoinCount = $"FightCoins: {(int)tween.CurrentValue}";
+                             }, tween => {
+                                 OnCoinCountEndAnimated();
+                             });
+        }
+
         public IEnumerator FillExperienceBar(uint currentExp, uint toExp, float delayBefore = 0f)
         {
-            OnBeginAnimated();
+            OnBarBeginAnimated();
             yield return new WaitForSeconds(delayBefore);
-            gameObject.Tween("FillExpBar" + gameObject.GetInstanceID(), currentExp, toExp, (ExperienceSystem.instance.GetPercentageForExperience(toExp) - ExperienceSystem.instance.GetPercentageForExperience(currentExp)) * ProgressSpeed,
+            gameObject.Tween("FillExpBar" + gameObject.GetInstanceID(), currentExp, toExp, (ExperienceSystem.instance.GetPercentageForExperience(toExp) - ExperienceSystem.instance.GetPercentageForExperience(currentExp)) * BarProgressSpeed,
                              TweenScaleFunctions.SineEaseIn, tween => {
                                  currentExpText = $"{(uint)tween.CurrentValue} / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
                                  _progressBarImage.fillAmount = ExperienceSystem.instance.GetPercentageForExperiencePrecise(tween.CurrentValue);
                              }, tween => {
-                                 OnEndAnimated();
+                                 OnBarEndAnimated();
                              });
         }
 
         private void LevelUpAnimation()
         {
-            OnBeginAnimated();
+            OnBarBeginAnimated();
             if (!_currentExpTextComp)
             {
                 Logger.log.Warn("Current experience text component was null, definitely not expected so skipping the animation");
@@ -291,7 +319,7 @@ namespace FightSabers.UI.Controllers
                                                           _progressBarImage.color = new Color32(0, 255, 0, 80);
                                                           currentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
                                                           currentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
-                                                          OnEndAnimated();
+                                                          OnBarEndAnimated();
                                                       });
                                  });
                 yield return new WaitUntil(() => finished);

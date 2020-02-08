@@ -59,6 +59,8 @@ namespace FightSabers
             fightSabersMetadata = PluginManager.AllPlugins.Select(x => x.Metadata).First(x => x.Name == "FightSabers");
             BSEvents.menuSceneActive += OnMenuSceneActive;
             BSEvents.gameSceneActive += OnGameSceneActive;
+            BSEvents.levelCleared += OnLevelCleared;
+            BSEvents.levelFailed += OnLevelCleared;
             GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", FightSabersGameplaySetup.instance);
         }
 
@@ -98,7 +100,21 @@ namespace FightSabers
             floatingScreen.GetComponent<Image>().enabled = false;
         }
 
-        private static void OnMenuSceneActive()
+        private void OnLevelCleared(StandardLevelScenesTransitionSetupDataSO transitionSetupData, LevelCompletionResults results)
+        {
+            //if (!OverlayViewController.instance.CoinCountCurrentlyAnimated) //TODO: Hotfix for BS_Utils 1.4.1
+            //{
+                var coinsWon = results.modifiedScore / 100000;
+                Logger.log.Debug($"results.modifiedScore: {results.modifiedScore}");
+                Logger.log.Debug($"coinsWon: {coinsWon}");
+                new UnityTask(OverlayViewController.instance.FillCoinCount(SaveDataManager.instance.SaveData.fightCoinsAmount,
+                                                                           SaveDataManager.instance.SaveData.fightCoinsAmount + coinsWon, 2.5f));
+                SaveDataManager.instance.SaveData.fightCoinsAmount += coinsWon;
+                SaveDataManager.instance.ApplyToFile();
+            //}
+        }
+
+        private void OnMenuSceneActive()
         {
             if (CurrentSceneState == SceneState.Menu) return;
             if (config.Value.Enabled)
@@ -107,11 +123,11 @@ namespace FightSabers
                 QuestManager.instance.UnlinkGameEventsForActivatedQuests();
             }
             if (ModifierManager.instance)
-                ModifierManager.instance.modifiers = new Type[]{};
+                ModifierManager.instance.modifiers = new Type[] { };
             CurrentSceneState = SceneState.Menu;
         }
 
-        private static void OnGameSceneActive()
+        private void OnGameSceneActive()
         {
             if (CurrentSceneState == SceneState.Game) return;
             if (GameNoteControllerAwakePatch.colorSuckers == null)
@@ -151,15 +167,9 @@ namespace FightSabers
                 modifierManager.timeWarperStrength = FightSabersGameplaySetup.instance.TimeWarperStrength;
                 new UnityTask(modifierManager.ConfigureModifiers(0.05f));
                 var scoreControllerManager = go.AddComponent<ScoreControllerManager>();
-                scoreControllerManager.BombCut += self => {
-                    modifierManager.ReduceColorSuckerColorness();
-                };
-                scoreControllerManager.NoteCut += self => {
-                    modifierManager.ImproveColorSuckerColorness();
-                };
-                scoreControllerManager.NoteMissed += self => {
-                    modifierManager.ReduceColorSuckerColorness();
-                };
+                scoreControllerManager.BombCut += self => { modifierManager.ReduceColorSuckerColorness(); };
+                scoreControllerManager.NoteCut += self => { modifierManager.ImproveColorSuckerColorness(); };
+                scoreControllerManager.NoteMissed += self => { modifierManager.ReduceColorSuckerColorness(); };
             }
             CurrentSceneState = SceneState.Game;
         }

@@ -114,17 +114,17 @@ namespace FightSabers.Core
                 if (ExperiencePointsWon >= GetExperienceBeforeLevelUp())
                 {
                     new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
-                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
+                    yield return new WaitUntil(() => !OverlayViewController.instance.BarCurrentlyAnimated);
                     ExperiencePointsWon -= GetExperienceBeforeLevelUp();
                     LevelUp();
-                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
+                    yield return new WaitUntil(() => !OverlayViewController.instance.BarCurrentlyAnimated);
                     delayApplied = 0;
                 }
                 else
                 {
                     var addingExperience = ExperiencePointsWon;
                     new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + addingExperience, delayApplied));
-                    yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
+                    yield return new WaitUntil(() => !OverlayViewController.instance.BarCurrentlyAnimated);
                     SaveDataManager.instance.SaveData.currentExp += addingExperience;
                     ExperiencePointsWon -= addingExperience;
                 }
