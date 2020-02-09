@@ -3,12 +3,32 @@
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
       <text text='~header-shop' align='Center' font-size='8'/>
     </horizontal>
+    <modal show-event='show-confirm-dialog' hide-event='close-dialog-modal' size-delta-x='90' size-delta-y='~dialog-height' click-off-closes='false'>
+      <vertical child-control-height='false'>
+        <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
+          <text text='Confirm' align='Center' font-size='6'></text>
+        </horizontal>
+        <horizontal child-control-width='false' background='round-rect-panel' pad='2'>
+          <text size-delta-x='70'
+                text='~dialog-desc'
+                word-wrapping='true' overflow-mode='Ellipsis' align='Center' italics='true'
+                font-size='4'/>
+        </horizontal>
+        <horizontal active='~dialog-remaining-money-state'>
+          <text text='~dialog-remaining-money' align='Center' font-size='3.5'></text>
+        </horizontal>
+        <horizontal spacing='8' pad-top='2'>
+          <button text='~dialog-cancel-text' on-click='close-confirm-dialog' pref-width='23' word-wrapping='false' glow-color='red'/>
+          <vertical active='~dialog-confirm-state'>
+            <button text='Confirm' on-click='confirm-buy-dialog' pref-width='23' word-wrapping='false' glow-color='green'/>
+          </vertical>
+        </horizontal>
+      </vertical>
+    </modal>
     <modal show-event='show-new' hide-event='close-modal' size-delta-x='120' size-delta-y='45' click-off-closes='true'>
       <vertical child-control-height='false'>
-        <horizontal spacing='5'>
-          <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
-            <text text='~modal-item-name' align='Center' font-size='6'></text>
-          </horizontal>
+        <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
+          <text text='~modal-item-name' align='Center' font-size='6'></text>
         </horizontal>
         <horizontal>
           <horizontal>
@@ -18,7 +38,8 @@
             <text text='~modal-item-price' align='Center'/>
           </horizontal>
           <horizontal anchor-min-y='0.2' anchor-max-y='0.3'>
-            <button text='~modal-item-owned-label' pref-width='20' word-wrapping='false' interactable='~modal-item-owned-state'/>
+            <button text='~modal-item-owned-label' pref-width='20' word-wrapping='false' interactable='~modal-item-owned-state'
+                    hover-hint='~modal-item-owned-hint' on-click="show-confirm-dialog" glow-color="~modal-item-owned-glow"/>
           </horizontal>
         </horizontal>
         <horizontal child-control-width='false' background='round-rect-panel' pad='2'>

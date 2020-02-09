@@ -46,7 +46,7 @@ namespace FightSabers.UI.Controllers
         public string CoinCount
         {
             get { return _coinCount; }
-            private set
+            set
             {
                 _coinCount = value;
                 NotifyPropertyChanged();

@@ -2,6 +2,8 @@
 using System.IO;
 using FightSabers.Models;
 using FightSabers.Models.Converters;
+using FightSabers.UI.Controllers;
+using FightSabers.Utilities;
 using Newtonsoft.Json;
 
 namespace FightSabers.Settings
@@ -9,16 +11,13 @@ namespace FightSabers.Settings
     public class SaveDataManager : PersistentSingleton<SaveDataManager>
     {
         #region Properties
-
         public ProfileSaveData SaveData { get; private set; }
 
         private readonly string _pathConfigFolder;
         private readonly string _pathSaveFile;
-
         #endregion
 
         #region Methods
-
         private SaveDataManager()
         {
             _pathConfigFolder = Path.Combine(Environment.CurrentDirectory, "UserData");
@@ -54,6 +53,13 @@ namespace FightSabers.Settings
             }
         }
 
+        public void Pay(int coinValue)
+        {
+            new UnityTask(OverlayViewController.instance.FillCoinCount(SaveData.fightCoinsAmount, SaveData.fightCoinsAmount - coinValue));
+            SaveData.fightCoinsAmount -= coinValue;
+            ApplyToFile();
+        }
+
         public void ApplyToFile()
         {
             if (SaveData == null) return;
@@ -61,7 +67,6 @@ namespace FightSabers.Settings
             if (!string.IsNullOrEmpty(jsonData))
                 File.WriteAllText(_pathSaveFile, jsonData);
         }
-
         #endregion
     }
 }
