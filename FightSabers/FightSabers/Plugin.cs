@@ -102,16 +102,14 @@ namespace FightSabers
 
         private void OnLevelCleared(StandardLevelScenesTransitionSetupDataSO transitionSetupData, LevelCompletionResults results)
         {
-            //if (!OverlayViewController.instance.CoinCountCurrentlyAnimated) //TODO: Hotfix for BS_Utils 1.4.1
-            //{
-                var coinsWon = results.modifiedScore / 100000;
-                Logger.log.Debug($"results.modifiedScore: {results.modifiedScore}");
-                Logger.log.Debug($"coinsWon: {coinsWon}");
-                new UnityTask(OverlayViewController.instance.FillCoinCount(SaveDataManager.instance.SaveData.fightCoinsAmount,
-                                                                           SaveDataManager.instance.SaveData.fightCoinsAmount + coinsWon, 2.5f));
-                SaveDataManager.instance.SaveData.fightCoinsAmount += coinsWon;
-                SaveDataManager.instance.ApplyToFile();
-            //}
+            if (!config.Value.Enabled) return;
+            var coinsWon = results.modifiedScore / 100000;
+            Logger.log.Debug($"results.modifiedScore: {results.modifiedScore}");
+            Logger.log.Debug($"coinsWon: {coinsWon}");
+            new UnityTask(OverlayViewController.instance.FillCoinCount(SaveDataManager.instance.SaveData.fightCoinsAmount,
+                                                                       SaveDataManager.instance.SaveData.fightCoinsAmount + coinsWon, 2.5f));
+            SaveDataManager.instance.SaveData.fightCoinsAmount += coinsWon;
+            SaveDataManager.instance.ApplyToFile();
         }
 
         private void OnMenuSceneActive()
