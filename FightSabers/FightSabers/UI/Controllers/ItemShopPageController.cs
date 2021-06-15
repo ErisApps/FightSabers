@@ -356,7 +356,7 @@ namespace FightSabers.UI.Controllers
                 _controllerOwner.ItemOwnedGlow = _rewardItem.unlockState ? "transparent" : hasEnoughMoney ? "green" : "red";
                 _controllerOwner.ItemOwnedHint =  hasEnoughMoney || _rewardItem.unlockState ? "" : "<color=#ff2a2aff>Not enough FightCoins!</color>";
                 _controllerOwner.ItemOwnedState = hasEnoughMoney && !_rewardItem.unlockState;
-                if (_rewardItem is SaberReward)
+                if (_rewardItem is SaberReward || _rewardItem is PlatformReward)
                     _controllerOwner.flowCoordinatorOwner.DisplayShopItemPreview(true, _rewardItem);
                 _controllerOwner.parserParams.EmitEvent("show-new");
             }

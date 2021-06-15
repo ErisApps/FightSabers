@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
+using BS_Utils.Utilities;
+using CustomFloorPlugin;
 using FightSabers.Core.ExclusiveContent;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
 using FightSabers.Models.RewardItems;
+using FightSabers.Utilities;
+using IPA.Utilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using ReflectionUtil = BS_Utils.Utilities.ReflectionUtil;
 
 namespace FightSabers.UI.Controllers
 {
@@ -25,8 +34,13 @@ namespace FightSabers.UI.Controllers
         private Vector3 saberLeftPos  = new Vector3(0, 0, 0);
         private Vector3 saberRightPos = new Vector3(0, 0.5f, 0);
 
+        //Platforms
+        private CustomFloorPlugin.CustomPlatform _previewPlatform;
+
         [UIParams]
         private BSMLParserParams parserParams;
+
+        private IRewardItem _currentReward;
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
@@ -38,7 +52,20 @@ namespace FightSabers.UI.Controllers
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
             base.DidDeactivate(deactivationType);
-            ClearPreview();
+            if (_currentReward is SaberReward)
+                ClearPreview();
+            else if (_currentReward is PlatformReward)
+            {
+                var asmType = PlatformManager.Instance.GetType();
+                var mi = asmType.GetMethod("InternalTempChangeToPlatform", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(int) }, null);
+                Logger.log.Debug($"mi is not null: {mi != null}");
+                mi?.Invoke(null, new object[] { 0 });
+                var list = PlatformManager.Instance.GetPlatforms().ToList();
+                list.RemoveAt(list.Count - 1);
+                var info = typeof(PlatformManager).GetField("platforms", BindingFlags.NonPublic | BindingFlags.Static);
+                info?.SetValue(null, list.ToArray());
+            }
+            _currentReward = null;
         }
 
         #region Utils
@@ -75,6 +102,7 @@ namespace FightSabers.UI.Controllers
 
         public void OpenPreview(IRewardItem rewardItem)
         {
+            _currentReward = rewardItem;
             switch (rewardItem)
             {
                 case SaberReward _:
@@ -83,10 +111,49 @@ namespace FightSabers.UI.Controllers
                 case AvatarReward _:
                 case NoteReward _:
                 case PlatformReward _:
+                    TestStuff();
+                    break;
                 case WallReward _:
                 case RewardItem _:
                     break;
             }
+        }
+
+        private static CustomFloorPlugin.CustomPlatform AddPlatformFromEmbedded(string embeddedPath)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(embeddedPath))
+            {
+                var bundle = AssetBundle.LoadFromStream(stream);
+                var asm = Assembly.Load("CustomFloorPlugin");
+                var platLoaderType = asm.GetType("CustomFloorPlugin.PlatformLoader");
+                Logger.log.Debug($"platLoaderType is not null: {platLoaderType != null}");
+                var customPlatform = PlatformManager.Instance.GetField("platformLoader")?.
+                                                     InvokeMethod("LoadPlatform", bundle, PlatformManager.Instance.transform) as CustomFloorPlugin.CustomPlatform;
+                Logger.log.Debug($"customPlatform is not null: {customPlatform != null}");
+                if (customPlatform != null)
+                {
+                    var list = PlatformManager.Instance.GetPlatforms().ToList();
+                    list.Add(customPlatform);
+                    foreach (var platform in list)
+                    {
+                        Logger.log.Debug($"p: {platform}");
+                    }
+                    var info = typeof(PlatformManager).GetField("platforms", BindingFlags.NonPublic | BindingFlags.Static);
+                    info?.SetValue(null, list.ToArray());
+                }
+                return customPlatform;
+            }
+        }
+
+        private void TestStuff()
+        {
+            var asmType = PlatformManager.Instance.GetType();
+            var plat = AddPlatformFromEmbedded("FightSabers.Rewards.Light Disc.plat");
+            Logger.log.Debug($"plat is not null: {plat != null}");
+            var mi = asmType.GetMethod("InternalTempChangeToPlatform", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(int) }, null);
+            Logger.log.Debug($"mi is not null: {mi != null}");
+            mi?.Invoke(null, new object[] { PlatformManager.Instance.GetPlatforms().Length - 1 });
         }
 
         private void PreparePreviewObject()

@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\_DevFolder\1.6.0 Dependencies\Plugins\BS_Utils.dll</HintPath>
     </Reference>
+    <Reference Include="CustomPlatforms">
+      <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\Plugins\CustomPlatforms.dll</HintPath>
+    </Reference>
     <Reference Include="CustomSaber">
       <HintPath>..\..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\Plugins\CustomSaber.dll</HintPath>
     </Reference>
@@ -215,7 +218,9 @@
     <EmbeddedResource Include="UI\Views\CharacterStatsPageView.bsml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\Views\FightSabersGameplaySetupView.bsml" />
+    <EmbeddedResource Include="UI\Views\FightSabersGameplaySetupView.bsml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\ShopMainPageView.bsml">
