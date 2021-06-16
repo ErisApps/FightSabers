@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.6.0", "FightSabers\1.6.0.csproj", "{5B3017F6-7C5C-4301-82CA-7A2D95C94824}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightSabers", "FightSabers\FightSabers.csproj", "{5B3017F6-7C5C-4301-82CA-7A2D95C94824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
