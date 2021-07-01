@@ -1,78 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.GameplaySetup;
-using BS_Utils.Gameplay;
-using BS_Utils.Utilities;
 using FightSabers.Core;
+using FightSabers.Installers;
 using FightSabers.Models;
 using FightSabers.Models.Modifiers;
 using FightSabers.Patches;
 using FightSabers.Settings;
 using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
-using Harmony;
+using HarmonyLib;
 using IPA;
 using IPA.Config;
+using IPA.Config.Stores;
 using IPA.Loader;
-using IPA.Utilities;
+using SiraUtil.Zenject;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Config = IPA.Config.Config;
-using IPALogger = IPA.Logging.Logger;
 
 namespace FightSabers
 {
-    public class Plugin : IBeatSaberPlugin
+	[Plugin(RuntimeOptions.DynamicInit)]
+    public class Plugin
     {
-        #region Properties
-        internal static Ref<PluginConfig>           config;
-        internal static IConfigProvider             configProvider;
-        internal static PluginLoader.PluginMetadata fightSabersMetadata;
+	    private PluginMetadata _fightSabersMetadata = null!;
 
         public static SceneState CurrentSceneState { get; private set; } = SceneState.Menu;
-        #endregion
 
-        #region BSIPA events
-        public void Init(IPALogger logger, [Config.Prefer("json")] IConfigProvider cfgProvider)
+        [Init]
+        public void Init(Logger logger, PluginMetadata metadata, Config config, Zenjector zenjector)
         {
-            Logger.log = logger;
-            BSEvents.menuSceneLoadedFresh += MenuLoadFresh;
-            configProvider = cfgProvider;
+	        _fightSabersMetadata = metadata;
 
-            config = cfgProvider.MakeLink<PluginConfig>((p, v) => {
-                if (v.Value == null || v.Value.RegenerateConfig)
-                    p.Store(v.Value = new PluginConfig() { RegenerateConfig = false });
-                config = v;
-            });
+	        zenjector.OnApp<FightSAppInstaller>().WithParameters(logger, config.Generated<PluginConfig>());
+	        zenjector.OnMenu<FightSMenuInstaller>();
+	        zenjector.OnGame<FightSGameInstaller>();
         }
 
-        public void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
-            var harmony = HarmonyInstance.Create("com.Shoko84.beatsaber.FightSabers");
+            var harmony = new Harmony("com.Shoko84.beatsaber.FightSabers");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-            fightSabersMetadata = PluginManager.AllPlugins.Select(x => x.Metadata).First(x => x.Name == "FightSabers");
-            BSEvents.menuSceneActive += OnMenuSceneActive;
-            BSEvents.gameSceneActive += OnGameSceneActive;
+
             GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", FightSabersGameplaySetup.instance);
         }
 
-        public void OnApplicationQuit() { }
+        [OnDisable]
+        public void OnDisable()
+        {
 
-        public void OnFixedUpdate() { }
-
-        public void OnUpdate() { }
-
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
-
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
-
-        public void OnSceneUnloaded(Scene scene) { }
-        #endregion
+        }
 
         #region Custom events
         private static void MenuLoadFresh()
