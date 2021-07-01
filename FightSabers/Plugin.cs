@@ -25,15 +25,15 @@ namespace FightSabers
 	[Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
-	    private PluginMetadata _fightSabersMetadata = null!;
+	    private const string HARMONY_ID = "be.erisapps.FightSabers";
 
-        public static SceneState CurrentSceneState { get; private set; } = SceneState.Menu;
+	    private Harmony? _harmonyInstance;
+
+	    public static SceneState CurrentSceneState { get; private set; } = SceneState.Menu;
 
         [Init]
         public void Init(Logger logger, PluginMetadata metadata, Config config, Zenjector zenjector)
         {
-	        _fightSabersMetadata = metadata;
-
 	        zenjector.OnApp<FightSAppInstaller>().WithParameters(logger, config.Generated<PluginConfig>());
 	        zenjector.OnMenu<FightSMenuInstaller>();
 	        zenjector.OnGame<FightSGameInstaller>();
@@ -42,8 +42,8 @@ namespace FightSabers
         [OnEnable]
         public void OnEnable()
         {
-            var harmony = new Harmony("com.Shoko84.beatsaber.FightSabers");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+	        _harmonyInstance = new Harmony(HARMONY_ID);
+	        _harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
             GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", FightSabersGameplaySetup.instance);
         }
@@ -51,7 +51,8 @@ namespace FightSabers
         [OnDisable]
         public void OnDisable()
         {
-
+	        _harmonyInstance?.UnpatchAll(HARMONY_ID);
+	        _harmonyInstance = null;
         }
 
         #region Custom events
