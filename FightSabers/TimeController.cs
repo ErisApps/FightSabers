@@ -8,79 +8,93 @@ using UnityEngine;
 
 namespace FightSabers
 {
-    public class TimeController : MonoBehaviour
-    {
-        private static TimeController _timeController;
+	public class TimeController : MonoBehaviour
+	{
+		private static TimeController _timeController;
 
-        public static TimeController Instance {
-            get {
-                if (_timeController == null)
-                    _timeController = new GameObject().AddComponent<TimeController>();
-                return _timeController;
-            }
-        }
+		public static TimeController Instance
+		{
+			get
+			{
+				if (_timeController == null)
+				{
+					_timeController = new GameObject().AddComponent<TimeController>();
+				}
 
-        private const float _baseTimeScale = 1f;
-        private float _controlledTime = 1f;
-        private float _modifiedTime   = 1f;
+				return _timeController;
+			}
+		}
 
-        private AudioTimeSyncController AudioTimeSync { get; set; }
-        private AudioSource             _songAudio;
-        private GamePause               _gamePauseManager;
+		private const float _baseTimeScale = 1f;
+		private float _controlledTime = 1f;
+		private float _modifiedTime = 1f;
 
-        public float TimeMult {
-            get { return _baseTimeScale * ManipulatedTime; }
-        }
+		private AudioTimeSyncController AudioTimeSync { get; set; }
+		private AudioSource _songAudio;
+		private GamePause _gamePauseManager;
 
-        //public float TimeScale {
-        //    get { return controlledTime; }
-        //}
+		public float TimeMult => _baseTimeScale * ManipulatedTime;
 
-        private float _manipulatedTime = 1f;
+		//public float TimeScale {
+		//    get { return controlledTime; }
+		//}
 
-        public float ManipulatedTime {
-            get { return _manipulatedTime; }
-            set {
-                _manipulatedTime = Mathf.Clamp(value, 0f, 5f);
-                UpdateTimeScale(_modifiedTime);
-            }
-        }
+		private float _manipulatedTime = 1f;
 
-        public float OverrideTimeScale { get; set; } = -1f;
+		public float ManipulatedTime
+		{
+			get => _manipulatedTime;
+			set
+			{
+				_manipulatedTime = Mathf.Clamp(value, 0f, 5f);
+				UpdateTimeScale(_modifiedTime);
+			}
+		}
 
-        private void Start()
-        {
-            AudioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
-            //var ncsem = Resources.FindObjectsOfTypeAll<NoteCutSoundEffectManager>().FirstOrDefault();
-            //var ncse = Resources.FindObjectsOfTypeAll<NoteCutSoundEffect>().FirstOrDefault();
+		public float OverrideTimeScale { get; set; } = -1f;
 
-            if (AudioTimeSync != null)
-            {
-                AudioTimeSync.forcedNoAudioSync = true;
-                _songAudio = AudioTimeSync.GetField<AudioSource>("_audioSource");
-            }
-            _gamePauseManager = Resources.FindObjectsOfTypeAll<GamePause>().FirstOrDefault();
-        }
+		private void Start()
+		{
+			AudioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
+			//var ncsem = Resources.FindObjectsOfTypeAll<NoteCutSoundEffectManager>().FirstOrDefault();
+			//var ncse = Resources.FindObjectsOfTypeAll<NoteCutSoundEffect>().FirstOrDefault();
 
-        private void LateUpdate()
-        {
-            Time.timeScale = OverrideTimeScale >= 0f ? OverrideTimeScale : _gamePauseManager.GetPrivateField<bool>("_pause") ? 1f : TimeMult;
-            if (!_gamePauseManager.GetPrivateField<bool>("_pause"))
-            {
-                if (!AudioTimeSync.forcedNoAudioSync)
-                    UpdateTimeScale(1f);
-                else if (Math.Abs(_songAudio.pitch - _controlledTime) > float.Epsilon)
-                    UpdateTimeScale(_songAudio.pitch);
-            }
-        }
+			if (AudioTimeSync != null)
+			{
+				AudioTimeSync.forcedNoAudioSync = true;
+				_songAudio = AudioTimeSync.GetField<AudioSource>("_audioSource");
+			}
 
-        private void UpdateTimeScale(float modifiedTime)
-        {
-            _modifiedTime = modifiedTime;
-            _controlledTime = modifiedTime * TimeMult;
-            if (!_songAudio) return;
-            _songAudio.pitch = _controlledTime;
-            AudioTimeSync.forcedNoAudioSync = !Mathf.Approximately(_songAudio.pitch, 1f);
-        }
-    }
+			_gamePauseManager = Resources.FindObjectsOfTypeAll<GamePause>().FirstOrDefault();
+		}
+
+		private void LateUpdate()
+		{
+			Time.timeScale = OverrideTimeScale >= 0f ? OverrideTimeScale : _gamePauseManager.GetPrivateField<bool>("_pause") ? 1f : TimeMult;
+			if (!_gamePauseManager.GetPrivateField<bool>("_pause"))
+			{
+				if (!AudioTimeSync.forcedNoAudioSync)
+				{
+					UpdateTimeScale(1f);
+				}
+				else if (Math.Abs(_songAudio.pitch - _controlledTime) > float.Epsilon)
+				{
+					UpdateTimeScale(_songAudio.pitch);
+				}
+			}
+		}
+
+		private void UpdateTimeScale(float modifiedTime)
+		{
+			_modifiedTime = modifiedTime;
+			_controlledTime = modifiedTime * TimeMult;
+			if (!_songAudio)
+			{
+				return;
+			}
+
+			_songAudio.pitch = _controlledTime;
+			AudioTimeSync.forcedNoAudioSync = !Mathf.Approximately(_songAudio.pitch, 1f);
+		}
+	}
 }
