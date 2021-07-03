@@ -70,6 +70,10 @@
 			<HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="NewtonSoft">
+			<HintPath>$(BeatSaberDir)\Libs\NewtonSoft.Json.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="SemVer">
 			<HintPath>$(BeatSaberDir)\Libs\SemVer.dll</HintPath>
 			<Private>False</Private>
