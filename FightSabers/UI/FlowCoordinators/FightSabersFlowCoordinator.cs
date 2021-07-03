@@ -7,6 +7,8 @@ namespace FightSabers.UI.FlowCoordinators
 {
 	internal class FightSabersFlowCoordinator : FlowCoordinator
 	{
+		private BottomPageController _bottomController;
+
 		public enum PageStatus
 		{
 			Home,
@@ -17,7 +19,6 @@ namespace FightSabers.UI.FlowCoordinators
 		}
 
 		public FlowCoordinator oldCoordinator;
-		public BottomPageController bottomController;
 
 		public PageStatus CurrentPageStatus { get; private set; }
 
@@ -30,9 +31,9 @@ namespace FightSabers.UI.FlowCoordinators
 
 			CurrentPageStatus = PageStatus.Home;
 			var homeController = BeatSaberUI.CreateViewController<HomePageController>();
-			bottomController = BeatSaberUI.CreateViewController<BottomPageController>();
-			bottomController.flowCoordinatorOwner = homeController.flowCoordinatorOwner = this;
-			ProvideInitialViewControllers(homeController, null, null, bottomController);
+			_bottomController = BeatSaberUI.CreateViewController<BottomPageController>();
+			_bottomController.FlowCoordinatorOwner = homeController.flowCoordinatorOwner = this;
+			ProvideInitialViewControllers(homeController, null, null, _bottomController);
 		}
 
 		public void ActivatePage(PageStatus status)
@@ -50,33 +51,33 @@ namespace FightSabers.UI.FlowCoordinators
 					ReplaceTopViewController(controller);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, bottomController);
+					ProvideInitialViewControllers(controller, null, null, _bottomController);
 					break;
 				case PageStatus.Skills:
 					controller = BeatSaberUI.CreateViewController<SkillTreePageController>();
 					ReplaceTopViewController(controller);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, bottomController);
+					ProvideInitialViewControllers(controller, null, null, _bottomController);
 					break;
 				case PageStatus.Profile:
 					controller = BeatSaberUI.CreateViewController<ProfilePageController>();
 					ReplaceTopViewController(controller);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, bottomController);
+					ProvideInitialViewControllers(controller, null, null, _bottomController);
 					break;
 				case PageStatus.Quests:
 					controller = BeatSaberUI.CreateViewController<QuestPickerPageController>();
 					ReplaceTopViewController(controller);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, bottomController);
+					ProvideInitialViewControllers(controller, null, null, _bottomController);
 					SetLeftScreenViewController(BeatSaberUI.CreateViewController<CurrentQuestPageController>(), ViewController.AnimationType.In);
 					break;
 				case PageStatus.Statistics:
 					controller = BeatSaberUI.CreateViewController<CharacterStatsPageController>();
 					ReplaceTopViewController(controller);
-					ProvideInitialViewControllers(controller, null, null, bottomController);
+					ProvideInitialViewControllers(controller, null, null, _bottomController);
 					SetLeftScreenViewController(BeatSaberUI.CreateViewController<MonsterInfoPageController>(), ViewController.AnimationType.In);
 					SetRightScreenViewController(BeatSaberUI.CreateViewController<ModifierStatsPageController>(), ViewController.AnimationType.In);
 					break;

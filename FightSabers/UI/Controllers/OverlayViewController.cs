@@ -2,7 +2,7 @@
 using System.Linq;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 using DigitalRuby.Tween;
 using FightSabers.Core;
 using FightSabers.Settings;
@@ -16,18 +16,15 @@ using Image = UnityEngine.UI.Image;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class OverlayViewController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\OverlayView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.OverlayView.bsml")]
+	internal class OverlayViewController : BSMLAutomaticViewController, ICanControlFlowCoordinator
 	{
-		public override string ResourceName => "FightSabers.UI.Views.OverlayView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\OverlayView.bsml";
-
 		public static OverlayViewController instance;
 
-		[UIParams]
-		private BSMLParserParams parserParams;
-
 		private bool _shouldOpenPage = true;
-		private FightSabersFlowCoordinator _flowCoordinatorOwner;
+		public FightSabersFlowCoordinator FlowCoordinatorOwner { get; set; } = null!;
+
 
 		[UIComponent("switch-fightsabers-btn")]
 		private Button _openFightSabersButton;
@@ -46,6 +43,7 @@ namespace FightSabers.UI.Controllers
 
 		private bool _experienceContainerState = true;
 
+
 		[UIValue("experience-container-state")]
 		public bool experienceContainerState
 		{
@@ -58,6 +56,7 @@ namespace FightSabers.UI.Controllers
 		}
 
 		private bool _fsDisableContainerState;
+
 
 		[UIValue("fs-disable-container-state")]
 		public bool fsDisableContainerState
@@ -72,6 +71,7 @@ namespace FightSabers.UI.Controllers
 
 		private string _buttonStatus = "Open FightSabers";
 
+
 		[UIValue("fightsabers-btn-status")]
 		public string buttonStatus
 		{
@@ -85,6 +85,7 @@ namespace FightSabers.UI.Controllers
 
 		private string _headerText = "";
 
+
 		[UIValue("header-text")]
 		public string headerText
 		{
@@ -97,6 +98,7 @@ namespace FightSabers.UI.Controllers
 		}
 
 		private string _currentLevelText = "";
+
 
 		[UIValue("current-level")]
 		public string currentLevelText
@@ -113,6 +115,7 @@ namespace FightSabers.UI.Controllers
 		private TextMeshProUGUI _currentExpTextComp;
 
 		private string _currentExpText = "";
+
 
 		[UIValue("current-exp")]
 		public string currentExpText
@@ -132,6 +135,7 @@ namespace FightSabers.UI.Controllers
 
 		public float ProgressSpeed { get; } = 2.5f;
 		public bool CurrentlyAnimated { get; private set; }
+
 
 		private void OnBeginAnimated()
 		{
@@ -321,13 +325,13 @@ namespace FightSabers.UI.Controllers
 			if (_shouldOpenPage)
 			{
 				var currentFlow = Resources.FindObjectsOfTypeAll<FlowCoordinator>().FirstOrDefault(f => f.isActivated);
-				_flowCoordinatorOwner = BeatSaberUI.CreateFlowCoordinator<FightSabersFlowCoordinator>();
-				_flowCoordinatorOwner.oldCoordinator = currentFlow;
-				currentFlow.PresentFlowCoordinator(_flowCoordinatorOwner);
+				FlowCoordinatorOwner = BeatSaberUI.CreateFlowCoordinator<FightSabersFlowCoordinator>();
+				FlowCoordinatorOwner.oldCoordinator = currentFlow;
+				currentFlow.PresentFlowCoordinator(FlowCoordinatorOwner);
 			}
 			else
 			{
-				_flowCoordinatorOwner.oldCoordinator.DismissFlowCoordinator(_flowCoordinatorOwner);
+				FlowCoordinatorOwner.oldCoordinator.DismissFlowCoordinator(FlowCoordinatorOwner);
 			}
 
 			_shouldOpenPage = !_shouldOpenPage;

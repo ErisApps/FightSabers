@@ -1,14 +1,11 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class CharacterStatsPageController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\CharacterStatsPageView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.CharacterStatsPageView.bsml")]
+	internal class CharacterStatsPageController : BSMLAutomaticViewController
 	{
-		public override string ResourceName => "FightSabers.UI.Views.CharacterStatsPageView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\CharacterStatsPageView.bsml";
-
-		[UIParams]
-		private BSMLParserParams parserParams;
 	}
 }

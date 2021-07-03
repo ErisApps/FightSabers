@@ -1,18 +1,14 @@
 ﻿using System.Diagnostics;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class HomePageController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\HomePageView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.HomePageView.bsml")]
+	internal class HomePageController : BSMLAutomaticViewController
 	{
 		private const string GITHUB_REPO_URL = "https://github.com/ErisApps/FightSabers/";
-
-		public override string ResourceName => "FightSabers.UI.Views.HomePageView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\HomePageView.bsml";
-
-		[UIParams]
-		private BSMLParserParams parserParams;
 
 		private string _modStatus = "Disable";
 

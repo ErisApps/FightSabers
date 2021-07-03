@@ -1,19 +1,15 @@
 ﻿using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.Core;
 using UnityEngine.UI;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class QuestPickerPageController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\QuestPickerPageView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.QuestPickerPageView.bsml")]
+	internal class QuestPickerPageController : BSMLAutomaticViewController
 	{
-		public override string ResourceName => "FightSabers.UI.Views.QuestPickerPageView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\QuestPickerPageView.bsml";
-
-		[UIParams]
-		private BSMLParserParams parserParams;
-
 		public static QuestPickerPageController instance;
 
 		[UIComponent("picker-quest-1-btn")]

@@ -1,6 +1,6 @@
 ﻿using System;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Models.Abstracts;
@@ -12,15 +12,11 @@ using UnityEngine.UI;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class CurrentQuestPageController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\CurrentQuestPageView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.CurrentQuestPageView.bsml")]
+	internal class CurrentQuestPageController : BSMLAutomaticViewController
 	{
-		public override string ResourceName => "FightSabers.UI.Views.CurrentQuestPageView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\CurrentQuestPageView.bsml";
-
 		public static CurrentQuestPageController instance;
-
-		[UIParams]
-		private BSMLParserParams parserParams;
 
 		[UIComponent("progress-bar-quest-1-img")]
 		private Image _progressBarImageQuest1;

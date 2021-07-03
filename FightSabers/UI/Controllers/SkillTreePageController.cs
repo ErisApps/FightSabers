@@ -1,14 +1,11 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Parser;
+using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class SkillTreePageController : FightSabersViewController
+	[HotReload(RelativePathToLayout = @"..\Views\SkillTreePageView.bsml")]
+	[ViewDefinition("FightSabers.UI.Views.SkillTreePageView.bsml")]
+	internal class SkillTreePageController : BSMLAutomaticViewController
 	{
-		public override string ResourceName => "FightSabers.UI.Views.SkillTreePageView.bsml";
-		public override string ContentFilePath => "D:\\Bibliotheques\\Documents\\GitHub\\FightSabers\\FightSabers\\FightSabers\\UI\\Views\\SkillTreePageView.bsml";
-
-		[UIParams]
-		private BSMLParserParams parserParams;
 	}
 }
