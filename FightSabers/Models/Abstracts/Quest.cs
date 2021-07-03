@@ -29,8 +29,6 @@ namespace FightSabers.Models.Abstracts
             }
         }
 
-        #region Events
-
         public delegate void ProgressHandler(object self);
         public event ProgressHandler ProgressChanged;
         public event ProgressHandler QuestCanceled;
@@ -52,8 +50,6 @@ namespace FightSabers.Models.Abstracts
             isCompleted = true;
             QuestCompleted?.Invoke(this);
         }
-
-        #endregion
 
         protected virtual void Prepare(string title, string description, string progressHint, string questType, uint expReward, float progress)
         {

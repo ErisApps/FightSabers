@@ -4,9 +4,7 @@ namespace FightSabers.Models.Interfaces
 {
     public interface IQuest
     {
-        #region Properties
-
-        /// <summary>
+	    /// <summary>
         /// Title of the quest
         /// </summary>
         string title { get; set; }
@@ -56,7 +54,5 @@ namespace FightSabers.Models.Interfaces
         void Complete();
         void LinkGameEvents();
         void UnlinkGameEvents();
-
-        #endregion
     }
 }

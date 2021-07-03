@@ -6,14 +6,8 @@ namespace FightSabers.Models.Quests
 {
     public class MonsterKillQuest : Quest
     {
-        #region Properties
-
-        public uint currentKillCount;
+	    public uint currentKillCount;
         public uint toKillCount;
-
-        #endregion
-
-        #region Events
 
         private void OnMonsterRemoved(object self, MonsterStatus status)
         {
@@ -23,10 +17,6 @@ namespace FightSabers.Models.Quests
             if (currentKillCount > toKillCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
                 Complete();
         }
-
-        #endregion
-
-        #region Methods
 
         protected override void Refresh()
         {
@@ -62,7 +52,5 @@ namespace FightSabers.Models.Quests
                          GetType().ToString(), toKillCount * 6,
                          currentKillCount                  / (float)toKillCount);
         }
-
-        #endregion
     }
 }

@@ -9,26 +9,16 @@ namespace FightSabers.Models.Modifiers
 {
     public class ColorSucker : Modifier
     {
-        #region Properties
-
-        public ColorNoteVisuals   Cnv { get; private set; }
+	    public ColorNoteVisuals   Cnv { get; private set; }
         public GameNoteController Gnc { get; private set; }
         public float StartingColorValue = 0.2f;
 
         private bool _isDisappearingArrow;
 
-        #endregion
-
-        #region Events
-
         private static void OnDidInitEvent(ColorNoteVisuals cnv, NoteController noteController)
         {
             ApplyColorVisualOnNotes(true);
         }
-
-        #endregion
-
-        #region Unity methods
 
         private void Awake()
         {
@@ -43,10 +33,6 @@ namespace FightSabers.Models.Modifiers
             if (Gnc)
                 _isDisappearingArrow = Gnc.GetPrivateField<bool>("_disappearingArrow");
         }
-
-        #endregion
-
-        #region Methods
 
         public static void ApplyColorVisualOnNotes(bool lerpMode)
         {
@@ -76,10 +62,6 @@ namespace FightSabers.Models.Modifiers
             }
         }
 
-        #endregion
-
-        #region Overrides
-
         public override void EnableModifier()
         {
             if (!Cnv)
@@ -97,7 +79,5 @@ namespace FightSabers.Models.Modifiers
             Cnv.didInitEvent -= OnDidInitEvent;
             ApplyColorVisualOnNotes(false);
         }
-
-        #endregion
     }
 }

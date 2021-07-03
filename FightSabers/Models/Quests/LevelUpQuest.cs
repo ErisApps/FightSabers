@@ -6,14 +6,8 @@ namespace FightSabers.Models.Quests
 {
     public class LevelUpQuest : Quest
     {
-        #region Properties
-
-        public uint currentLevelUpCount;
+	    public uint currentLevelUpCount;
         public uint toLevelUpCount;
-
-        #endregion
-
-        #region Events
 
         private void OnLeveledUp(object self)
         {
@@ -22,8 +16,6 @@ namespace FightSabers.Models.Quests
             if (currentLevelUpCount >= toLevelUpCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
                 Complete();
         }
-
-        #endregion
 
         protected override void Refresh()
         {

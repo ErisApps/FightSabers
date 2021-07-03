@@ -2,9 +2,7 @@
 {
     public interface IModifier
     {
-        #region Properties
-
-        /// <summary>
+	    /// <summary>
         /// Title of the modifier
         /// </summary>
         string title { get; set; }
@@ -16,8 +14,6 @@
         /// Strength of the modifier, above 0
         /// </summary>
         float strength { get; set; }
-
-        #endregion
 
         void EnableModifier();
         void DisableModifier();

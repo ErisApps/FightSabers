@@ -6,14 +6,8 @@ namespace FightSabers.Models.Quests
 {
     public class MonsterDamageQuest : Quest
     {
-        #region Properties
-
-        public uint currentDamageCount;
+	    public uint currentDamageCount;
         public uint toDamageCount;
-
-        #endregion
-
-        #region Events
 
         private void OnMonsterHurt(object self, int damage)
         {
@@ -22,10 +16,6 @@ namespace FightSabers.Models.Quests
             if (currentDamageCount > toDamageCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
                 Complete();
         }
-
-        #endregion
-
-        #region Methods
 
         protected override void Refresh()
         {
@@ -61,7 +51,5 @@ namespace FightSabers.Models.Quests
                          GetType().ToString(), toDamageCount / 1000,
                          currentDamageCount / (float)toDamageCount);
         }
-
-        #endregion
     }
 }
