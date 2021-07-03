@@ -30,9 +30,9 @@ namespace FightSabers.Models.Abstracts
         }
 
         public delegate void ProgressHandler(object self);
-        public event ProgressHandler ProgressChanged;
-        public event ProgressHandler QuestCanceled;
-        public event ProgressHandler QuestCompleted;
+        public event ProgressHandler? ProgressChanged;
+        public event ProgressHandler? QuestCanceled;
+        public event ProgressHandler? QuestCompleted;
 
         protected void OnProgressChanged()
         {

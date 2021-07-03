@@ -49,7 +49,7 @@ namespace FightSabers.Models.Quests
         {
             this.currentLevelUpCount = currentLevelUpCount;
             this.toLevelUpCount = toLevelUpCount;
-            base.Prepare("Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!", 
+            base.Prepare("Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!",
                          $"{currentLevelUpCount} / {toLevelUpCount}",
                          GetType().ToString(), 15 * toLevelUpCount,
                          currentLevelUpCount / (float)toLevelUpCount);

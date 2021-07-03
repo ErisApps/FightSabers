@@ -1,11 +1,11 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Modifiers;
 using FightSabers.UI.Controllers;
+using HarmonyLib;
 
 namespace FightSabers.Patches
 {
