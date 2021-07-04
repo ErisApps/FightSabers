@@ -14,7 +14,9 @@ namespace FightSabers.Models.Quests
             currentLevelUpCount += 1;
             Progress = currentLevelUpCount / (float)toLevelUpCount;
             if (currentLevelUpCount >= toLevelUpCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-                Complete();
+            {
+	            Complete();
+            }
         }
 
         protected override void Refresh()
@@ -25,15 +27,26 @@ namespace FightSabers.Models.Quests
         public override void Activate(bool forceInitialize = false)
         {
             if (!isInitialized && forceInitialize)
-                isInitialized = true;
-            if (!isInitialized || isActivated) return;
+            {
+	            isInitialized = true;
+            }
+
+            if (!isInitialized || isActivated)
+            {
+	            return;
+            }
+
             Logger.log.Debug(">>> Specific quest activated!");
             ExperienceSystem.instance.LeveledUp += OnLeveledUp;
         }
 
         public override void Deactivate()
         {
-            if (!isInitialized || !isActivated) return;
+            if (!isInitialized || !isActivated)
+            {
+	            return;
+            }
+
             ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
             base.Deactivate();
         }

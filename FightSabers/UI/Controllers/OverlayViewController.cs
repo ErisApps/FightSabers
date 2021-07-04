@@ -12,6 +12,7 @@ using HMUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 using Image = UnityEngine.UI.Image;
 
 namespace FightSabers.UI.Controllers
@@ -24,6 +25,12 @@ namespace FightSabers.UI.Controllers
 
 		private bool _shouldOpenPage = true;
 		public FightSabersFlowCoordinator FlowCoordinatorOwner { get; set; } = null!;
+
+		[Inject]
+		internal void Construct(PluginConfig config)
+		{
+			_config = config;
+		}
 
 
 		[UIComponent("switch-fightsabers-btn")]
@@ -87,7 +94,7 @@ namespace FightSabers.UI.Controllers
 
 
 		[UIValue("header-text")]
-		public string headerText
+		public string HeaderText
 		{
 			get => _headerText;
 			private set
@@ -101,7 +108,7 @@ namespace FightSabers.UI.Controllers
 
 
 		[UIValue("current-level")]
-		public string currentLevelText
+		public string CurrentLevelText
 		{
 			get => _currentLevelText;
 			private set
@@ -118,7 +125,7 @@ namespace FightSabers.UI.Controllers
 
 
 		[UIValue("current-exp")]
-		public string currentExpText
+		public string CurrentExpText
 		{
 			get => _currentExpText;
 			private set
@@ -130,8 +137,8 @@ namespace FightSabers.UI.Controllers
 
 		public delegate void BarAnimatedHandler(object self, bool state);
 
-		public event BarAnimatedHandler BeginAnimated;
-		public event BarAnimatedHandler EndAnimated;
+		public event BarAnimatedHandler? BeginAnimated;
+		public event BarAnimatedHandler? EndAnimated;
 
 		public float ProgressSpeed { get; } = 2.5f;
 		public bool CurrentlyAnimated { get; private set; }
@@ -178,11 +185,11 @@ namespace FightSabers.UI.Controllers
 			_progressBarImage.color = new Color32(0, 255, 0, 80);
 			_progressBarImage.material = null;
 			//Header text
-			headerText = $"{Plugin.FightSabersMetadata.Name} v{Plugin.FightSabersMetadata.Version}";
+			HeaderText = $"{Plugin.FightSabersMetadata.Name} v{Plugin.FightSabersMetadata.Version}";
 			//Level text
-			currentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
+			CurrentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
 			//Current exp
-			currentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+			CurrentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
 			new UnityTask(FillExperienceBar(0, SaveDataManager.instance.SaveData.currentExp, 3.5f));
 		}
 
@@ -194,7 +201,7 @@ namespace FightSabers.UI.Controllers
 				(ExperienceSystem.instance.GetPercentageForExperience(toExp) - ExperienceSystem.instance.GetPercentageForExperience(currentExp)) * ProgressSpeed,
 				TweenScaleFunctions.SineEaseIn, tween =>
 				{
-					currentExpText = $"{(uint) tween.CurrentValue} / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+					CurrentExpText = $"{(uint) tween.CurrentValue} / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
 					_progressBarImage.fillAmount = ExperienceSystem.instance.GetPercentageForExperiencePrecise(tween.CurrentValue);
 				}, tween =>
 				{
@@ -219,7 +226,7 @@ namespace FightSabers.UI.Controllers
 
 		private void AnimateTextPosition()
 		{
-			currentExpText = "LEVEL UP!";
+			CurrentExpText = "LEVEL UP!";
 			_currentExpTextComp.transform.SetParent(_mainBackground.transform);
 			gameObject.Tween("FloatingTextPosition" + gameObject.GetInstanceID(), _currentExpTextComp.transform.localPosition,
 				_currentExpTextComp.transform.localPosition + new Vector3(0, 0, -10f), 2.25f,
@@ -310,8 +317,8 @@ namespace FightSabers.UI.Controllers
 
 								_progressBarImage.fillAmount = 0;
 								_progressBarImage.color = new Color32(0, 255, 0, 80);
-								currentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
-								currentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
+								CurrentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+								CurrentLevelText = $"Level {SaveDataManager.instance.SaveData.level}";
 								OnEndAnimated();
 							});
 					});
