@@ -22,8 +22,7 @@ namespace FightSabers.Installers
 		public override void InstallBindings()
 		{
 			Container.BindLoggerAsSiraLogger(_logger);
-			Container.BindInstance(_pluginMetadata.Name).WithId("FSName");
-			Container.BindInstance(_pluginMetadata.Version).WithId("FSVersion");
+			Container.BindInstance(_pluginMetadata).WithId(Constants.BindingIds.METADATA);
 			Container.BindInstance(_config).AsSingle();
 		}
 	}

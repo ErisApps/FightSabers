@@ -1,108 +1,87 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using FightSabers.Settings;
+using IPA.Loader;
+using Zenject;
 
 namespace FightSabers.UI.Controllers
 {
 	[HotReload(RelativePathToLayout = @"..\Views\HomePageView.bsml")]
 	[ViewDefinition("FightSabers.UI.Views.HomePageView.bsml")]
-	internal class HomePageController : BSMLAutomaticViewController
+	internal class HomePageController : BSMLAutomaticViewController, IDisposable
 	{
-		private const string GITHUB_REPO_URL = "https://github.com/ErisApps/FightSabers/";
+		private PluginConfig _config = null!;
+		private PluginMetadata _metadata = null!;
 
-		private string _modStatus = "Disable";
+		[Inject]
+		internal void Construct(PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata metadata)
+		{
+			_metadata = metadata;
+			_config = config;
+
+			VersionText = $"Version {_metadata.Version}";
+
+			_config.ConfigChanged -= OnConfigChanged;
+			_config.ConfigChanged += OnConfigChanged;
+		}
+
+		public void Dispose()
+		{
+			_config.ConfigChanged -= OnConfigChanged;
+		}
 
 		[UIValue("switch-plugin-btn-status")]
-		public string modStatus
-		{
-			get => _modStatus;
-			private set
-			{
-				_modStatus = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _pluginTextStatus = "FightSabers is enabled!";
+		internal string ModStatus { get; private set; } = null!;
 
 		[UIValue("plugin-text-status")]
-		public string pluginTextStatus
-		{
-			get => _pluginTextStatus;
-			private set
-			{
-				_pluginTextStatus = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _pluginTextColorStatus = "lime";
+		internal string PluginTextStatus { get; private set; } = null!;
 
 		[UIValue("plugin-text-color-status")]
-		public string pluginTextColorStatus
-		{
-			get => _pluginTextColorStatus;
-			private set
-			{
-				_pluginTextColorStatus = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _versionText = "Version 0.0.0";
+		internal string PluginTextColorStatus { get; private set; } = null!;
 
 		[UIValue("version-text")]
-		public string versionText
-		{
-			get => _versionText;
-			private set
-			{
-				_versionText = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string VersionText { get; private set; } = null!;
 
-		protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
-		{
-			base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-
-			versionText = $"Version {Plugin.FightSabersMetadata.Version}";
-			RefreshPageUI();
-		}
 
 		[UIAction("plugin-status-act")]
 		private void PluginSwitchAction()
 		{
-			Plugin.config.Value.Enabled = !Plugin.config.Value.Enabled;
-			OverlayViewController.instance.experienceContainerState = Plugin.config.Value.Enabled;
-			OverlayViewController.instance.fsDisableContainerState = !Plugin.config.Value.Enabled;
-			Plugin.configProvider.Store(Plugin.config.Value);
+			_config.Enabled = !_config.Enabled;
+			OverlayViewController.instance.experienceContainerState = _config.Enabled;
+			OverlayViewController.instance.fsDisableContainerState = !_config.Enabled;
 			RefreshPageUI();
 		}
 
 		[UIAction("github-link-act")]
 		private void OpenGithubLink()
 		{
-			Process.Start(GITHUB_REPO_URL);
+			Process.Start(_metadata.PluginSourceLink.ToString());
 		}
 
 		[UIAction("donate-link-act")]
 		private void OpenDonateLink()
 		{
-			Process.Start("https://ko-fi.com/shoko84");
+			Process.Start(_metadata.DonateLink.ToString());
 		}
 
 		[UIAction("bug-link-act")]
 		private void OpenBugLink()
 		{
-			Process.Start(GITHUB_REPO_URL + "issues");
+			Process.Start(_metadata.PluginSourceLink + "/issues");
+		}
+
+		private void OnConfigChanged(object sender, EventArgs e)
+		{
+			RefreshPageUI();
 		}
 
 		private void RefreshPageUI()
 		{
-			modStatus = Plugin.config.Value.Enabled ? "Disable" : "Enable";
-			pluginTextStatus = $"FightSabers is {(Plugin.config.Value.Enabled ? "enabled" : "disabled")}!";
-			pluginTextColorStatus = Plugin.config.Value.Enabled ? "lime" : "red";
+			ModStatus = _config.Enabled ? "Disable" : "Enable";
+			PluginTextStatus = $"FightSabers is {(_config.Enabled ? "enabled" : "disabled")}!";
+			PluginTextColorStatus = _config.Enabled ? "lime" : "red";
 		}
 	}
 }
