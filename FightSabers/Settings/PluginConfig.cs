@@ -20,6 +20,15 @@ namespace FightSabers.Settings
 		[UseConverter(typeof(Vector3Converter))]
 		public virtual Vector3 PanelRotation { get; set; } = new(-15, 0, 0);
 
+		public virtual bool NoteShrinkerEnabled { get; set; } = true;
+		public virtual float NoteShrinkerStrength { get; set; } = 1f;
+
+		public virtual bool ColorSuckerEnabled { get; set; } = true;
+		public virtual float ColorSuckerStrength { get; set; } = 1f;
+
+		public virtual bool TimeWarperEnabled { get; set; } = true;
+		public virtual float TimeWarperStrength { get; set; } = 1f;
+
 		public virtual void OnReload()
 		{
 			// This is called whenever the config file is reloaded from disk.

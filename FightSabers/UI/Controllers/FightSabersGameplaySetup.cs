@@ -29,30 +29,54 @@ namespace FightSabers.UI.Controllers
 
 
 		[UIValue("note-shrinker")]
-		internal bool NoteShrinkerEnabled { get; set; }
+		internal bool NoteShrinkerEnabled
+		{
+			get => _config.NoteShrinkerEnabled;
+			set => _config.NoteShrinkerEnabled = value;
+		}
 
 		[UIValue("note-shrinker-strength")]
-		internal float NoteShrinkerStrength = 1f;
+		internal float NoteShrinkerStrength
+		{
+			get => _config.NoteShrinkerStrength;
+			set => _config.NoteShrinkerStrength = value;
+		}
 
 		[UIValue("note-shrinker-hint")]
 		internal string NoteShrinkerHint { get; private set; } = NOTE_SHRINKER_HINT;
 
 
 		[UIValue("color-sucker")]
-		internal bool ColorSuckerEnabled { get; set; }
+		internal bool ColorSuckerEnabled
+		{
+			get => _config.ColorSuckerEnabled;
+			set => _config.ColorSuckerEnabled = value;
+		}
 
 		[UIValue("color-sucker-strength")]
-		internal float ColorSuckerStrength = 1f;
+		internal float ColorSuckerStrength
+		{
+			get => _config.ColorSuckerStrength;
+			set => _config.ColorSuckerStrength = value;
+		}
 
 		[UIValue("color-sucker-hint")]
 		internal string ColorSuckerHint { get; private set; } = COLOR_SUCKER_HINT;
 
 
 		[UIValue("time-warper")]
-		internal bool TimeWarperEnabled { get; set; }
+		internal bool TimeWarperEnabled
+		{
+			get => _config.TimeWarperEnabled;
+			set => _config.TimeWarperEnabled = value;
+		}
 
 		[UIValue("time-warper-strength")]
-		internal float TimeWarperStrength = 1f;
+		internal float TimeWarperStrength
+		{
+			get => _config.TimeWarperStrength;
+			set => _config.TimeWarperStrength = value;
+		}
 
 		[UIValue("time-warper-hint")]
 		internal string TimeWarperHint { get; private set; } = TIME_WARPER_HINT;
