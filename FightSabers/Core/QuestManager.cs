@@ -11,15 +11,29 @@ using Random = UnityEngine.Random;
 
 namespace FightSabers.Core
 {
-	public class QuestManager : PersistentSingleton<QuestManager>
+	internal class QuestManager
 	{
-		public List<IQuest> CurrentQuests => SaveDataManager.instance.SaveData.currentQuests;
+		private readonly SaveDataManager _saveDataManager;
 
-		public List<IQuest> PickableQuests => SaveDataManager.instance.SaveData.pickableQuests;
+		public QuestManager(SaveDataManager saveDataManager)
+		{
+			_saveDataManager = saveDataManager;
 
-		public bool CanPickQuest => SaveDataManager.instance.SaveData.currentQuests.Count < 3;
+			PossibleQuestTypes = new[]
+			{
+				typeof(LevelUpQuest),
+				typeof(MonsterDamageQuest),
+				typeof(MonsterKillQuest)
+			};
+		}
 
-		public Type[] PossibleQuestTypes { get; private set; }
+		public List<IQuest> CurrentQuests => _saveDataManager.SaveData.currentQuests;
+
+		public List<IQuest> PickableQuests => _saveDataManager.SaveData.pickableQuests;
+
+		public bool CanPickQuest => _saveDataManager.SaveData.currentQuests.Count < 3;
+
+		public Type[] PossibleQuestTypes { get; }
 
 		public delegate void QuestHandler(object self);
 
@@ -40,8 +54,8 @@ namespace FightSabers.Core
 			if (self is Quest quest)
 			{
 				quest.QuestCanceled -= OnQuestCanceled;
-				SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
-				SaveDataManager.instance.ApplyToFile();
+				_saveDataManager.SaveData.currentQuests.Remove(quest);
+				_saveDataManager.ApplyToFile();
 				QuestCanceled?.Invoke(this, quest);
 			}
 		}
@@ -51,8 +65,8 @@ namespace FightSabers.Core
 			if (self is Quest quest)
 			{
 				quest.QuestCompleted -= OnQuestCompleted;
-				SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
-				SaveDataManager.instance.ApplyToFile();
+				_saveDataManager.SaveData.currentQuests.Remove(quest);
+				_saveDataManager.ApplyToFile();
 				QuestCompleted?.Invoke(this, quest);
 			}
 		}
@@ -65,22 +79,12 @@ namespace FightSabers.Core
 			}
 		}
 
-		private void Awake()
-		{
-			PossibleQuestTypes = new[]
-			{
-				typeof(LevelUpQuest),
-				typeof(MonsterDamageQuest),
-				typeof(MonsterKillQuest)
-			};
-		}
-
 		public void LoadQuests()
 		{
 			Random.InitState((int) DateTime.Now.Ticks);
 			foreach (var currentQuest in CurrentQuests)
 			{
-				if (!(currentQuest is Quest quest))
+				if (currentQuest is not Quest quest)
 				{
 					continue;
 				}
@@ -93,7 +97,7 @@ namespace FightSabers.Core
 
 			foreach (var pickableQuest in PickableQuests)
 			{
-				if (!(pickableQuest is Quest quest))
+				if (pickableQuest is not Quest quest)
 				{
 					continue;
 				}
@@ -122,7 +126,7 @@ namespace FightSabers.Core
 				return;
 			}
 
-			if (!(Activator.CreateInstance(type) is Quest quest))
+			if (Activator.CreateInstance(type) is not Quest quest)
 			{
 				return;
 			}
@@ -143,7 +147,7 @@ namespace FightSabers.Core
 			quest.QuestCompleted += OnQuestCompleted;
 			quest.ProgressChanged += OnQuestProgressChanged;
 			PickableQuests.Add(quest);
-			SaveDataManager.instance.ApplyToFile();
+			_saveDataManager.ApplyToFile();
 		}
 
 		public void LinkGameEventsForActivatedQuests()
@@ -186,8 +190,8 @@ namespace FightSabers.Core
 			}
 
 			quest.Deactivate();
-			SaveDataManager.instance.SaveData.currentQuests.Remove(quest);
-			SaveDataManager.instance.ApplyToFile();
+			_saveDataManager.SaveData.currentQuests.Remove(quest);
+			_saveDataManager.ApplyToFile();
 			OnQuestCanceled(quest);
 		}
 
@@ -216,8 +220,8 @@ namespace FightSabers.Core
 
 			PickableQuests.Remove(quest);
 			quest.Activate();
-			SaveDataManager.instance.SaveData.currentQuests.Add(quest);
-			SaveDataManager.instance.ApplyToFile();
+			_saveDataManager.SaveData.currentQuests.Add(quest);
+			_saveDataManager.ApplyToFile();
 			OnQuestPicked();
 			//new UnityTask(TestComplete(quest, 2f));
 		}

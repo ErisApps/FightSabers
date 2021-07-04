@@ -1,3 +1,4 @@
+using FightSabers.Core;
 using FightSabers.Settings;
 using IPA.Loader;
 using IPA.Logging;
@@ -26,6 +27,7 @@ namespace FightSabers.Installers
 			Container.BindInstance(_config).AsSingle();
 
 			Container.BindInterfacesAndSelfTo<SaveDataManager>().AsSingle();
+			Container.Bind<QuestManager>().AsSingle();
 		}
 	}
 }
