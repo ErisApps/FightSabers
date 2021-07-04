@@ -49,8 +49,7 @@ namespace FightSabers.UI.Controllers
 		private void PluginSwitchAction()
 		{
 			_config.Enabled = !_config.Enabled;
-			OverlayViewController.instance.experienceContainerState = _config.Enabled;
-			OverlayViewController.instance.fsDisableContainerState = !_config.Enabled;
+
 			RefreshPageUI();
 		}
 
