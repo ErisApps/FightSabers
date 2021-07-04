@@ -247,21 +247,21 @@ namespace FightSabers.UI.Controllers
 				switch (i)
 				{
 					case 0:
-						titleQuest1 = pickableQuest != null ? pickableQuest.title : "Quest not available";
-						descQuest1 = pickableQuest != null ? pickableQuest.description : "";
-						expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+						titleQuest1 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						descQuest1 = pickableQuest != null ? pickableQuest.Description : "";
+						expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
 						pickerQuest1Active = pickableQuest != null;
 						break;
 					case 1:
-						titleQuest2 = pickableQuest != null ? pickableQuest.title : "Quest not available";
-						descQuest2 = pickableQuest != null ? pickableQuest.description : "";
-						expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+						titleQuest2 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						descQuest2 = pickableQuest != null ? pickableQuest.Description : "";
+						expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
 						pickerQuest2Active = pickableQuest != null;
 						break;
 					case 2:
-						titleQuest3 = pickableQuest != null ? pickableQuest.title : "Quest not available";
-						descQuest3 = pickableQuest != null ? pickableQuest.description : "";
-						expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.expReward} EXP" : "";
+						titleQuest3 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						descQuest3 = pickableQuest != null ? pickableQuest.Description : "";
+						expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
 						pickerQuest3Active = pickableQuest != null;
 						break;
 				}

@@ -11,16 +11,22 @@ namespace FightSabers.Models.Quests
 
         private void OnMonsterRemoved(object self, MonsterStatus status)
         {
-            if (status != MonsterStatus.Killed) return;
+            if (status != MonsterStatus.Killed)
+            {
+	            return;
+            }
+
             currentKillCount += 1;
             Progress = currentKillCount / (float)toKillCount;
             if (currentKillCount > toKillCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-                Complete();
+            {
+	            Complete();
+            }
         }
 
         protected override void Refresh()
         {
-            progressHint = $"{currentKillCount} / {toKillCount}";
+            ProgressHint = $"{currentKillCount} / {toKillCount}";
         }
 
         public override void Complete()
@@ -31,14 +37,22 @@ namespace FightSabers.Models.Quests
 
         public override void LinkGameEvents()
         {
-            if (isCompleted && !hasGameEventsActivated) return;
+            if (IsCompleted && !HasGameEventsActivated)
+            {
+	            return;
+            }
+
             MonsterGenerator.instance.MonsterRemoved += OnMonsterRemoved;
             base.LinkGameEvents();
         }
 
         public override void UnlinkGameEvents()
         {
-            if (isCompleted && hasGameEventsActivated) return;
+            if (IsCompleted && HasGameEventsActivated)
+            {
+	            return;
+            }
+
             MonsterGenerator.instance.MonsterRemoved -= OnMonsterRemoved;
             base.UnlinkGameEvents();
         }

@@ -7,15 +7,15 @@ namespace FightSabers.Models.Abstracts
 {
     public abstract class Quest : IQuest
     {
-        public string title { get; set; }
-        public string description { get; set; }
-        public string progressHint { get; set; }
-        public string questType { get; set; }
-        public uint expReward { get; set; }
-        public bool isInitialized { get; set; }
-        public bool isActivated { get; set; }
-        public bool isCompleted { get; set; }
-        public bool hasGameEventsActivated { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ProgressHint { get; set; }
+        public string QuestType { get; set; }
+        public uint ExpReward { get; set; }
+        public bool IsInitialized { get; set; }
+        public bool IsActivated { get; set; }
+        public bool IsCompleted { get; set; }
+        public bool HasGameEventsActivated { get; set; }
 
         private float _progress { get; set; }
         [JsonProperty("progress")]
@@ -47,57 +47,57 @@ namespace FightSabers.Models.Abstracts
 
         protected void OnQuestCompleted()
         {
-            isCompleted = true;
+            IsCompleted = true;
             QuestCompleted?.Invoke(this);
         }
 
         protected virtual void Prepare(string title, string description, string progressHint, string questType, uint expReward, float progress)
         {
-            if (isInitialized) return;
-            this.title = title;
-            this.description = description;
-            this.progressHint = progressHint;
-            this.questType = questType;
-            this.expReward = expReward;
+            if (IsInitialized) return;
+            this.Title = title;
+            this.Description = description;
+            this.ProgressHint = progressHint;
+            this.QuestType = questType;
+            this.ExpReward = expReward;
             Progress = progress;
-            isInitialized = true;
+            IsInitialized = true;
         }
 
         public void ForceInitialize()
         {
-            isInitialized = true;
+            IsInitialized = true;
         }
 
         public virtual void Activate(bool forceInitialize = false)
         {
-            if (!isInitialized && forceInitialize)
-                isInitialized = true;
-            if (!isInitialized || isActivated) return;
+            if (!IsInitialized && forceInitialize)
+                IsInitialized = true;
+            if (!IsInitialized || IsActivated) return;
             Logger.log.Debug(">>> Base quest activated!");
-            isActivated = true;
+            IsActivated = true;
         }
 
         public virtual void Deactivate()
         {
-            if (!isInitialized || !isActivated) return;
-            isActivated = false;
+            if (!IsInitialized || !IsActivated) return;
+            IsActivated = false;
             OnQuestCanceled();
         }
 
         public virtual void Complete()
         {
-            ExperienceSystem.instance.AddFightExperience(expReward);
+            ExperienceSystem.instance.AddFightExperience(ExpReward);
             OnQuestCompleted();
         }
 
         public virtual void LinkGameEvents()
         {
-            hasGameEventsActivated = true;
+            HasGameEventsActivated = true;
         }
 
         public virtual void UnlinkGameEvents()
         {
-            hasGameEventsActivated = false;
+            HasGameEventsActivated = false;
         }
 
         protected abstract void Refresh();

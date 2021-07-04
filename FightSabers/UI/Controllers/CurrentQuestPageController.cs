@@ -313,7 +313,7 @@ namespace FightSabers.UI.Controllers
 				return;
 			}
 
-			Logger.log.Debug($"CurrentQuests.Count: {QuestManager.instance.CurrentQuests.Count}");
+			_logger.log.Debug($"CurrentQuests.Count: {QuestManager.instance.CurrentQuests.Count}");
 			for (var i = 0; i < 3; ++i)
 			{
 				if (QuestManager.instance.CurrentQuests.Count > i && QuestManager.instance.CurrentQuests[i] is IQuest quest)
@@ -363,10 +363,10 @@ namespace FightSabers.UI.Controllers
 			progressBar.color = new Color32(0, 255, 0, 80);
 			progressBar.material = null;
 			//Title
-			this.SetProperty($"TitleQuest{questIdx}Text", quest.title);
-			this.SetProperty($"DescQuest{questIdx}Text", quest.description);
-			this.SetProperty($"CurrentProgressQuest{questIdx}Text", quest.progressHint);
-			this.SetProperty($"HoverQuest{questIdx}Progress", $"Reward: <color=#FFA500>{quest.expReward} EXP</color>");
+			this.SetProperty($"TitleQuest{questIdx}Text", quest.Title);
+			this.SetProperty($"DescQuest{questIdx}Text", quest.Description);
+			this.SetProperty($"CurrentProgressQuest{questIdx}Text", quest.ProgressHint);
+			this.SetProperty($"HoverQuest{questIdx}Progress", $"Reward: <color=#FFA500>{quest.ExpReward} EXP</color>");
 			//UI state
 			this.SetProperty($"Quest{questIdx}ContainerState", true);
 		}

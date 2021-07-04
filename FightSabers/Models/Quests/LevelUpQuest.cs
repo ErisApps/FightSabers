@@ -21,17 +21,17 @@ namespace FightSabers.Models.Quests
 
         protected override void Refresh()
         {
-            progressHint = $"{currentLevelUpCount} / {toLevelUpCount}";
+            ProgressHint = $"{currentLevelUpCount} / {toLevelUpCount}";
         }
 
         public override void Activate(bool forceInitialize = false)
         {
-            if (!isInitialized && forceInitialize)
+            if (!IsInitialized && forceInitialize)
             {
-	            isInitialized = true;
+	            IsInitialized = true;
             }
 
-            if (!isInitialized || isActivated)
+            if (!IsInitialized || IsActivated)
             {
 	            return;
             }
@@ -42,7 +42,7 @@ namespace FightSabers.Models.Quests
 
         public override void Deactivate()
         {
-            if (!isInitialized || !isActivated)
+            if (!IsInitialized || !IsActivated)
             {
 	            return;
             }

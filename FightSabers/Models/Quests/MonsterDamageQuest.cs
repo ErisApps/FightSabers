@@ -14,12 +14,14 @@ namespace FightSabers.Models.Quests
             currentDamageCount += (uint)damage;
             Progress = currentDamageCount / (float)toDamageCount;
             if (currentDamageCount > toDamageCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-                Complete();
+            {
+	            Complete();
+            }
         }
 
         protected override void Refresh()
         {
-            progressHint = $"{currentDamageCount} / {toDamageCount}";
+            ProgressHint = $"{currentDamageCount} / {toDamageCount}";
         }
 
         public override void Complete()
@@ -30,14 +32,22 @@ namespace FightSabers.Models.Quests
 
         public override void LinkGameEvents()
         {
-            if (isCompleted && !hasGameEventsActivated) return;
+            if (IsCompleted && !HasGameEventsActivated)
+            {
+	            return;
+            }
+
             MonsterGenerator.instance.MonsterHurt += OnMonsterHurt;
             base.LinkGameEvents();
         }
 
         public override void UnlinkGameEvents()
         {
-            if (isCompleted && hasGameEventsActivated) return;
+            if (IsCompleted && HasGameEventsActivated)
+            {
+	            return;
+            }
+
             MonsterGenerator.instance.MonsterHurt -= OnMonsterHurt;
             base.UnlinkGameEvents();
         }
