@@ -71,7 +71,7 @@ namespace FightSabers.Utilities
         public delegate void ResumedHandler(UnityTask self);
         public delegate void FinishedHandler(bool manual, UnityTask self);
 
-        private UnityTaskManager.UnityTaskState task;
+        private UnityTaskManager.UnityTaskState _task = null!;
 
         /// Creates a new Task object for the given coroutine.
         ///
@@ -83,7 +83,7 @@ namespace FightSabers.Utilities
             InitUnityTask(c, autoStart);
         }
 
-        public UnityTask()
+        private UnityTask()
         {
             returnedValues = new Dictionary<string, object>();
         }
@@ -116,54 +116,50 @@ namespace FightSabers.Utilities
 
         private void InitUnityTask(IEnumerator c, bool autoStart)
         {
-            task = UnityTaskManager.CreateTask(c);
-            task.Paused += TaskPaused;
-            task.Resumed += TaskResumed;
-            task.Finished += TaskFinished;
+            _task = UnityTaskManager.CreateTask(c);
+            _task.Paused += TaskPaused;
+            _task.Resumed += TaskResumed;
+            _task.Finished += TaskFinished;
             if (autoStart)
-                Start();
+            {
+	            Start();
+            }
         }
 
         /// Returns true if and only if the coroutine is running.  Paused tasks
         /// are considered to be running.
-        public bool Running
-        {
-            get { return task.Running; }
-        }
+        public bool Running => _task.Running;
 
         /// Returns true if and only if the coroutine is currently paused.
-        public bool IsPaused
-        {
-            get { return task.IsPaused; }
-        }
+        public bool IsPaused => _task.IsPaused;
 
         /// Termination event.  Triggered when the coroutine completes execution.
-        public event PausedHandler Paused;
-        public event ResumedHandler Resumed;
-        public event FinishedHandler Finished;
+        public event PausedHandler? Paused;
+        public event ResumedHandler? Resumed;
+        public event FinishedHandler? Finished;
 
         public Dictionary<string, object> returnedValues;
 
         /// Begins execution of the coroutine
         public void Start()
         {
-            task.Start();
+            _task.Start();
         }
 
         /// Discontinues execution of the coroutine at its next yield.
         public void Stop()
         {
-            task.Stop();
+            _task.Stop();
         }
 
         public void Pause()
         {
-            task.Pause();
+            _task.Pause();
         }
 
         public void Unpause()
         {
-            task.Unpause();
+            _task.Unpause();
         }
 
         private void TaskFinished(bool manual)
@@ -184,15 +180,15 @@ namespace FightSabers.Utilities
 
     internal class UnityTaskManager : MonoBehaviour
     {
-        private static UnityTaskManager singleton;
+        private static UnityTaskManager? _singleton;
 
         public static UnityTaskState CreateTask(IEnumerator coroutine)
         {
-            if (singleton == null)
+            if (_singleton == null)
             {
                 var go = new GameObject("TaskManager");
                 DontDestroyOnLoad(go);
-                singleton = go.AddComponent<UnityTaskManager>();
+                _singleton = go.AddComponent<UnityTaskManager>();
             }
             return new UnityTaskState(coroutine);
         }
@@ -215,9 +211,9 @@ namespace FightSabers.Utilities
 
             public bool IsPaused { get; private set; }
 
-            public event PausedHandler Paused;
-            public event ResumedHandler Resumed;
-            public event FinishedHandler Finished;
+            public event PausedHandler? Paused;
+            public event ResumedHandler? Resumed;
+            public event FinishedHandler? Finished;
 
             public void Pause()
             {
@@ -234,7 +230,7 @@ namespace FightSabers.Utilities
             public void Start()
             {
                 Running = true;
-                singleton.StartCoroutine(CallWrapper());
+                _singleton!.StartCoroutine(CallWrapper());
             }
 
             public void Stop()
@@ -250,13 +246,19 @@ namespace FightSabers.Utilities
                 while (Running)
                 {
                     if (IsPaused)
-                        yield return null;
+                    {
+	                    yield return null;
+                    }
                     else
                     {
                         if (e != null && e.MoveNext())
-                            yield return e.Current;
+                        {
+	                        yield return e.Current;
+                        }
                         else
-                            Running = false;
+                        {
+	                        Running = false;
+                        }
                     }
                 }
                 Finished?.Invoke(stopped);
