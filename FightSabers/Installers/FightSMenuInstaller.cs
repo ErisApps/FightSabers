@@ -1,6 +1,5 @@
 using FightSabers.UI.Controllers;
 using FightSabers.UI.FlowCoordinators;
-using FightSabers.UI.Managers;
 using SiraUtil;
 using Zenject;
 
@@ -10,8 +9,7 @@ namespace FightSabers.Installers
 	{
 		public override void InstallBindings()
 		{
-			Container.Bind<FightSabersGameplaySetup>().AsSingle();
-			Container.BindInterfacesTo<GamePlaySetupManager>().AsSingle();
+			Container.BindInterfacesTo<FightSabersGameplaySetup>().AsSingle();
 
 			Container.Bind<BottomPageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<CharacterStatsPageController>().FromNewComponentAsViewController().AsSingle().Lazy();

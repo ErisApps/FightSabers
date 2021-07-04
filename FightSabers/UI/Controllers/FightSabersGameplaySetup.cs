@@ -1,10 +1,12 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.GameplaySetup;
 using FightSabers.Models.Modifiers;
 using FightSabers.Settings;
+using Zenject;
 
 namespace FightSabers.UI.Controllers
 {
-	internal class FightSabersGameplaySetup
+	internal class FightSabersGameplaySetup : IInitializable
 	{
 		private readonly PluginConfig _config;
 
@@ -15,6 +17,11 @@ namespace FightSabers.UI.Controllers
 		public FightSabersGameplaySetup(PluginConfig config)
 		{
 			_config = config;
+		}
+
+		public void Initialize()
+		{
+			GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", this, MenuType.Solo | MenuType.Custom);
 		}
 
 		[UIValue("warning-hint-text")]
