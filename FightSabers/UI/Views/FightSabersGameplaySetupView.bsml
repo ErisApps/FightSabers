@@ -1,15 +1,16 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <horizontal horizontal-fit='PreferredSize'>
-    <modifier-container pref-width='65'>
-      <modifier source='#GameNoteIcon' text='Note Shrinker' value='note-shrinker' apply-on-change='true' hover-hint='~warning-hint-text'/>
-      <increment-setting text='Strength' font-size='4' value='note-shrinker-strength' min='0.7' max='130' increment='0.05' apply-on-change='true'
-                         hover-hint='~note-shrinker-hint' on-change='update-ns-hint-act'/>
-      <modifier source='#LightIcon' text='Color Sucker' value='color-sucker' apply-on-change='true' hover-hint='~warning-hint-text'/>
-      <increment-setting text='Strength' font-size='4' value='color-sucker-strength' min='0.05' increment='0.05' apply-on-change='true'
-                         hover-hint='~color-sucker-hint' on-change='update-cs-hint-act'/>
-      <modifier source='#FasterSongIcon' text='Time Warper' value='time-warper' apply-on-change='true' hover-hint='~warning-hint-text'/>
-      <increment-setting text='Strength' font-size='4' value='time-warper-strength' min='0.05' increment='0.05' apply-on-change='true'
-                         hover-hint='~time-warper-hint' on-change='update-tw-hint-act'/>
-    </modifier-container>
-  </horizontal>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<horizontal horizontal-fit='PreferredSize'>
+		<modifier-container pref-width='65'>
+			<modifier source='#GameNoteIcon' text='Note Shrinker' value='note-shrinker' apply-on-change='true' hover-hint='~warning-hint-text'/>
+			<increment-setting text='Strength' font-size='4' value='note-shrinker-strength' min='0.7' max='130' increment='0.05' apply-on-change='true'
+							   hover-hint='~note-shrinker-hint' on-change='update-ns-hint-act'/>
+			<modifier source='#LightIcon' text='Color Sucker' value='color-sucker' apply-on-change='true' hover-hint='~warning-hint-text'/>
+			<increment-setting text='Strength' font-size='4' value='color-sucker-strength' min='0.05' increment='0.05' apply-on-change='true'
+							   hover-hint='~color-sucker-hint' on-change='update-cs-hint-act'/>
+			<modifier source='#FasterSongIcon' text='Time Warper' value='time-warper' apply-on-change='true' hover-hint='~warning-hint-text'/>
+			<increment-setting text='Strength' font-size='4' value='time-warper-strength' min='0.05' increment='0.05' apply-on-change='true'
+							   hover-hint='~time-warper-hint' on-change='update-tw-hint-act'/>
+		</modifier-container>
+	</horizontal>
 </bg>

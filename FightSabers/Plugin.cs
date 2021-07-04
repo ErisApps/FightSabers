@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
-using BeatSaberMarkupLanguage.GameplaySetup;
 using FightSabers.Core;
 using FightSabers.Installers;
 using FightSabers.Models;
@@ -46,8 +45,6 @@ namespace FightSabers
         {
 	        _harmonyInstance = new Harmony(HARMONY_ID);
 	        _harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
-
-            GameplaySetup.instance.AddTab("FS Modifiers", "FightSabers.UI.Views.FightSabersGameplaySetupView.bsml", FightSabersGameplaySetup.instance);
         }
 
         [OnDisable]
