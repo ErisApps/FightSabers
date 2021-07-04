@@ -4,6 +4,6 @@ namespace FightSabers.UI.Controllers
 {
 	internal interface ICanControlFlowCoordinator
 	{
-		FightSabersFlowCoordinator FlowCoordinatorOwner { get; set; }
+		FightSabersFlowCoordinator? FlowCoordinatorOwner { get; set; }
 	}
 }
