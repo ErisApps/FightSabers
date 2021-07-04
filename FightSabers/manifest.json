@@ -1,18 +1,19 @@
 ﻿{
-  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
-  "author": "Shoko84",
-  "description": "Transform your Beat Saber into a RPG game!",
-  "gameVersion": "1.6.2",
-  "id": "FightSabers",
-  "name": "FightSabers",
-  "version": "0.3.2",
-  "dependsOn": {
-    "BeatSaberMarkupLanguage": "^1.1.3",
-    "BS Utils": "^1.4.1"
-  },
-  "features": [],
-  "links": {
-    "project-home": "https://github.com/Shoko84/FightSabers/blob/master/README.md",
-    "project-source": "https://github.com/Shoko84/FightSabers"
-  }
+	"$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
+	"author": "Eris",
+	"description": "Transform your Beat Saber into a RPG game!",
+	"gameVersion": "1.16.2",
+	"id": "FightSabers",
+	"name": "FightSabers",
+	"version": "0.3.2",
+	"dependsOn": {
+		"BSIPA": "^4.1.6",
+		"BeatSaberMarkupLanguage": "^1.5.3",
+		"SiraUtil": "^2.5.5"
+	},
+	"links": {
+		"project-home": "https://github.com/ErisApps/FightSabers/blob/master/README.md",
+		"project-source": "https://github.com/ErisApps/FightSabers",
+		"donate": "https://www.patreon.com/erisapps"
+	}
 }
