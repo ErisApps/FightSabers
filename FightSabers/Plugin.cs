@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.GameplaySetup;
 using FightSabers.Core;
@@ -12,13 +13,14 @@ using FightSabers.Settings;
 using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
 using HarmonyLib;
+using HMUI;
 using IPA;
-using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Loader;
 using SiraUtil.Zenject;
 using UnityEngine;
 using UnityEngine.UI;
+using Config = IPA.Config.Config;
 
 namespace FightSabers
 {
@@ -55,7 +57,6 @@ namespace FightSabers
 	        _harmonyInstance = null;
         }
 
-        #region Custom events
         private static void MenuLoadFresh()
         {
             SaveDataManager.instance.Setup();
@@ -66,37 +67,54 @@ namespace FightSabers
 
             //ExperienceSystem.instance.Invoke("TestLevel", 5f); //TODO: Remove later, FPFC testing
             var floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true,
-                                                                     Float3.ToVector3(config.Value.FSPanelPosition),
-                                                                     Quaternion.Euler(Float3.ToVector3(config.Value.FSPanelRotation)));
+                                                                     config.Value.FSPanelPosition,
+                                                                     Quaternion.Euler(config.Value.FSPanelRotation));
             floatingScreen.screenMover.OnRelease += (pos, rot) => {
-                config.Value.FSPanelPosition = new Float3(pos.x, pos.y, pos.z);
-                config.Value.FSPanelRotation = new Float3(rot.eulerAngles.x, rot.eulerAngles.y, rot.eulerAngles.z);
+                config.Value.FSPanelPosition = new Vector3(pos.x, pos.y, pos.z);
+                config.Value.FSPanelRotation = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y, rot.eulerAngles.z);
                 configProvider.Store(config.Value);
             };
-            floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), true);
+            floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), ViewController.AnimationType.None);
             floatingScreen.GetComponent<Image>().enabled = false;
         }
 
         private static void OnMenuSceneActive()
         {
-            if (CurrentSceneState == SceneState.Menu) return;
+            if (CurrentSceneState == SceneState.Menu)
+            {
+	            return;
+            }
+
             if (config.Value.Enabled)
             {
                 ExperienceSystem.instance.ApplyExperience();
                 QuestManager.instance.UnlinkGameEventsForActivatedQuests();
             }
+
             if (ModifierManager.instance)
-                ModifierManager.instance.modifiers = new Type[]{};
+            {
+	            ModifierManager.instance.modifiers = new Type[]{};
+            }
+
             CurrentSceneState = SceneState.Menu;
         }
 
         private static void OnGameSceneActive()
         {
-            if (CurrentSceneState == SceneState.Game) return;
+            if (CurrentSceneState == SceneState.Game)
+            {
+	            return;
+            }
+
             if (GameNoteControllerAwakePatch.colorSuckers == null)
-                GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
+            {
+	            GameNoteControllerAwakePatch.colorSuckers = new List<ColorSucker>();
+            }
             else
-                GameNoteControllerAwakePatch.colorSuckers.Clear();
+            {
+	            GameNoteControllerAwakePatch.colorSuckers.Clear();
+            }
+
             if (config.Value.Enabled && (FightSabersGameplaySetup.instance.ColorSuckerEnabled  ||
                                          FightSabersGameplaySetup.instance.NoteShrinkerEnabled ||
                                          FightSabersGameplaySetup.instance.TimeWarperEnabled))
@@ -119,11 +137,20 @@ namespace FightSabers
                 var modifierManager = go.AddComponent<ModifierManager>();
                 var modifiers = new List<Type>();
                 if (FightSabersGameplaySetup.instance.ColorSuckerEnabled)
-                    modifiers.Add(typeof(ColorSucker));
+                {
+	                modifiers.Add(typeof(ColorSucker));
+                }
+
                 if (FightSabersGameplaySetup.instance.NoteShrinkerEnabled)
-                    modifiers.Add(typeof(NoteShrinker));
+                {
+	                modifiers.Add(typeof(NoteShrinker));
+                }
+
                 if (FightSabersGameplaySetup.instance.TimeWarperEnabled)
-                    modifiers.Add(typeof(TimeWarper));
+                {
+	                modifiers.Add(typeof(TimeWarper));
+                }
+
                 modifierManager.modifiers = modifiers.ToArray();
                 modifierManager.noteShrinkerStrength = FightSabersGameplaySetup.instance.NoteShrinkerStrength;
                 modifierManager.colorSuckerStrength = FightSabersGameplaySetup.instance.ColorSuckerStrength;
@@ -142,6 +169,5 @@ namespace FightSabers
             }
             CurrentSceneState = SceneState.Game;
         }
-        #endregion
     }
 }
