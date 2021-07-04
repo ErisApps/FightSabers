@@ -13,15 +13,15 @@ namespace FightSabers.Models.Modifiers
 
         private void Awake()
         {
-            title = "Note shrinker";
-            description = "Shrinks notes";
+            Title = "Note shrinker";
+           Description = "Shrinks notes";
             ScaleApplied = BaseScaleApplied;
         }
 
         public override void EnableModifier()
         {
-            strength = strength < 0 ? 1 : strength;
-            ScaleApplied = BaseScaleApplied * (1 / strength);
+            Strength = Strength < 0 ? 1 : Strength;
+            ScaleApplied = BaseScaleApplied * (1 / Strength);
             ScaleApplied = ScaleApplied.x >= 1 ? Vector3.one : ScaleApplied;
             ScaleApplied = ScaleApplied.x <= 0 ? new Vector3(Mathf.Abs(ScaleApplied.x), Mathf.Abs(ScaleApplied.y), Mathf.Abs(ScaleApplied.z)) : ScaleApplied;
             _oldScale = transform.localScale;

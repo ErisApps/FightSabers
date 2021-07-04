@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace FightSabers.Models.Abstracts
 {
-    public abstract class Modifier : MonoBehaviour, IModifier
-    {
-        public string title { get; set; }
-        public string description { get; set; }
-        public float strength { get; set; } = 1f;
-        public GameNoteController gameNoteController;
+	public abstract class Modifier : MonoBehaviour, IModifier
+	{
+		public string Title { get; set; }
+		public string Description { get; set; }
+		public float Strength { get; set; } = 1f;
+		public GameNoteController GameNoteController;
 
-        public abstract void EnableModifier();
-        public abstract void DisableModifier();
-    }
+		public abstract void EnableModifier();
+		public abstract void DisableModifier();
+	}
 }

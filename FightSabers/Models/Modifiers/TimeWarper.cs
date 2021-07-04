@@ -16,18 +16,26 @@ namespace FightSabers.Models.Modifiers
 
         private void Awake()
         {
-            title = "Time warper";
-            description = "Song is playing faster";
+            Title = "Time warper";
+            Description = "Song is playing faster";
         }
 
         public override void EnableModifier()
         {
             if (!_audioTimeSyncController)
-                _audioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
+            {
+	            _audioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
+            }
+
             if (!_gameCoreSceneSetup)
-                _gameCoreSceneSetup = Resources.FindObjectsOfTypeAll<GameplayCoreSceneSetup>().FirstOrDefault();
+            {
+	            _gameCoreSceneSetup = Resources.FindObjectsOfTypeAll<GameplayCoreSceneSetup>().FirstOrDefault();
+            }
+
             if (!_mixer)
-                _mixer = _gameCoreSceneSetup.GetPrivateField<AudioManagerSO>("_audioMixer");
+            {
+	            _mixer = _gameCoreSceneSetup.GetPrivateField<AudioManagerSO>("_audioMixer");
+            }
 
             _audioSource = _audioTimeSyncController.GetPrivateField<AudioSource>("_audioSource");
             _baseTimeScale = _audioTimeSyncController.GetPrivateField<float>("_timeScale");

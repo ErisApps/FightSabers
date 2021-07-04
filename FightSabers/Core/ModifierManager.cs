@@ -40,7 +40,7 @@ namespace FightSabers.Core
 				else if (modifier == typeof(TimeWarper))
 				{
 					timeWarper = gameObject.AddComponent<TimeWarper>();
-					timeWarper.strength = timeWarperStrength;
+					timeWarper.Strength = timeWarperStrength;
 					timeWarper.EnableModifier();
 				}
 			}
