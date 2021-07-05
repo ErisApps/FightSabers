@@ -3,6 +3,7 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.Core;
 using UnityEngine.UI;
+using Zenject;
 
 namespace FightSabers.UI.Controllers
 {
@@ -10,192 +11,74 @@ namespace FightSabers.UI.Controllers
 	[ViewDefinition("FightSabers.UI.Views.QuestPickerPageView.bsml")]
 	internal class QuestPickerPageController : BSMLAutomaticViewController
 	{
-		public static QuestPickerPageController instance;
+		private QuestManager _questManager = null!;
+
+		[Inject]
+		internal void Construct(QuestManager questManager)
+		{
+			_questManager = questManager;
+		}
 
 		[UIComponent("picker-quest-1-btn")]
-		private Button? _pickerQuest1Btn = null;
+		internal Button PickerQuest1Btn = null!;
 
 		[UIComponent("picker-quest-2-btn")]
-		private Button? _pickerQuest2Btn = null;
+		internal Button PickerQuest2Btn = null!;
 
 		[UIComponent("picker-quest-3-btn")]
-		private Button? _pickerQuest3Btn = null;
+		internal Button PickerQuest3Btn = null!;
 
-		private string _questPickStatus = "Loading..";
 
 		[UIValue("quest-pick-status")]
-		public string QuestPickStatus
-		{
-			get => _questPickStatus;
-			private set
-			{
-				_questPickStatus = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string QuestPickStatus { get; set; } = "Loading..";
 
-		private bool _pickerQuest1Active;
 
 		[UIValue("picker-quest-1-active")]
-		public bool pickerQuest1Active
-		{
-			get => _pickerQuest1Active;
-			private set
-			{
-				_pickerQuest1Active = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private bool _pickerQuest2Active;
+		internal bool PickerQuest1Active { get; set; }
 
 		[UIValue("picker-quest-2-active")]
-		public bool pickerQuest2Active
-		{
-			get => _pickerQuest2Active;
-			private set
-			{
-				_pickerQuest2Active = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private bool _pickerQuest3Active;
+		internal bool PickerQuest2Active { get; set; }
 
 		[UIValue("picker-quest-3-active")]
-		public bool pickerQuest3Active
-		{
-			get => _pickerQuest3Active;
-			private set
-			{
-				_pickerQuest3Active = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal bool PickerQuest3Active { get; set; }
 
-		private string _titleQuest1 = "Quest not available";
 
 		[UIValue("title-quest-1")]
-		public string titleQuest1
-		{
-			get => _titleQuest1;
-			private set
-			{
-				_titleQuest1 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _titleQuest2 = "Quest not available";
+		internal string TitleQuest1 { get; set; } = "Quest not available";
 
 		[UIValue("title-quest-2")]
-		public string titleQuest2
-		{
-			get => _titleQuest2;
-			private set
-			{
-				_titleQuest2 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _titleQuest3 = "Quest not available";
+		internal string TitleQuest2 { get; set; } = "Quest not available";
 
 		[UIValue("title-quest-3")]
-		public string titleQuest3
-		{
-			get => _titleQuest3;
-			private set
-			{
-				_titleQuest3 = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string TitleQuest3 { get; set; } = "Quest not available";
 
-		private string _descQuest1 = "";
 
 		[UIValue("desc-quest-1")]
-		public string descQuest1
-		{
-			get => _descQuest1;
-			private set
-			{
-				_descQuest1 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _descQuest2 = "";
+		internal string DescQuest1 { get; set; } = string.Empty;
 
 		[UIValue("desc-quest-2")]
-		public string descQuest2
-		{
-			get => _descQuest2;
-			private set
-			{
-				_descQuest2 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _descQuest3 = "";
+		internal string DescQuest2 { get; set; } = string.Empty;
 
 		[UIValue("desc-quest-3")]
-		public string descQuest3
-		{
-			get => _descQuest3;
-			private set
-			{
-				_descQuest3 = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string DescQuest3 { get; set; } = string.Empty;
 
-		private string _expRewardQuest1 = "";
 
 		[UIValue("exp-reward-quest-1")]
-		public string expRewardQuest1
-		{
-			get => _expRewardQuest1;
-			private set
-			{
-				_expRewardQuest1 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _expRewardQuest2 = "";
+		internal string ExpRewardQuest1 { get; set; } = string.Empty;
 
 		[UIValue("exp-reward-quest-2")]
-		public string expRewardQuest2
-		{
-			get => _expRewardQuest2;
-			private set
-			{
-				_expRewardQuest2 = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _expRewardQuest3 = "";
+		internal string ExpRewardQuest2 { get; set; } = string.Empty;
 
 		[UIValue("exp-reward-quest-3")]
-		public string expRewardQuest3
-		{
-			get => _expRewardQuest3;
-			private set
-			{
-				_expRewardQuest3 = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string ExpRewardQuest3 { get; set; } = string.Empty;
+
 
 		[UIAction("select-quest-1-act")]
 		private void Quest1Selected()
 		{
-			QuestManager.instance.PickQuest(0);
-			pickerQuest1Active = false;
-			if (!QuestManager.instance.CanPickQuest)
+			_questManager.PickQuest(0);
+			PickerQuest1Active = false;
+			if (!_questManager.CanPickQuest)
 			{
 				ChangePickingStatus(false);
 			}
@@ -207,9 +90,9 @@ namespace FightSabers.UI.Controllers
 		[UIAction("select-quest-2-act")]
 		private void Quest2Selected()
 		{
-			QuestManager.instance.PickQuest(1);
-			pickerQuest2Active = false;
-			if (!QuestManager.instance.CanPickQuest)
+			_questManager.PickQuest(1);
+			PickerQuest2Active = false;
+			if (!_questManager.CanPickQuest)
 			{
 				ChangePickingStatus(false);
 			}
@@ -221,9 +104,9 @@ namespace FightSabers.UI.Controllers
 		[UIAction("select-quest-3-act")]
 		private void Quest3Selected()
 		{
-			QuestManager.instance.PickQuest(2);
-			pickerQuest3Active = false;
-			if (!QuestManager.instance.CanPickQuest)
+			_questManager.PickQuest(2);
+			PickerQuest3Active = false;
+			if (!_questManager.CanPickQuest)
 			{
 				ChangePickingStatus(false);
 			}
@@ -234,35 +117,35 @@ namespace FightSabers.UI.Controllers
 
 		public void ChangePickingStatus(bool status)
 		{
-			pickerQuest1Active = QuestManager.instance.PickableQuests.Count > 0 && QuestManager.instance.PickableQuests[0] != null && status;
-			pickerQuest2Active = QuestManager.instance.PickableQuests.Count > 1 && QuestManager.instance.PickableQuests[1] != null && status;
-			pickerQuest3Active = QuestManager.instance.PickableQuests.Count > 2 && QuestManager.instance.PickableQuests[2] != null && status;
+			PickerQuest1Active = _questManager.PickableQuests.Count > 0 && _questManager.PickableQuests[0] != null && status;
+			PickerQuest2Active = _questManager.PickableQuests.Count > 1 && _questManager.PickableQuests[1] != null && status;
+			PickerQuest3Active = _questManager.PickableQuests.Count > 2 && _questManager.PickableQuests[2] != null && status;
 		}
 
 		public void RefreshPickableQuestContent()
 		{
 			for (var i = 0; i < 3; i++)
 			{
-				var pickableQuest = i >= QuestManager.instance.PickableQuests.Count ? null : QuestManager.instance.PickableQuests[i];
+				var pickableQuest = i >= _questManager.PickableQuests.Count ? null : _questManager.PickableQuests[i];
 				switch (i)
 				{
 					case 0:
-						titleQuest1 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
-						descQuest1 = pickableQuest != null ? pickableQuest.Description : "";
-						expRewardQuest1 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
-						pickerQuest1Active = pickableQuest != null;
+						TitleQuest1 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						DescQuest1 = pickableQuest != null ? pickableQuest.Description : string.Empty;
+						ExpRewardQuest1 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : string.Empty;
+						PickerQuest1Active = pickableQuest != null;
 						break;
 					case 1:
-						titleQuest2 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
-						descQuest2 = pickableQuest != null ? pickableQuest.Description : "";
-						expRewardQuest2 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
-						pickerQuest2Active = pickableQuest != null;
+						TitleQuest2 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						DescQuest2 = pickableQuest != null ? pickableQuest.Description : string.Empty;
+						ExpRewardQuest2 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : string.Empty;
+						PickerQuest2Active = pickableQuest != null;
 						break;
 					case 2:
-						titleQuest3 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
-						descQuest3 = pickableQuest != null ? pickableQuest.Description : "";
-						expRewardQuest3 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : "";
-						pickerQuest3Active = pickableQuest != null;
+						TitleQuest3 = pickableQuest != null ? pickableQuest.Title : "Quest not available";
+						DescQuest3 = pickableQuest != null ? pickableQuest.Description : string.Empty;
+						ExpRewardQuest3 = pickableQuest != null ? $"{pickableQuest.ExpReward} EXP" : string.Empty;
+						PickerQuest3Active = pickableQuest != null;
 						break;
 				}
 			}
@@ -270,7 +153,7 @@ namespace FightSabers.UI.Controllers
 
 		public void RefreshPickStatusText()
 		{
-			var pickableQuestAmount = 3 - QuestManager.instance.CurrentQuests.Count;
+			var pickableQuestAmount = 3 - _questManager.CurrentQuests.Count;
 			QuestPickStatus = pickableQuestAmount <= 0
 				? "<color=#e74c3c>Your quest list is full!</color>"
 				: $"You can still pick <color=#ffa500ff>{pickableQuestAmount}</color> quest{(pickableQuestAmount != 1 ? "s" : "")}!";
@@ -282,28 +165,26 @@ namespace FightSabers.UI.Controllers
 
 			if (firstActivation)
 			{
-				instance = this;
-
-				var iconImage = _pickerQuest1Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
-				if (_pickerQuest1Btn != null && iconImage)
+				var iconImage = PickerQuest1Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
+				if (PickerQuest1Btn != null && iconImage != null)
 				{
 					iconImage.enabled = false;
 				}
 
-				iconImage = _pickerQuest2Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
-				if (_pickerQuest2Btn != null && iconImage)
+				iconImage = PickerQuest2Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
+				if (PickerQuest2Btn != null &&  iconImage != null)
 				{
 					iconImage.enabled = false;
 				}
 
-				iconImage = _pickerQuest3Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
-				if (_pickerQuest3Btn != null && iconImage)
+				iconImage = PickerQuest3Btn.GetComponentsInChildren<Image>().FirstOrDefault(image => image != null && image.name == "Icon");
+				if (PickerQuest3Btn != null && iconImage != null)
 				{
 					iconImage.enabled = false;
 				}
 
 				RefreshPickableQuestContent();
-				if (!QuestManager.instance.CanPickQuest)
+				if (!_questManager.CanPickQuest)
 				{
 					ChangePickingStatus(false);
 				}
