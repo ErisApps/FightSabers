@@ -1,3 +1,4 @@
+using System;
 using FightSabers.UI.Controllers;
 using FightSabers.UI.FlowCoordinators;
 using SiraUtil;
@@ -17,11 +18,12 @@ namespace FightSabers.Installers
 			Container.Bind<HomePageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<ModifierStatsPageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<MonsterInfoPageController>().FromNewComponentAsViewController().AsSingle().Lazy();
-			Container.Bind<OverlayViewController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<ProfilePageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<QuestPickerPageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<SkillTreePageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<FightSabersFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle().Lazy();
+
+			Container.Bind(typeof(OverlayViewController), typeof(IDisposable)).To<OverlayViewController>().FromNewComponentAsViewController().AsSingle().Lazy();
 		}
 	}
 }
