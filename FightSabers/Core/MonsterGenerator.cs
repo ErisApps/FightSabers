@@ -13,24 +13,24 @@ namespace FightSabers.Core
 	{
 		public class MonsterSpawnInfo
 		{
-			public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, float unspawnTime, uint noteCount, uint monsterDifficulty, Type[] modifierTypes)
+			public MonsterSpawnInfo(string monsterName, uint monsterHp, float spawnTime, float deSpawnTime, uint noteCount, uint monsterDifficulty, Type[] modifierTypes)
 			{
-				this.monsterName = monsterName;
-				this.monsterHp = monsterHp;
-				this.spawnTime = spawnTime;
-				this.unspawnTime = unspawnTime;
-				this.noteCount = noteCount;
-				this.monsterDifficulty = monsterDifficulty;
-				this.modifierTypes = modifierTypes;
+				MonsterName = monsterName;
+				MonsterHp = monsterHp;
+				SpawnTime = spawnTime;
+				DeSpawnTime = deSpawnTime;
+				NoteCount = noteCount;
+				MonsterDifficulty = monsterDifficulty;
+				ModifierTypes = modifierTypes;
 			}
 
-			public string monsterName;
-			public uint monsterHp;
-			public float spawnTime;
-			public float unspawnTime;
-			public uint noteCount;
-			public uint monsterDifficulty;
-			public Type[] modifierTypes;
+			public readonly string MonsterName;
+			public readonly uint MonsterHp;
+			public readonly float SpawnTime;
+			public readonly float DeSpawnTime;
+			public readonly uint NoteCount;
+			public readonly uint MonsterDifficulty;
+			public readonly Type[] ModifierTypes;
 		}
 
 		public static MonsterGenerator instance { get; private set; }
@@ -114,11 +114,11 @@ namespace FightSabers.Core
 								_modifierTypes[Random.Range(0, _modifierTypes.Length)]
 							});
 						_monsterSpawnInfos.Add(monsterSpawnInfo);
-						Logger.log.Debug(monsterSpawnInfo.monsterName + " lv." + monsterSpawnInfo.monsterDifficulty +
-						                 " with " + monsterSpawnInfo.monsterHp + " HP will spawn at: " + monsterSpawnInfo.spawnTime +
-						                 " | and will finish at: " + monsterSpawnInfo.unspawnTime);
+						Logger.log.Debug(monsterSpawnInfo.MonsterName + " lv." + monsterSpawnInfo.MonsterDifficulty +
+						                 " with " + monsterSpawnInfo.MonsterHp + " HP will spawn at: " + monsterSpawnInfo.SpawnTime +
+						                 " | and will finish at: " + monsterSpawnInfo.DeSpawnTime);
 						Logger.log.Debug("Modifiers applied: ");
-						foreach (var modifierType in monsterSpawnInfo.modifierTypes)
+						foreach (var modifierType in monsterSpawnInfo.ModifierTypes)
 						{
 							Logger.log.Debug($"-> {modifierType}");
 						}
@@ -203,7 +203,7 @@ namespace FightSabers.Core
 				MonsterSpawnInfo createdMonsterInfo = null;
 				foreach (var monsterSpawnInfo in _monsterSpawnInfos)
 				{
-					if (!(_audioTimeSyncController.songTime > monsterSpawnInfo.spawnTime))
+					if (!(_audioTimeSyncController.songTime > monsterSpawnInfo.SpawnTime))
 					{
 						continue;
 					}

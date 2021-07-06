@@ -117,7 +117,7 @@ namespace FightSabers.Core
 		}
 
 		public float SpawnTime { get; private set; }
-		public float UnSpawnTime { get; private set; }
+		public float DeSpawnTime { get; private set; }
 
 		public ScoreControllerManager ScoreControllerManager { get; private set; }
 		public ModifierManager ModifierManager { get; private set; }
@@ -245,15 +245,15 @@ namespace FightSabers.Core
 		{
 			yield return new WaitForEndOfFrame();
 			ModifierManager = gameObject.AddComponent<ModifierManager>();
-			ModifierManager.modifiers = monsterInfo.modifierTypes;
-			MonsterName = monsterInfo.monsterName;
-			NoteCountLeft = (int) monsterInfo.noteCount;
+			ModifierManager.modifiers = monsterInfo.ModifierTypes;
+			MonsterName = monsterInfo.MonsterName;
+			NoteCountLeft = (int) monsterInfo.NoteCount;
 			ModifierManager.noteCountDuration = NoteCountLeft;
-			maxHealth = (int) monsterInfo.monsterHp;
-			CurrentHealth = (int) monsterInfo.monsterHp;
-			MonsterDifficulty = (int) monsterInfo.monsterDifficulty;
-			SpawnTime = monsterInfo.spawnTime;
-			UnSpawnTime = monsterInfo.unspawnTime;
+			maxHealth = (int) monsterInfo.MonsterHp;
+			CurrentHealth = (int) monsterInfo.MonsterHp;
+			MonsterDifficulty = (int) monsterInfo.MonsterDifficulty;
+			SpawnTime = monsterInfo.SpawnTime;
+			DeSpawnTime = monsterInfo.DeSpawnTime;
 			name = "[FS|" + MonsterName + "lv." + MonsterDifficulty + "]";
 			new UnityTask(ModifierManager.ConfigureModifiers());
 			ScoreControllerManager = gameObject.AddComponent<ScoreControllerManager>();
