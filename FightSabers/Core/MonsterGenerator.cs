@@ -53,9 +53,9 @@ namespace FightSabers.Core
 
 		public delegate void MonsterStateHandler(object self, MonsterStatus status);
 
-		public event MonsterStateHandler MonsterAdded;
-		public event MonsterStateHandler MonsterRemoved;
-		public event MonsterBehaviour.MonsterHitHandler MonsterHurt;
+		public event MonsterStateHandler? MonsterAdded;
+		public event MonsterStateHandler? MonsterRemoved;
+		public event MonsterBehaviour.MonsterHitHandler? MonsterHurt;
 
 		private void OnMonsterAdded()
 		{

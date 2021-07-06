@@ -13,25 +13,25 @@ namespace FightSabers.Core
 {
 	public class MonsterBehaviour : MonoBehaviour
 	{
-		private static Vector3 BasePosition = new Vector3(0, 3f, 3.75f);
-		private static readonly Vector3 BaseRotation = new Vector3(0, 0, 0);
-		private static Vector3 BaseScale = new Vector3(0.01f, 0.01f, 0.01f);
+		private static Vector3 BasePosition = new(0, 3f, 3.75f);
+		private static readonly Vector3 BaseRotation = new(0, 0, 0);
+		private static Vector3 BaseScale = new(0.01f, 0.01f, 0.01f);
 
-		private static readonly Vector2 BaseCanvasSize = new Vector2(140, 50);
+		private static readonly Vector2 BaseCanvasSize = new(140, 50);
 
 		private static readonly float NoteCountFontSize = 8f;
-		private static readonly Vector2 NoteCountNamePosition = new Vector2(50, 28);
+		private static readonly Vector2 NoteCountNamePosition = new(50, 28);
 
-		private static readonly Vector2 MonsterLabelPosition = new Vector2(20, 15);
-		private static readonly Vector2 MonsterLabelSize = new Vector2(140, 20);
+		private static readonly Vector2 MonsterLabelPosition = new(20, 15);
+		private static readonly Vector2 MonsterLabelSize = new(140, 20);
 		private static readonly float MonsterLabelFontSize = 13f;
 
-		private static readonly Vector2 MonsterHpLabelPosition = new Vector2(85, 0);
-		private static readonly Vector2 MonsterHpLabelSize = new Vector2(35, 20);
+		private static readonly Vector2 MonsterHpLabelPosition = new(85, 0);
+		private static readonly Vector2 MonsterHpLabelSize = new(35, 20);
 		private static readonly float MonsterHpLabelFontSize = 11f;
 
-		private static readonly Vector2 MonsterLifeBarSize = new Vector2(100, 10);
-		private static readonly Color MonsterLifeBarBgColor = new Color(0, 0, 0, 0.2f);
+		private static readonly Vector2 MonsterLifeBarSize = new(100, 10);
+		private static readonly Color MonsterLifeBarBgColor = new(0, 0, 0, 0.2f);
 
 		public Canvas Canvas { get; private set; }
 		public TMP_Text NoteCountText { get; private set; }
@@ -137,7 +137,7 @@ namespace FightSabers.Core
 
 		public delegate void MonsterHitHandler(object self, int damage);
 
-		public event MonsterHitHandler MonsterHurt;
+		public event MonsterHitHandler? MonsterHurt;
 
 		private void OnMonsterHurt(int damage)
 		{

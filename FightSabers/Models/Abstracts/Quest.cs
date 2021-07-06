@@ -20,10 +20,14 @@ namespace FightSabers.Models.Abstracts
         private float _progress { get; set; }
         [JsonProperty("progress")]
         public float Progress {
-            get { return _progress; }
+            get => _progress;
             set
             {
-                if (Math.Abs(_progress - value) < 0.001f) return;
+                if (Math.Abs(_progress - value) < 0.001f)
+                {
+	                return;
+                }
+
                 _progress = value;
                 OnProgressChanged();
             }
@@ -53,12 +57,16 @@ namespace FightSabers.Models.Abstracts
 
         protected virtual void Prepare(string title, string description, string progressHint, string questType, uint expReward, float progress)
         {
-            if (IsInitialized) return;
-            this.Title = title;
-            this.Description = description;
-            this.ProgressHint = progressHint;
-            this.QuestType = questType;
-            this.ExpReward = expReward;
+            if (IsInitialized)
+            {
+	            return;
+            }
+
+            Title = title;
+            Description = description;
+            ProgressHint = progressHint;
+            QuestType = questType;
+            ExpReward = expReward;
             Progress = progress;
             IsInitialized = true;
         }
@@ -71,15 +79,26 @@ namespace FightSabers.Models.Abstracts
         public virtual void Activate(bool forceInitialize = false)
         {
             if (!IsInitialized && forceInitialize)
-                IsInitialized = true;
-            if (!IsInitialized || IsActivated) return;
+            {
+	            IsInitialized = true;
+            }
+
+            if (!IsInitialized || IsActivated)
+            {
+	            return;
+            }
+
             Logger.log.Debug(">>> Base quest activated!");
             IsActivated = true;
         }
 
         public virtual void Deactivate()
         {
-            if (!IsInitialized || !IsActivated) return;
+            if (!IsInitialized || !IsActivated)
+            {
+	            return;
+            }
+
             IsActivated = false;
             OnQuestCanceled();
         }
