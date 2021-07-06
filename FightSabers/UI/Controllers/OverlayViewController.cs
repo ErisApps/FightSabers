@@ -29,19 +29,22 @@ namespace FightSabers.UI.Controllers
 		private PluginConfig _config = null!;
 		private PluginMetadata _pluginMetadata = null!;
 		private SaveDataManager _saveDataManager = null!;
+		private ExperienceSystem _experienceSystem = null!;
 
 		private bool _shouldOpenPage = true;
 
-		public FightSabersFlowCoordinator FlowCoordinatorOwner { get; set; } = null!;
+		public FightSabersFlowCoordinator? FlowCoordinatorOwner { get; set; } = null!;
 
 
 		[Inject]
-		internal void Construct(SiraLog logger, PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata pluginMetadata, SaveDataManager saveDataManager)
+		internal void Construct(SiraLog logger, PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata pluginMetadata, SaveDataManager saveDataManager,
+			ExperienceSystem experienceSystem)
 		{
 			_logger = logger;
 			_config = config;
 			_pluginMetadata = pluginMetadata;
 			_saveDataManager = saveDataManager;
+			_experienceSystem = experienceSystem;
 
 			_config.ConfigChanged -= ConfigOnConfigChanged;
 			_config.ConfigChanged += ConfigOnConfigChanged;
@@ -51,10 +54,6 @@ namespace FightSabers.UI.Controllers
 		{
 			_config.ConfigChanged -= ConfigOnConfigChanged;
 		}
-
-		[UIComponent("switch-fightsabers-btn")]
-		[SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "BSML calls this")]
-		internal Button OpenFightSabersButton = null!;
 
 		[UIComponent("progress-bar-img")]
 		internal Image ProgressBarImage = null!;
@@ -123,7 +122,7 @@ namespace FightSabers.UI.Controllers
 
 			if (firstActivation)
 			{
-				ExperienceSystem.instance.LeveledUp += OnLeveledUp;
+				_experienceSystem.LeveledUp += OnLeveledUp;
 			}
 
 			//ProgressBar
@@ -142,7 +141,7 @@ namespace FightSabers.UI.Controllers
 			//Level text
 			CurrentLevelText = $"Level {_saveDataManager.SaveData.level}";
 			//Current exp
-			CurrentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+			CurrentExpText = $"0 / {_experienceSystem.TotalNeededExperienceForNextLevel}";
 			new UnityTask(FillExperienceBar(0, _saveDataManager.SaveData.currentExp, 3.5f));
 		}
 
@@ -151,11 +150,11 @@ namespace FightSabers.UI.Controllers
 			OnBeginAnimated();
 			yield return new WaitForSeconds(delayBefore);
 			gameObject.Tween("FillExpBar" + gameObject.GetInstanceID(), currentExp, toExp,
-				(ExperienceSystem.instance.GetPercentageForExperience(toExp) - ExperienceSystem.instance.GetPercentageForExperience(currentExp)) * ProgressSpeed,
+				(_experienceSystem.GetPercentageForExperience(toExp) - _experienceSystem.GetPercentageForExperience(currentExp)) * ProgressSpeed,
 				TweenScaleFunctions.SineEaseIn, tween =>
 				{
-					CurrentExpText = $"{(uint) tween.CurrentValue} / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
-					ProgressBarImage.fillAmount = ExperienceSystem.instance.GetPercentageForExperiencePrecise(tween.CurrentValue);
+					CurrentExpText = $"{(uint) tween.CurrentValue} / {_experienceSystem.TotalNeededExperienceForNextLevel}";
+					ProgressBarImage.fillAmount = _experienceSystem.GetPercentageForExperiencePrecise(tween.CurrentValue);
 				}, _ =>
 				{
 					OnEndAnimated();
@@ -271,7 +270,7 @@ namespace FightSabers.UI.Controllers
 
 								ProgressBarImage.fillAmount = 0;
 								ProgressBarImage.color = new Color32(0, 255, 0, 80);
-								CurrentExpText = $"0 / {ExperienceSystem.instance.TotalNeededExperienceForNextLevel}";
+								CurrentExpText = $"0 / {_experienceSystem.TotalNeededExperienceForNextLevel}";
 								CurrentLevelText = $"Level {_saveDataManager.SaveData.level}";
 								OnEndAnimated();
 							});
@@ -290,7 +289,7 @@ namespace FightSabers.UI.Controllers
 				FlowCoordinatorOwner.oldCoordinator = currentFlow;
 				currentFlow.PresentFlowCoordinator(FlowCoordinatorOwner);
 			}
-			else
+			else if (FlowCoordinatorOwner != null && FlowCoordinatorOwner.oldCoordinator != null)
 			{
 				FlowCoordinatorOwner.oldCoordinator.DismissFlowCoordinator(FlowCoordinatorOwner);
 			}

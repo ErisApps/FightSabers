@@ -3,23 +3,60 @@ using System.Collections;
 using FightSabers.Settings;
 using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
+using SiraUtil.Tools;
 using UnityEngine;
+using Zenject;
 
 namespace FightSabers.Core
 {
-	public class ExperienceSystem : PersistentSingleton<ExperienceSystem>
+	internal class ExperienceSystem : IInitializable
 	{
+		private readonly SiraLog _logger;
+
+		private readonly SaveDataManager _saveDataManager;
+
+		public ExperienceSystem(SiraLog logger, SaveDataManager saveDataManager)
+		{
+			_logger = logger;
+			_saveDataManager = saveDataManager;
+
+			RefreshTotalNeededExperience();
+		}
+
+		public void Initialize()
+		{
+			if (!HasOverflowedExperience)
+			{
+				return;
+			}
+
+			while (HasOverflowedExperience)
+			{
+				_saveDataManager.SaveData.level += 1;
+				_saveDataManager.SaveData.currentExp -= TotalNeededExperienceForNextLevel;
+				_saveDataManager.SaveData.skillPointRemaining += 1;
+				RefreshTotalNeededExperience();
+			}
+
+			_saveDataManager.ApplyToFile();
+		}
+
 		public uint ExperiencePointsWon { get; private set; }
+
 		public float ExperienceMultiplier { get; private set; } = 1f;
+
 		public uint TotalNeededExperienceForNextLevel { get; private set; }
+
 		public bool IsApplyingExperience { get; private set; }
 
-		public bool HasOverflowedExperience => SaveDataManager.instance.SaveData.currentExp >= TotalNeededExperienceForNextLevel;
+		public bool HasOverflowedExperience => _saveDataManager.SaveData.currentExp >= TotalNeededExperienceForNextLevel;
 
 		public delegate void ExperienceHandler(object self);
 
 		public event ExperienceHandler? LeveledUp;
+
 		public event ExperienceHandler? ApplyExperienceStarted;
+
 		public event ExperienceHandler? ApplyExperienceFinished;
 
 		private void OnLeveledUp()
@@ -39,19 +76,14 @@ namespace FightSabers.Core
 			ApplyExperienceFinished?.Invoke(this);
 		}
 
-		public void Setup()
-		{
-			RefreshTotalNeededExperience();
-		}
-
 		public void RefreshTotalNeededExperience()
 		{
-			TotalNeededExperienceForNextLevel = GetNeededExperience(SaveDataManager.instance.SaveData.level + 1) - GetNeededExperience(SaveDataManager.instance.SaveData.level);
+			TotalNeededExperienceForNextLevel = GetNeededExperience(_saveDataManager.SaveData.level + 1) - GetNeededExperience(_saveDataManager.SaveData.level);
 		}
 
 		public uint GetExperienceBeforeLevelUp()
 		{
-			return TotalNeededExperienceForNextLevel - SaveDataManager.instance.SaveData.currentExp;
+			return TotalNeededExperienceForNextLevel - _saveDataManager.SaveData.currentExp;
 		}
 
 		public uint GetNeededExperience(uint level)
@@ -71,30 +103,12 @@ namespace FightSabers.Core
 
 		public float GetCurrentExperiencePercentage()
 		{
-			return GetPercentageForExperience(SaveDataManager.instance.SaveData.currentExp);
+			return GetPercentageForExperience(_saveDataManager.SaveData.currentExp);
 		}
 
 		public void AddFightExperience(uint exp)
 		{
 			ExperiencePointsWon += (uint) (exp * ExperienceMultiplier);
-		}
-
-		public void FixOverflowedExperience()
-		{
-			if (!HasOverflowedExperience)
-			{
-				return;
-			}
-
-			while (HasOverflowedExperience)
-			{
-				SaveDataManager.instance.SaveData.level += 1;
-				SaveDataManager.instance.SaveData.currentExp -= TotalNeededExperienceForNextLevel;
-				SaveDataManager.instance.SaveData.skillPointRemaining += 1;
-				RefreshTotalNeededExperience();
-			}
-
-			SaveDataManager.instance.ApplyToFile();
 		}
 
 		public void ApplyExperience(float delayApplied = 2.5f)
@@ -112,10 +126,10 @@ namespace FightSabers.Core
 		{
 			while (ExperiencePointsWon > 0)
 			{
-				Logger.log.Debug($"ExperiencePointsWon: {ExperiencePointsWon}");
+				_logger.Debug($"ExperiencePointsWon: {ExperiencePointsWon}");
 				if (ExperiencePointsWon >= GetExperienceBeforeLevelUp())
 				{
-					new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
+					new UnityTask(OverlayViewController.instance.FillExperienceBar(_saveDataManager.SaveData.currentExp, TotalNeededExperienceForNextLevel, delayApplied));
 					yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
 					ExperiencePointsWon -= GetExperienceBeforeLevelUp();
 					LevelUp();
@@ -125,10 +139,10 @@ namespace FightSabers.Core
 				else
 				{
 					var addingExperience = ExperiencePointsWon;
-					new UnityTask(OverlayViewController.instance.FillExperienceBar(SaveDataManager.instance.SaveData.currentExp, SaveDataManager.instance.SaveData.currentExp + addingExperience,
+					new UnityTask(OverlayViewController.instance.FillExperienceBar(_saveDataManager.SaveData.currentExp, _saveDataManager.SaveData.currentExp + addingExperience,
 						delayApplied));
 					yield return new WaitUntil(() => !OverlayViewController.instance.CurrentlyAnimated);
-					SaveDataManager.instance.SaveData.currentExp += addingExperience;
+					_saveDataManager.SaveData.currentExp += addingExperience;
 					ExperiencePointsWon -= addingExperience;
 				}
 			}
@@ -136,15 +150,15 @@ namespace FightSabers.Core
 			OnApplyExperienceFinished();
 			for (var i = 0; HasOverflowedExperience && i < 5; ++i)
 			{
-				Logger.log.Error("This should never happen but the experience system is broken for this session. Please DM me if you're seeing this!");
+				_logger.Error("This should never happen but the experience system is broken for this session. Please DM me if you're seeing this!");
 			}
 		}
 
 		public void LevelUp()
 		{
-			SaveDataManager.instance.SaveData.level += 1;
-			SaveDataManager.instance.SaveData.currentExp = 0;
-			SaveDataManager.instance.SaveData.skillPointRemaining += 1;
+			_saveDataManager.SaveData.level += 1;
+			_saveDataManager.SaveData.currentExp = 0;
+			_saveDataManager.SaveData.skillPointRemaining += 1;
 			RefreshTotalNeededExperience();
 			OnLeveledUp();
 		}
