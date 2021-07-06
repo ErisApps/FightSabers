@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.ViewControllers;
 using DigitalRuby.Tween;
 using FightSabers.Core;
@@ -12,10 +12,11 @@ using FightSabers.UI.FlowCoordinators;
 using FightSabers.Utilities;
 using HMUI;
 using IPA.Loader;
+using IPA.Utilities;
 using SiraUtil.Tools;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using VRUIControls;
 using Zenject;
 using Image = UnityEngine.UI.Image;
 
@@ -25,11 +26,15 @@ namespace FightSabers.UI.Controllers
 	[ViewDefinition("FightSabers.UI.Views.OverlayView.bsml")]
 	internal class OverlayViewController : BSMLAutomaticViewController, ICanControlFlowCoordinator, IDisposable
 	{
+		private static readonly FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.Accessor PhysicsRaycaster = FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.GetAccessor("_physicsRaycaster");
+
 		private SiraLog _logger = null!;
 		private PluginConfig _config = null!;
 		private PluginMetadata _pluginMetadata = null!;
 		private SaveDataManager _saveDataManager = null!;
 		private ExperienceSystem _experienceSystem = null!;
+
+		private FloatingScreen _floatingScreen = null!;
 
 		private bool _shouldOpenPage = true;
 
@@ -38,7 +43,7 @@ namespace FightSabers.UI.Controllers
 
 		[Inject]
 		internal void Construct(SiraLog logger, PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata pluginMetadata, SaveDataManager saveDataManager,
-			ExperienceSystem experienceSystem)
+			ExperienceSystem experienceSystem, PhysicsRaycasterWithCache physicsRaycasterWithCache)
 		{
 			_logger = logger;
 			_config = config;
@@ -48,10 +53,19 @@ namespace FightSabers.UI.Controllers
 
 			_config.ConfigChanged -= ConfigOnConfigChanged;
 			_config.ConfigChanged += ConfigOnConfigChanged;
+
+			_floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(120, 52f), true, config.PanelPosition, Quaternion.Euler(config.PanelRotation));
+			var graphicRaycaster = _floatingScreen.GetComponent<VRGraphicRaycaster>();
+			PhysicsRaycaster(ref graphicRaycaster) = physicsRaycasterWithCache;
+			_floatingScreen.SetRootViewController(this, AnimationType.None);
+
+			_floatingScreen.HandleReleased -= FloatingScreenOnHandleReleased;
+			_floatingScreen.HandleReleased += FloatingScreenOnHandleReleased;
 		}
 
 		public void Dispose()
 		{
+			_floatingScreen.HandleReleased -= FloatingScreenOnHandleReleased;
 			_config.ConfigChanged -= ConfigOnConfigChanged;
 		}
 
@@ -91,7 +105,9 @@ namespace FightSabers.UI.Controllers
 		internal string CurrentExpText { get; set; } = string.Empty;
 
 		public delegate void BarAnimatedHandler(object self, bool state);
+
 		public event BarAnimatedHandler? BeginAnimated;
+
 		public event BarAnimatedHandler? EndAnimated;
 
 		public float ProgressSpeed => 2.5f;
@@ -303,6 +319,12 @@ namespace FightSabers.UI.Controllers
 			NotifyPropertyChanged(nameof(ExperienceContainerState));
 			NotifyPropertyChanged(nameof(FsDisableContainerState));
 
+		}
+
+		private void FloatingScreenOnHandleReleased(object sender, FloatingScreenHandleEventArgs e)
+		{
+			_config.PanelPosition = e.Position;
+			_config.PanelRotation = e.Rotation.eulerAngles;
 		}
 	}
 }

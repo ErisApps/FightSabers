@@ -54,7 +54,7 @@ namespace FightSabers
 	        _harmonyInstance = null;
         }
 
-        private static void MenuLoadFresh()
+        /*private static void MenuLoadFresh()
         {
             SaveDataManager.instance.Setup();
             QuestManager.instance.LoadQuests();
@@ -73,7 +73,7 @@ namespace FightSabers
             };
             floatingScreen.SetRootViewController(BeatSaberUI.CreateViewController<OverlayViewController>(), ViewController.AnimationType.None);
             floatingScreen.GetComponent<Image>().enabled = false;
-        }
+        }*/
 
         private static void OnMenuSceneActive()
         {
