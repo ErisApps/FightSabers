@@ -27,7 +27,7 @@ namespace FightSabers.Installers
 			Container.BindInstance(_config).AsSingle();
 
 			Container.BindInterfacesAndSelfTo<SaveDataManager>().AsSingle();
-			Container.Bind<QuestManager>().AsSingle();
+			Container.BindInterfacesAndSelfTo<QuestManager>().AsSingle();
 		}
 	}
 }

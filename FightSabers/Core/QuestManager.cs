@@ -7,11 +7,12 @@ using FightSabers.Models.Quests;
 using FightSabers.Settings;
 using JetBrains.Annotations;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace FightSabers.Core
 {
-	internal class QuestManager
+	internal class QuestManager : IInitializable
 	{
 		private readonly SaveDataManager _saveDataManager;
 
@@ -27,6 +28,40 @@ namespace FightSabers.Core
 			};
 		}
 
+		public void Initialize()
+		{
+			LoadQuests();
+		}
+
+		private void LoadQuests()
+		{
+			Random.InitState((int) DateTime.Now.Ticks);
+			foreach (var currentQuest in CurrentQuests)
+			{
+				if (currentQuest is not Quest quest)
+				{
+					continue;
+				}
+
+				quest.QuestCanceled += OnQuestCanceled;
+				quest.QuestCompleted += OnQuestCompleted;
+				quest.ProgressChanged += OnQuestProgressChanged;
+				quest.Activate(true);
+			}
+
+			foreach (var pickableQuest in PickableQuests)
+			{
+				if (pickableQuest is not Quest quest)
+				{
+					continue;
+				}
+
+				quest.ForceInitialize();
+				quest.QuestCompleted += OnQuestCompleted;
+				quest.ProgressChanged += OnQuestProgressChanged;
+			}
+		}
+
 		public List<IQuest> CurrentQuests => _saveDataManager.SaveData.currentQuests;
 
 		public List<IQuest> PickableQuests => _saveDataManager.SaveData.pickableQuests;
@@ -40,8 +75,11 @@ namespace FightSabers.Core
 		public delegate void QuestArgsHandler(object self, Quest quest);
 
 		public event QuestHandler? QuestPicked;
+
 		public event QuestArgsHandler? QuestCanceled;
+
 		public event QuestArgsHandler? QuestCompleted;
+
 		public event QuestArgsHandler? QuestProgressChanged;
 
 		private void OnQuestPicked()
@@ -76,35 +114,6 @@ namespace FightSabers.Core
 			if (self is Quest quest)
 			{
 				QuestProgressChanged?.Invoke(this, quest);
-			}
-		}
-
-		public void LoadQuests()
-		{
-			Random.InitState((int) DateTime.Now.Ticks);
-			foreach (var currentQuest in CurrentQuests)
-			{
-				if (currentQuest is not Quest quest)
-				{
-					continue;
-				}
-
-				quest.QuestCanceled += OnQuestCanceled;
-				quest.QuestCompleted += OnQuestCompleted;
-				quest.ProgressChanged += OnQuestProgressChanged;
-				quest.Activate(true);
-			}
-
-			foreach (var pickableQuest in PickableQuests)
-			{
-				if (pickableQuest is not Quest quest)
-				{
-					continue;
-				}
-
-				quest.ForceInitialize();
-				quest.QuestCompleted += OnQuestCompleted;
-				quest.ProgressChanged += OnQuestProgressChanged;
 			}
 		}
 
