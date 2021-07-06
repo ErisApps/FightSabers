@@ -317,7 +317,7 @@ namespace FightSabers.Core
 			Canvas.enabled = false;
 			_floatingText = FloatingText.Create();
 			_floatingText.fadeOutText = true;
-			_floatingText.tweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
+			_floatingText.TweenScaleFunc = TweenScaleFunctions.QuadraticEaseOut;
 			_floatingText.ConfigureText();
 			if (_is360Level)
 			{

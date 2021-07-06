@@ -7,21 +7,17 @@ namespace FightSabers.Utilities
 {
 	public class FloatingText : MonoBehaviour
 	{
-		#region Properties
-
-		public Vector2 canvasSize = new Vector2(100, 50);
-		public Vector2 labelPosition = new Vector2(0, 15);
-		public Vector2 labelSize = new Vector2(100, 20);
+		public Vector2 canvasSize = new(100, 50);
+		public Vector2 labelPosition = new(0, 15);
+		public Vector2 labelSize = new(100, 20);
 		public float labelFontSize = 14f;
 
 		public bool fadeOutText;
-		public Func<float, float> tweenScaleFunc;
+		public Func<float, float>? TweenScaleFunc;
 		public Vector3 tweenEndPosition;
 
-		#endregion
-
-		private Canvas _canvas;
-		private TMP_Text _textLabel;
+		private Canvas _canvas = null!;
+		private TMP_Text _textLabel = null!;
 
 		public static FloatingText Create()
 		{
@@ -59,11 +55,13 @@ namespace FightSabers.Utilities
 			_canvas.enabled = false;
 		}
 
+		// ReSharper disable once CognitiveComplexity
 		public void DisplayText(Vector3 pos, Vector3 rot, Vector3 scale, string labelInfo, float duration)
 		{
-			transform.localPosition = pos;
-			transform.localEulerAngles = rot;
-			transform.localScale = scale;
+			var transform1 = transform;
+			transform1.localPosition = pos;
+			transform1.localEulerAngles = rot;
+			transform1.localScale = scale;
 
 			if (_textLabel)
 			{
@@ -75,10 +73,10 @@ namespace FightSabers.Utilities
 				_canvas.enabled = true;
 			}
 
-			if (tweenScaleFunc != null)
+			if (TweenScaleFunc != null)
 			{
-				gameObject.Tween("FloatingText" + gameObject.GetInstanceID(), transform.localPosition, tweenEndPosition, duration, tweenScaleFunc,
-					delegate(ITween<Vector3> tween)
+				gameObject.Tween("FloatingText" + gameObject.GetInstanceID(), transform.localPosition, tweenEndPosition, duration, TweenScaleFunc,
+					tween =>
 					{
 						if (!this)
 						{
@@ -90,7 +88,7 @@ namespace FightSabers.Utilities
 						{
 							_textLabel.alpha = 1f - tween.CurrentProgress;
 						}
-					}, delegate
+					}, _ =>
 					{
 						if (this && gameObject)
 						{
