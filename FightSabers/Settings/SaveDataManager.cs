@@ -19,7 +19,7 @@ namespace FightSabers.Settings
 
 		internal ProfileSaveData SaveData { get; }
 
-		private SaveDataManager(SiraLog logger, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata metadata)
+		public SaveDataManager(SiraLog logger, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata metadata)
 		{
 			var saveDirectoryPath = Path.Combine(UnityGame.UserDataPath, metadata.Id);
 			_saveFilePath = Path.Combine(saveDirectoryPath, SAVE_DATA_FILE_NAME + SAVE_DATA_EXTENSION);
