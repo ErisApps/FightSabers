@@ -1,4 +1,5 @@
 ﻿using System;
+using BeatSaberMarkupLanguage;
 using DigitalRuby.Tween;
 using TMPro;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace FightSabers.Utilities
 				rectTransform.sizeDelta = canvasSize;
 				if (!_textLabel)
 				{
-					_textLabel = Utils.CreateText((RectTransform) _canvas.transform, "", labelPosition);
+					_textLabel = BeatSaberUI.CreateText((RectTransform) _canvas.transform, "", labelPosition);
 				}
 			}
 

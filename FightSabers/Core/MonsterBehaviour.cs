@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using BeatSaberMarkupLanguage;
 using DigitalRuby.Tween;
 using FightSabers.Models;
 using FightSabers.Settings;
@@ -185,7 +186,7 @@ namespace FightSabers.Core
 				rectTransform.sizeDelta = BaseCanvasSize;
 			}
 
-			NoteCountText = Utils.CreateText((RectTransform) Canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
+			NoteCountText = BeatSaberUI.CreateText((RectTransform) Canvas.transform, NoteCountLeft + " notes left", NoteCountNamePosition);
 			rectTransform = NoteCountText.transform as RectTransform;
 			if (rectTransform != null)
 			{
@@ -195,7 +196,7 @@ namespace FightSabers.Core
 				NoteCountText.fontSize = NoteCountFontSize;
 			}
 
-			MonsterLabel = Utils.CreateText(Canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
+			MonsterLabel = BeatSaberUI.CreateText(Canvas.transform as RectTransform, MonsterName, MonsterLabelPosition);
 			rectTransform = MonsterLabel.transform as RectTransform;
 			if (rectTransform != null)
 			{
@@ -205,7 +206,7 @@ namespace FightSabers.Core
 				MonsterLabel.fontSize = MonsterLabelFontSize;
 			}
 
-			MonsterHpLabel = Utils.CreateText(Canvas.transform as RectTransform, "0 HP", MonsterHpLabelPosition);
+			MonsterHpLabel = BeatSaberUI.CreateText(Canvas.transform as RectTransform, "0 HP", MonsterHpLabelPosition);
 			rectTransform = MonsterHpLabel.transform as RectTransform;
 			if (rectTransform != null)
 			{
