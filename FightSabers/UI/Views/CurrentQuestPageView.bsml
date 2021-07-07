@@ -1,90 +1,91 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <vertical child-control-height='false'>
-    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='Current quests' align='Center' font-size='8'/>
-    </horizontal>
-    <vertical spacing='7' vertical-fit='PreferredSize' pad-top='-2'>
-      <!-- First -->
-      <horizontal pref-height='14' active='~quest-1-container-state'>
-        <vertical spacing='4' pref-width='50'>
-          <vertical pref-width='50'>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~title-quest-1' align='Center' font-size='4'
-                    size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
-            </horizontal>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~desc-quest-1'
-                    align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
-                    size-delta-x='50' size-delta-y='5'/>
-            </horizontal>
-          </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-1-progress'>
-            <img id='progress-bg-bar-quest-1-img' pref-width='50' pref-height='5'/>
-            <img id='progress-bar-quest-1-img' pref-width='50' pref-height='5'/>
-            <text id='current-progress-quest-1-text' text='~current-progress-quest-1' align='Center' font-size='3'></text>
-          </stack>
-        </vertical>
-        <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
-          <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
-                  interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
-                  on-click='quest-1-cancel-act'/>
-        </vertical>
-      </horizontal>
-      <!-- Second -->
-      <horizontal pref-height='14' active='~quest-2-container-state'>
-        <vertical spacing='4' pref-width='50'>
-          <vertical pref-width='50'>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~title-quest-2' align='Center' font-size='4'
-                    size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
-            </horizontal>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~desc-quest-2' 
-                    align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
-                    size-delta-x='50' size-delta-y='5'/>
-            </horizontal>
-          </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-2-progress'>
-            <img id='progress-bg-bar-quest-2-img' pref-width='50' pref-height='5'/>
-            <img id='progress-bar-quest-2-img' pref-width='50' pref-height='5'/>
-            <text id='current-progress-quest-2-text' text='~current-progress-quest-2' align='Center' font-size='3'></text>
-          </stack>
-        </vertical>
-        <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
-          <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
-                  interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
-                  on-click='quest-2-cancel-act'/>
-        </vertical>
-      </horizontal>
-      <!-- Third -->
-      <horizontal pref-height='14' active='~quest-3-container-state'>
-        <vertical spacing='4' pref-width='50'>
-          <vertical pref-width='50'>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~title-quest-3' align='Center' font-size='4'
-                    size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
-            </horizontal>
-            <horizontal child-control-width='false' child-control-height='false'>
-              <text text='~desc-quest-3'
-                    align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
-                    size-delta-x='50' size-delta-y='5'/>
-            </horizontal>
-          </vertical>
-          <stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-3-progress'>
-            <img id='progress-bg-bar-quest-3-img' pref-width='50' pref-height='5'/>
-            <img id='progress-bar-quest-3-img' pref-width='50' pref-height='5'/>
-            <text id='current-progress-quest-3-text' text='~current-progress-quest-3' align='Center' font-size='3'></text>
-          </stack>
-        </vertical>
-        <vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
-          <button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
-                  interactable='false' hover-hint='Not yet implemented!'/>
-          <button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
-                  on-click='quest-3-cancel-act'/>
-        </vertical>
-      </horizontal>
-    </vertical>
-  </vertical>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<vertical child-control-height='false'>
+		<horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+			<text text='Current quests' align='Center' font-size='8'/>
+		</horizontal>
+		<vertical spacing='7' vertical-fit='PreferredSize' pad-top='-2'>
+			<!-- First -->
+			<horizontal pref-height='14' active='~quest-1-container-state'>
+				<vertical spacing='4' pref-width='50'>
+					<vertical pref-width='50'>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~title-quest-1' align='Center' font-size='4'
+								  size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
+						</horizontal>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~desc-quest-1'
+								  align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
+								  size-delta-x='50' size-delta-y='5'/>
+						</horizontal>
+					</vertical>
+					<stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-1-progress'>
+						<img id='progress-bg-bar-quest-1-img' pref-width='50' pref-height='5'/>
+						<img id='progress-bar-quest-1-img' pref-width='50' pref-height='5'/>
+						<text id='current-progress-quest-1-text' text='~current-progress-quest-1' align='Center' font-size='3'/>
+					</stack>
+				</vertical>
+				<vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
+					<button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
+							interactable='false' hover-hint='Not yet implemented!'/>
+					<button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+							on-click='quest-1-cancel-act'/>
+				</vertical>
+			</horizontal>
+			<!-- Second -->
+			<horizontal pref-height='14' active='~quest-2-container-state'>
+				<vertical spacing='4' pref-width='50'>
+					<vertical pref-width='50'>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~title-quest-2' align='Center' font-size='4'
+								  size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
+						</horizontal>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~desc-quest-2'
+								  align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
+								  size-delta-x='50' size-delta-y='5'/>
+						</horizontal>
+					</vertical>
+					<stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-2-progress'>
+						<img id='progress-bg-bar-quest-2-img' pref-width='50' pref-height='5'/>
+						<img id='progress-bar-quest-2-img' pref-width='50' pref-height='5'/>
+						<text id='current-progress-quest-2-text' text='~current-progress-quest-2' align='Center' font-size='3'/>
+					</stack>
+				</vertical>
+				<vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
+					<button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
+							interactable='false' hover-hint='Not yet implemented!'/>
+					<button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+							on-click='quest-2-cancel-act'/>
+				</vertical>
+			</horizontal>
+			<!-- Third -->
+			<horizontal pref-height='14' active='~quest-3-container-state'>
+				<vertical spacing='4' pref-width='50'>
+					<vertical pref-width='50'>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~title-quest-3' align='Center' font-size='4'
+								  size-delta-x='50' size-delta-y='6' overflow-mode='Ellipsis' all-uppercase='true'/>
+						</horizontal>
+						<horizontal child-control-width='false' child-control-height='false'>
+							<text text='~desc-quest-3'
+								  align='Center' italics='true' font-size='2.5' color='#CFCFCF' rich-text='true' overflow-mode='Ellipsis'
+								  size-delta-x='50' size-delta-y='5'/>
+						</horizontal>
+					</vertical>
+					<stack pref-width='50' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' hover-hint='~hover-quest-3-progress'>
+						<img id='progress-bg-bar-quest-3-img' pref-width='50' pref-height='5'/>
+						<img id='progress-bar-quest-3-img' pref-width='50' pref-height='5'/>
+						<text id='current-progress-quest-3-text' text='~current-progress-quest-3' align='Center' font-size='3'/>
+					</stack>
+				</vertical>
+				<vertical horizontal-fit='PreferredSize' pad-left='8' spacing='4'>
+					<button pref-width='0' pref-height='7' text='Boost' font-size='3' word-wrapping='false' glow-color='green'
+							interactable='false' hover-hint='Not yet implemented!'/>
+					<button pref-width='0' pref-height='7' text='Cancel' font-size='3' word-wrapping='false' glow-color='red'
+							on-click='quest-3-cancel-act'/>
+				</vertical>
+			</horizontal>
+		</vertical>
+	</vertical>
 </bg>

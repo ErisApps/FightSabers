@@ -1,10 +1,11 @@
-﻿<bg>
-  <vertical child-control-height='false'>
-    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='FightSabers' align='Center' font-size='8'/>
-    </horizontal>
-    <horizontal vertical-fit='PreferredSize'>
-      <text text='Skill tree' align='Center'/>
-    </horizontal>
-  </vertical>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<vertical child-control-height='false'>
+		<horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+			<text text='FightSabers' align='Center' font-size='8'/>
+		</horizontal>
+		<horizontal vertical-fit='PreferredSize'>
+			<text text='Skill tree' align='Center'/>
+		</horizontal>
+	</vertical>
 </bg>

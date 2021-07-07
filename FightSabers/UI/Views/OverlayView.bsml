@@ -1,25 +1,26 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
-    id='main-background'>
-  <vertical spacing='0'>
-    <horizontal />
-    <horizontal />
-    <horizontal bg='round-rect-panel' horizontal-fit='PreferredSize'>
-      <button id='switch-fightsabers-btn' pref-width='45' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
-    </horizontal>
-    <horizontal>
-      <vertical active='~experience-container-state' spacing='2'>
-        <text text='~header-text' align='Top' font-size='3.5'></text>
-        <stack id='progress-bar-stack' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
-          <img id='progress-bg-bar-img' pref-width='80' pref-height='8'/>
-          <img id='progress-bar-img' pref-width='80' pref-height='8'/>
-          <text id='current-exp-text' text='~current-exp' align='Center' font-size='4.5'></text>
-        </stack> 
-        <text text='~current-level' align='Top'></text>
-      </vertical>
-      <vertical active='~fs-disable-container-state'>
-        <text text='FightSabers is disabled!' align='Center' font-size='4.5' color='orange'></text>
-        <text text='No monsters will spawn..' align='Center' font-size='3.5' color='#CFCFCF'></text>
-      </vertical>
-    </horizontal>
-  </vertical>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
+	id='main-background'>
+	<vertical spacing='0'>
+		<horizontal/>
+		<horizontal/>
+		<horizontal bg='round-rect-panel' horizontal-fit='PreferredSize'>
+			<button id='switch-fightsabers-btn' pref-width='45' text='~fightsabers-btn-status' on-click='switch-fightsabers-act'/>
+		</horizontal>
+		<horizontal>
+			<vertical active='~experience-container-state' spacing='2'>
+				<text text='~header-text' align='Top' font-size='3.5'/>
+				<stack id='progress-bar-stack' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+					<img id='progress-bg-bar-img' pref-width='80' pref-height='8'/>
+					<img id='progress-bar-img' pref-width='80' pref-height='8'/>
+					<text id='current-exp-text' text='~current-exp' align='Center' font-size='4.5'/>
+				</stack>
+				<text text='~current-level' align='Top'/>
+			</vertical>
+			<vertical active='~fs-disable-container-state'>
+				<text text='FightSabers is disabled!' align='Center' font-size='4.5' color='orange'/>
+				<text text='No monsters will spawn..' align='Center' font-size='3.5' color='#CFCFCF'/>
+			</vertical>
+		</horizontal>
+	</vertical>
 </bg>

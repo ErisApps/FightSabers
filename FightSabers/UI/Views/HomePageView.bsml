@@ -1,43 +1,44 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <!--Plugin status-->
-  <vertical id='plugin-status-layout' bg='round-rect-panel' size-delta-y='25' pad='5' horizontal-fit='Unconstrained' vertical-fit='Unconstrained'
-            anchor-min-x='0.025' anchor-max-x='0.25' anchor-min-y='0.85' anchor-max-y='0.8'>
-    <horizontal pad-bottom='5'>
-      <text align ='Center' font-size='3' text='~plugin-text-status' face-color='~plugin-text-color-status'></text>
-    </horizontal>
-    <button id='switch-plugin-btn' font-size='3' pref-width='20' pref-height='7' text='~switch-plugin-btn-status' on-click='plugin-status-act' word-wrapping='false' />
-  </vertical>
-  <!--Updater-->
-  <vertical id='updater-layout' size-delta-y='25' pad='5' horizontal-fit='Unconstrained' vertical-fit='Unconstrained'
-            anchor-min-x='0.8' anchor-max-x='0.975' anchor-min-y='0.925' anchor-max-y='0.8'>
-    <text align ='Center' font-size='3' text='~version-text'></text>
-    <horizontal pad-top='5'>
-      <clickable-text id='latest-release-text' align='Center' font-size='3' text='' face-color='#FD3F92' />
-    </horizontal>
-  </vertical>
-  <!--Main stuff-->
-  <vertical child-control-height='false' anchor-min-y='0.1' anchor-max-y='1'>
-    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='Home' align='Center' font-size='8'/>
-    </horizontal>
-    <vertical bg='round-rect-panel' size-delta-y='45' pad='5'>
-      <horizontal pad-bottom='3'>
-        <text align='Center' bold='true' italics='true' font-size='3.5' rich-text='true' text='Welcome to FightSabers!' />
-      </horizontal>
-      <text align='Center' font-size='3.5' text='Fight monsters, earn experience and unlock new skills!' />
-      <text align='Center' font-size='3.5' text='But be careful, monsters are making your games harder!' />
-      <horizontal pad-top='3'>
-        <text align='Center' italics='true' font-size='3' text='This ambitious project is still very new, a lot' />
-      </horizontal>
-      <text align='Center' italics='true' font-size='3' text="of things are planned but it's taking time, sowwy!" />
-      <horizontal pad-top='3'>
-        <text id='creator-text' italics='true' align ='Center' font-size='3' text='Developed by Shoko84'></text>
-      </horizontal>
-    </vertical>
-  </vertical>
-  <bottom-button-panel>
-    <button id='github-link-btn' text='Github project' on-click='github-link-act'/>
-    <button id='donate-link-btn' italics='true' pref-width='0' text='smol kofi' hover-hint='You can support the project by buying me a coffee!' on-click='donate-link-act'/>
-    <button id='bug-link-btn' text='Found a bug?' hover-hint='Let me know if you think have found a bug!' on-click='bug-link-act'/>
-  </bottom-button-panel>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<!--Plugin status-->
+	<vertical id='plugin-status-layout' bg='round-rect-panel' size-delta-y='25' pad='5' horizontal-fit='Unconstrained' vertical-fit='Unconstrained'
+			  anchor-min-x='0.025' anchor-max-x='0.25' anchor-min-y='0.85' anchor-max-y='0.8'>
+		<horizontal pad-bottom='5'>
+			<text align='Center' font-size='3' text='~plugin-text-status' face-color='~plugin-text-color-status'/>
+		</horizontal>
+		<button id='switch-plugin-btn' font-size='3' pref-width='20' pref-height='7' text='~switch-plugin-btn-status' on-click='plugin-status-act' word-wrapping='false'/>
+	</vertical>
+	<!--Updater-->
+	<vertical id='updater-layout' size-delta-y='25' pad='5' horizontal-fit='Unconstrained' vertical-fit='Unconstrained'
+			  anchor-min-x='0.8' anchor-max-x='0.975' anchor-min-y='0.925' anchor-max-y='0.8'>
+		<text align='Center' font-size='3' text='~version-text'/>
+		<horizontal pad-top='5'>
+			<clickable-text id='latest-release-text' align='Center' font-size='3' text='' face-color='#FD3F92'/>
+		</horizontal>
+	</vertical>
+	<!--Main stuff-->
+	<vertical child-control-height='false' anchor-min-y='0.1' anchor-max-y='1'>
+		<horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+			<text text='Home' align='Center' font-size='8'/>
+		</horizontal>
+		<vertical bg='round-rect-panel' size-delta-y='45' pad='5'>
+			<horizontal pad-bottom='3'>
+				<text align='Center' bold='true' italics='true' font-size='3.5' rich-text='true' text='Welcome to FightSabers!'/>
+			</horizontal>
+			<text align='Center' font-size='3.5' text='Fight monsters, earn experience and unlock new skills!'/>
+			<text align='Center' font-size='3.5' text='But be careful, monsters are making your games harder!'/>
+			<horizontal pad-top='3'>
+				<text align='Center' italics='true' font-size='3' text='This ambitious project is still very new, a lot'/>
+			</horizontal>
+			<text align='Center' italics='true' font-size='3' text="of things are planned but it's taking time, sowwy!"/>
+			<horizontal pad-top='3'>
+				<text id='creator-text' italics='true' align='Center' font-size='3' text='Developed by Shoko84'/>
+			</horizontal>
+		</vertical>
+	</vertical>
+	<bottom-button-panel>
+		<button id='github-link-btn' text='Github project' on-click='github-link-act'/>
+		<button id='donate-link-btn' italics='true' pref-width='0' text='smol kofi' hover-hint='You can support the project by buying me a coffee!' on-click='donate-link-act'/>
+		<button id='bug-link-btn' text='Found a bug?' hover-hint='Let me know if you think have found a bug!' on-click='bug-link-act'/>
+	</bottom-button-panel>
 </bg>
