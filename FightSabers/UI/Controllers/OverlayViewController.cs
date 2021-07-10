@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.FloatingScreen;
@@ -10,7 +9,6 @@ using FightSabers.Core;
 using FightSabers.Settings;
 using FightSabers.UI.FlowCoordinators;
 using FightSabers.Utilities;
-using HMUI;
 using IPA.Loader;
 using IPA.Utilities;
 using SiraUtil.Tools;
@@ -27,21 +25,22 @@ namespace FightSabers.UI.Controllers
 	internal class OverlayViewController : BSMLAutomaticViewController, IDisposable
 	{
 		private static readonly FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.Accessor PhysicsRaycaster = FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.GetAccessor("_physicsRaycaster");
+		private static readonly FieldAccessor<LazyInject<FightSabersFlowCoordinator>, bool>.Accessor LazyInjectHasValueAccessor = FieldAccessor<LazyInject<FightSabersFlowCoordinator>, bool>.GetAccessor("_hasValue");
 
 		private SiraLog _logger = null!;
 		private PluginConfig _config = null!;
 		private PluginMetadata _pluginMetadata = null!;
 		private SaveDataManager _saveDataManager = null!;
 		private ExperienceSystem _experienceSystem = null!;
-		private FightSabersFlowCoordinator _fightSabersFlowCoordinator = null!;
+		private LazyInject<FightSabersFlowCoordinator> _fightSabersFlowCoordinator = null!;
 
 		private FloatingScreen _floatingScreen = null!;
 
-		private bool IsFightSabersFlowCoordinatorOpen => _fightSabersFlowCoordinator.YoungestChildFlowCoordinatorOrSelf() is FightSabersFlowCoordinator;
+		private bool IsFightSabersFlowCoordinatorOpen => LazyInjectHasValueAccessor(ref _fightSabersFlowCoordinator) && _fightSabersFlowCoordinator.Value.YoungestChildFlowCoordinatorOrSelf() is FightSabersFlowCoordinator;
 
 		[Inject]
 		internal void Construct(SiraLog logger, PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata pluginMetadata, SaveDataManager saveDataManager,
-			ExperienceSystem experienceSystem, FightSabersFlowCoordinator fightSabersFlowCoordinator, PhysicsRaycasterWithCache physicsRaycasterWithCache)
+			ExperienceSystem experienceSystem, LazyInject<FightSabersFlowCoordinator> fightSabersFlowCoordinator, PhysicsRaycasterWithCache physicsRaycasterWithCache)
 		{
 			_logger = logger;
 			_config = config;
@@ -299,12 +298,12 @@ namespace FightSabers.UI.Controllers
 		{
 			if (IsFightSabersFlowCoordinatorOpen)
 			{
-				BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(_fightSabersFlowCoordinator);
+				BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(_fightSabersFlowCoordinator.Value);
 				ButtonStatus = "Close FightSabers";
 			}
 			else
 			{
-				BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(_fightSabersFlowCoordinator);
+				BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(_fightSabersFlowCoordinator.Value);
 				ButtonStatus = "Open FightSabers";
 			}
 		}
@@ -313,7 +312,6 @@ namespace FightSabers.UI.Controllers
 		{
 			NotifyPropertyChanged(nameof(ExperienceContainerState));
 			NotifyPropertyChanged(nameof(FsDisableContainerState));
-
 		}
 
 		private void FloatingScreenOnHandleReleased(object sender, FloatingScreenHandleEventArgs e)

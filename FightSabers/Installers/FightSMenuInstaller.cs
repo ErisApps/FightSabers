@@ -23,7 +23,7 @@ namespace FightSabers.Installers
 			Container.Bind<SkillTreePageController>().FromNewComponentAsViewController().AsSingle().Lazy();
 			Container.Bind<FightSabersFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle().Lazy();
 
-			Container.Bind(typeof(OverlayViewController), typeof(IDisposable)).To<OverlayViewController>().FromNewComponentAsViewController().AsSingle().Lazy();
+			Container.Bind(typeof(OverlayViewController), typeof(IDisposable)).To<OverlayViewController>().FromNewComponentAsViewController().AsSingle();
 		}
 	}
 }
