@@ -35,7 +35,8 @@ namespace FightSabers
         [Init]
         public void Init(Logger logger, PluginMetadata metadata, Config config, Zenjector zenjector)
         {
-	        zenjector.OnApp<FightSAppInstaller>().WithParameters(logger, config.Generated<PluginConfig>());
+	        var pluginConfig = config.Generated<PluginConfig>();
+	        zenjector.OnApp<FightSAppInstaller>().WithParameters(logger, metadata, pluginConfig);
 	        zenjector.OnMenu<FightSMenuInstaller>();
 	        zenjector.OnGame<FightSGameInstaller>();
         }
