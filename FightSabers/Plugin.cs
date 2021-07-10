@@ -38,7 +38,9 @@ namespace FightSabers
 	        var pluginConfig = config.Generated<PluginConfig>();
 	        zenjector.OnApp<FightSAppInstaller>().WithParameters(logger, metadata, pluginConfig);
 	        zenjector.OnMenu<FightSMenuInstaller>();
-	        zenjector.OnGame<FightSGameInstaller>();
+	        zenjector.OnGame<FightSGameInstaller>()
+		        .OnlyForStandard()
+		        .When(() => pluginConfig.Enabled);
         }
 
         [OnEnable]
