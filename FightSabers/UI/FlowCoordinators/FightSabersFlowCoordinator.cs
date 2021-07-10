@@ -28,8 +28,6 @@ namespace FightSabers.UI.FlowCoordinators
 			Statistics
 		}
 
-		public FlowCoordinator oldCoordinator;
-
 		[Inject]
 		internal void Construct(HomePageController homePageController, BottomPageController bottomPageController, LazyInject<SkillTreePageController> skillTreePageController,
 			LazyInject<ProfilePageController> profilePageController, LazyInject<QuestPickerPageController> questPickerPageController, LazyInject<CurrentQuestPageController> currentQuestPageController,

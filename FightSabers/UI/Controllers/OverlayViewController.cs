@@ -24,7 +24,7 @@ namespace FightSabers.UI.Controllers
 {
 	[HotReload(RelativePathToLayout = @"..\Views\OverlayView.bsml")]
 	[ViewDefinition("FightSabers.UI.Views.OverlayView.bsml")]
-	internal class OverlayViewController : BSMLAutomaticViewController, ICanControlFlowCoordinator, IDisposable
+	internal class OverlayViewController : BSMLAutomaticViewController, IDisposable
 	{
 		private static readonly FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.Accessor PhysicsRaycaster = FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.GetAccessor("_physicsRaycaster");
 
@@ -33,23 +33,22 @@ namespace FightSabers.UI.Controllers
 		private PluginMetadata _pluginMetadata = null!;
 		private SaveDataManager _saveDataManager = null!;
 		private ExperienceSystem _experienceSystem = null!;
+		private FightSabersFlowCoordinator _fightSabersFlowCoordinator = null!;
 
 		private FloatingScreen _floatingScreen = null!;
 
-		private bool _shouldOpenPage = true;
-
-		public FightSabersFlowCoordinator? FlowCoordinatorOwner { get; set; } = null!;
-
+		private bool IsFightSabersFlowCoordinatorOpen => _fightSabersFlowCoordinator.YoungestChildFlowCoordinatorOrSelf() is FightSabersFlowCoordinator;
 
 		[Inject]
 		internal void Construct(SiraLog logger, PluginConfig config, [Inject(Id = Constants.BindingIds.METADATA)] PluginMetadata pluginMetadata, SaveDataManager saveDataManager,
-			ExperienceSystem experienceSystem, PhysicsRaycasterWithCache physicsRaycasterWithCache)
+			ExperienceSystem experienceSystem, FightSabersFlowCoordinator fightSabersFlowCoordinator, PhysicsRaycasterWithCache physicsRaycasterWithCache)
 		{
 			_logger = logger;
 			_config = config;
 			_pluginMetadata = pluginMetadata;
 			_saveDataManager = saveDataManager;
 			_experienceSystem = experienceSystem;
+			_fightSabersFlowCoordinator = fightSabersFlowCoordinator;
 
 			_config.ConfigChanged -= ConfigOnConfigChanged;
 			_config.ConfigChanged += ConfigOnConfigChanged;
@@ -90,7 +89,7 @@ namespace FightSabers.UI.Controllers
 
 
 		[UIValue("fightsabers-btn-status")]
-		public string buttonStatus { get; private set; } = "Open FightSabers";
+		public string ButtonStatus { get; private set; } = "Open FightSabers";
 
 		[UIValue("header-text")]
 		public string HeaderText { get; private set; } = string.Empty;
@@ -298,20 +297,16 @@ namespace FightSabers.UI.Controllers
 		[UIAction("switch-fightsabers-act")]
 		public void ShowModPageClick()
 		{
-			if (_shouldOpenPage)
+			if (IsFightSabersFlowCoordinatorOpen)
 			{
-				var currentFlow = Resources.FindObjectsOfTypeAll<FlowCoordinator>().FirstOrDefault(f => f.isActivated);
-				FlowCoordinatorOwner = BeatSaberUI.CreateFlowCoordinator<FightSabersFlowCoordinator>();
-				FlowCoordinatorOwner.oldCoordinator = currentFlow;
-				currentFlow.PresentFlowCoordinator(FlowCoordinatorOwner);
+				BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(_fightSabersFlowCoordinator);
+				ButtonStatus = "Close FightSabers";
 			}
-			else if (FlowCoordinatorOwner != null && FlowCoordinatorOwner.oldCoordinator != null)
+			else
 			{
-				FlowCoordinatorOwner.oldCoordinator.DismissFlowCoordinator(FlowCoordinatorOwner);
+				BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(_fightSabersFlowCoordinator);
+				ButtonStatus = "Open FightSabers";
 			}
-
-			_shouldOpenPage = !_shouldOpenPage;
-			buttonStatus = _shouldOpenPage ? "Open FightSabers" : "Close FightSabers";
 		}
 
 		private void ConfigOnConfigChanged(object sender, EventArgs e)
