@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.FloatingScreen;
 using FightSabers.Core;
 using FightSabers.Installers;
 using FightSabers.Models;
@@ -12,14 +10,12 @@ using FightSabers.Settings;
 using FightSabers.UI.Controllers;
 using FightSabers.Utilities;
 using HarmonyLib;
-using HMUI;
 using IPA;
+using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Loader;
 using SiraUtil.Zenject;
 using UnityEngine;
-using UnityEngine.UI;
-using Config = IPA.Config.Config;
 
 namespace FightSabers
 {
