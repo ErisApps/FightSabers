@@ -11,6 +11,13 @@ namespace FightSabers.UI.FlowCoordinators
 	{
 		private HomePageController _homePageController = null!;
 		private BottomPageController _bottomPageController = null!;
+		private LazyInject<SkillTreePageController> _skillTreePageController = null!;
+		private LazyInject<ProfilePageController> _profilePageController = null!;
+		private LazyInject<QuestPickerPageController> _questPickerPageController = null!;
+		private LazyInject<CurrentQuestPageController> _currentQuestPageController = null!;
+		private LazyInject<CharacterStatsPageController> _characterStatsPageController = null!;
+		private LazyInject<MonsterInfoPageController> _monsterInfoPageController = null!;
+		private LazyInject<ModifierStatsPageController> _modifierStatsPageController = null!;
 
 		public enum PageStatus
 		{
@@ -26,10 +33,20 @@ namespace FightSabers.UI.FlowCoordinators
 		public PageStatus CurrentPageStatus { get; private set; }
 
 		[Inject]
-		internal void Construct(HomePageController homePageController, BottomPageController bottomPageController)
+		internal void Construct(HomePageController homePageController, BottomPageController bottomPageController, LazyInject<SkillTreePageController> skillTreePageController,
+			LazyInject<ProfilePageController> profilePageController, LazyInject<QuestPickerPageController> questPickerPageController, LazyInject<CurrentQuestPageController> currentQuestPageController,
+			LazyInject<CharacterStatsPageController> characterStatsPageController, LazyInject<MonsterInfoPageController> monsterInfoPageController,
+			LazyInject<ModifierStatsPageController> modifierStatsPageController)
 		{
 			_homePageController = homePageController;
 			_bottomPageController = bottomPageController;
+			_skillTreePageController = skillTreePageController;
+			_profilePageController = profilePageController;
+			_questPickerPageController = questPickerPageController;
+			_currentQuestPageController = currentQuestPageController;
+			_characterStatsPageController = characterStatsPageController;
+			_monsterInfoPageController = monsterInfoPageController;
+			_modifierStatsPageController = modifierStatsPageController;
 		}
 
 		protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -50,43 +67,37 @@ namespace FightSabers.UI.FlowCoordinators
 				return;
 			}
 
-			BSMLAutomaticViewController controller;
 			switch (status)
 			{
 				case PageStatus.Home:
-					controller = _homePageController;
-					ReplaceTopViewController(controller);
+					ReplaceTopViewController(_homePageController);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, _bottomPageController);
+					ProvideInitialViewControllers(_homePageController, null, null, _bottomPageController);
 					break;
 				case PageStatus.Skills:
-					controller = BeatSaberUI.CreateViewController<SkillTreePageController>();
-					ReplaceTopViewController(controller);
+					ReplaceTopViewController(_skillTreePageController.Value);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, _bottomPageController);
+					ProvideInitialViewControllers(_skillTreePageController.Value, null, null, _bottomPageController);
 					break;
 				case PageStatus.Profile:
-					controller = BeatSaberUI.CreateViewController<ProfilePageController>();
-					ReplaceTopViewController(controller);
+					ReplaceTopViewController(_profilePageController.Value);
 					SetLeftScreenViewController(null, ViewController.AnimationType.Out);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, _bottomPageController);
+					ProvideInitialViewControllers(_profilePageController.Value, null, null, _bottomPageController);
 					break;
 				case PageStatus.Quests:
-					controller = BeatSaberUI.CreateViewController<QuestPickerPageController>();
-					ReplaceTopViewController(controller);
+					ReplaceTopViewController(_questPickerPageController.Value);
 					SetRightScreenViewController(null, ViewController.AnimationType.Out);
-					ProvideInitialViewControllers(controller, null, null, _bottomPageController);
-					SetLeftScreenViewController(BeatSaberUI.CreateViewController<CurrentQuestPageController>(), ViewController.AnimationType.In);
+					ProvideInitialViewControllers(_questPickerPageController.Value, null, null, _bottomPageController);
+					SetLeftScreenViewController(_currentQuestPageController.Value, ViewController.AnimationType.In);
 					break;
 				case PageStatus.Statistics:
-					controller = BeatSaberUI.CreateViewController<CharacterStatsPageController>();
-					ReplaceTopViewController(controller);
-					ProvideInitialViewControllers(controller, null, null, _bottomPageController);
-					SetLeftScreenViewController(BeatSaberUI.CreateViewController<MonsterInfoPageController>(), ViewController.AnimationType.In);
-					SetRightScreenViewController(BeatSaberUI.CreateViewController<ModifierStatsPageController>(), ViewController.AnimationType.In);
+					ReplaceTopViewController(_characterStatsPageController.Value);
+					ProvideInitialViewControllers(_characterStatsPageController.Value, null, null, _bottomPageController);
+					SetLeftScreenViewController(_monsterInfoPageController.Value, ViewController.AnimationType.In);
+					SetRightScreenViewController(_modifierStatsPageController.Value, ViewController.AnimationType.In);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(status), status, null);
