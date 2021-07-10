@@ -19,7 +19,9 @@ namespace FightSabers.UI.FlowCoordinators
 		private LazyInject<MonsterInfoPageController> _monsterInfoPageController = null!;
 		private LazyInject<ModifierStatsPageController> _modifierStatsPageController = null!;
 
-		public enum PageStatus
+		private PageStatus _currentPageStatus;
+
+		internal enum PageStatus
 		{
 			Home,
 			Skills,
@@ -29,8 +31,6 @@ namespace FightSabers.UI.FlowCoordinators
 		}
 
 		public FlowCoordinator oldCoordinator;
-
-		public PageStatus CurrentPageStatus { get; private set; }
 
 		[Inject]
 		internal void Construct(HomePageController homePageController, BottomPageController bottomPageController, LazyInject<SkillTreePageController> skillTreePageController,
@@ -62,7 +62,7 @@ namespace FightSabers.UI.FlowCoordinators
 
 		public void ActivatePage(PageStatus status)
 		{
-			if (status == CurrentPageStatus)
+			if (status == _currentPageStatus)
 			{
 				return;
 			}
@@ -103,7 +103,7 @@ namespace FightSabers.UI.FlowCoordinators
 					throw new ArgumentOutOfRangeException(nameof(status), status, null);
 			}
 
-			CurrentPageStatus = status;
+			_currentPageStatus = status;
 		}
 	}
 }
