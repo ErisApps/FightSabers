@@ -1,13 +1,11 @@
 ﻿using System;
-using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.UI.Controllers;
 using HMUI;
 using Zenject;
 
 namespace FightSabers.UI.FlowCoordinators
 {
-	internal class FightSabersFlowCoordinator : FlowCoordinator
+	internal class FightSabersFlowCoordinator : FlowCoordinator, IDisposable
 	{
 		private HomePageController _homePageController = null!;
 		private BottomPageController _bottomPageController = null!;
@@ -56,11 +54,18 @@ namespace FightSabers.UI.FlowCoordinators
 				return;
 			}
 
-			_bottomPageController.FlowCoordinatorOwner = this;
-			ActivatePage(PageStatus.Home);
+			_bottomPageController.PageTypeActivationRequested -= ActivatePageType;
+			_bottomPageController.PageTypeActivationRequested += ActivatePageType;
+
+			ActivatePageType(PageStatus.Home);
 		}
 
-		public void ActivatePage(PageStatus status)
+		public void Dispose()
+		{
+			_bottomPageController.PageTypeActivationRequested -= ActivatePageType;
+		}
+
+		private void ActivatePageType(PageStatus status)
 		{
 			if (status == _currentPageStatus)
 			{

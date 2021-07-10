@@ -1,4 +1,5 @@
-﻿using BeatSaberMarkupLanguage.Attributes;
+﻿using System;
+using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.UI.FlowCoordinators;
 
@@ -6,53 +7,38 @@ namespace FightSabers.UI.Controllers
 {
 	[HotReload(RelativePathToLayout = @"..\Views\BottomPageView.bsml")]
 	[ViewDefinition("FightSabers.UI.Views.BottomPageView.bsml")]
-	internal class BottomPageController : BSMLAutomaticViewController, ICanControlFlowCoordinator
+	internal class BottomPageController : BSMLAutomaticViewController
 	{
-		public FightSabersFlowCoordinator? FlowCoordinatorOwner { get; set; }
+		public event Action<FightSabersFlowCoordinator.PageStatus>? PageTypeActivationRequested;
 
 		[UIAction("quests-page-act")]
 		private void QuestsPageClicked()
 		{
-			if (FlowCoordinatorOwner != null)
-			{
-				FlowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Quests);
-			}
+			PageTypeActivationRequested?.Invoke(FightSabersFlowCoordinator.PageStatus.Quests);
 		}
 
 		[UIAction("skills-page-act")]
 		private void SkillsPageClicked()
 		{
-			if (FlowCoordinatorOwner != null)
-			{
-				FlowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Skills);
-			}
+			PageTypeActivationRequested?.Invoke(FightSabersFlowCoordinator.PageStatus.Skills);
 		}
 
 		[UIAction("home-page-act")]
 		private void HomePageClicked()
 		{
-			if (FlowCoordinatorOwner != null)
-			{
-				FlowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Home);
-			}
+			PageTypeActivationRequested?.Invoke(FightSabersFlowCoordinator.PageStatus.Home);
 		}
 
 		[UIAction("profile-page-act")]
 		private void ProfilePageClicked()
 		{
-			if (FlowCoordinatorOwner != null)
-			{
-				FlowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Profile);
-			}
+			PageTypeActivationRequested?.Invoke(FightSabersFlowCoordinator.PageStatus.Profile);
 		}
 
 		[UIAction("stats-page-act")]
 		private void StatsPageClicked()
 		{
-			if (FlowCoordinatorOwner != null)
-			{
-				FlowCoordinatorOwner.ActivatePage(FightSabersFlowCoordinator.PageStatus.Statistics);
-			}
+			PageTypeActivationRequested?.Invoke(FightSabersFlowCoordinator.PageStatus.Statistics);
 		}
 	}
 }
