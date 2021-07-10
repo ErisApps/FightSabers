@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using FightSabers.Core;
+using FightSabers.Models.Abstracts;
 using UnityEngine.UI;
 using Zenject;
 
@@ -9,7 +11,7 @@ namespace FightSabers.UI.Controllers
 {
 	[HotReload(RelativePathToLayout = @"..\Views\QuestPickerPageView.bsml")]
 	[ViewDefinition("FightSabers.UI.Views.QuestPickerPageView.bsml")]
-	internal class QuestPickerPageController : BSMLAutomaticViewController
+	internal class QuestPickerPageController : BSMLAutomaticViewController, IDisposable
 	{
 		private QuestManager _questManager = null!;
 
@@ -17,6 +19,17 @@ namespace FightSabers.UI.Controllers
 		internal void Construct(QuestManager questManager)
 		{
 			_questManager = questManager;
+
+			_questManager.QuestCanceled -= OnQuestCanceled;
+			_questManager.QuestCanceled += OnQuestCanceled;
+			_questManager.QuestCompleted -= OnQuestCompleted;
+			_questManager.QuestCompleted += OnQuestCompleted;
+		}
+
+		public void Dispose()
+		{
+			_questManager.QuestCanceled -= OnQuestCanceled;
+			_questManager.QuestCompleted -= OnQuestCompleted;
 		}
 
 		[UIComponent("picker-quest-1-btn")]
@@ -191,6 +204,26 @@ namespace FightSabers.UI.Controllers
 
 				RefreshPickStatusText();
 			}
+		}
+
+		private void OnQuestCanceled(object self, Quest quest)
+		{
+			RefreshUI();
+		}
+
+		private void OnQuestCompleted(object self, Quest quest)
+		{
+			RefreshUI();
+		}
+
+		private void RefreshUI()
+		{
+			if (_questManager.CanPickQuest)
+			{
+				ChangePickingStatus(true);
+			}
+
+			RefreshPickStatusText();
 		}
 	}
 }

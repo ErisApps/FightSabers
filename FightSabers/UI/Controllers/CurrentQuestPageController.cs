@@ -5,271 +5,162 @@ using FightSabers.Core;
 using FightSabers.Models;
 using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
+using IPA.Utilities;
 using JetBrains.Annotations;
+using SiraUtil.Tools;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace FightSabers.UI.Controllers
 {
 	[HotReload(RelativePathToLayout = @"..\Views\CurrentQuestPageView.bsml")]
 	[ViewDefinition("FightSabers.UI.Views.CurrentQuestPageView.bsml")]
-	internal class CurrentQuestPageController : BSMLAutomaticViewController
+	internal class CurrentQuestPageController : BSMLAutomaticViewController, IDisposable
 	{
-		public static CurrentQuestPageController instance;
+		private SiraLog _logger = null!;
+		private QuestManager _questManager = null!;
 
+		[Inject]
+		internal void Construct(SiraLog logger, QuestManager questManager)
+		{
+			_logger = logger;
+			_questManager = questManager;
+
+			_questManager.QuestPicked -= OnQuestPicked;
+			_questManager.QuestPicked += OnQuestPicked;
+			_questManager.QuestCanceled -= OnQuestCanceled;
+			_questManager.QuestCanceled += OnQuestCanceled;
+			_questManager.QuestCompleted -= OnQuestCompleted;
+			_questManager.QuestCompleted += OnQuestCompleted;
+			_questManager.QuestProgressChanged -= OnQuestProgressChanged;
+			_questManager.QuestProgressChanged += OnQuestProgressChanged;
+		}
+
+		public void Dispose()
+		{
+			_questManager.QuestPicked -= OnQuestPicked;
+			_questManager.QuestCanceled -= OnQuestCanceled;
+			_questManager.QuestCompleted -= OnQuestCompleted;
+			_questManager.QuestProgressChanged -= OnQuestProgressChanged;
+		}
+
+		// TODO: Find a better way to infer usage without pragma disables of CS0414
 		[UIComponent("progress-bar-quest-1-img")]
-		private Image _progressBarImageQuest1;
+#pragma warning disable 414
+		internal Image ProgressBarImageQuest1 = null!;
+#pragma warning restore 414
 
 		[UIComponent("progress-bg-bar-quest-1-img")]
-		private Image _progressBgBarImageQuest1;
+#pragma warning disable 414
+		internal Image ProgressBgBarImageQuest1 = null!;
+#pragma warning restore 414
 
 		[UIComponent("current-progress-quest-1-text")]
-		private TextMeshProUGUI _currentProgressQuest1TextComp;
-
-		private bool _quest1ContainerState;
+#pragma warning disable 414
+		internal TextMeshProUGUI CurrentProgressQuest1TextComp = null!;
+#pragma warning restore 414
 
 		[UIValue("quest-1-container-state")]
-		public bool Quest1ContainerState
-		{
-			get => _quest1ContainerState;
-			private set
-			{
-				_quest1ContainerState = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _titleQuest1Text = "";
+		internal bool Quest1ContainerState { get; set; }
 
 		[UIValue("title-quest-1")]
-		public string TitleQuest1Text
-		{
-			get => _titleQuest1Text;
-			private set
-			{
-				_titleQuest1Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _descQuest1Text = "";
+		internal string TitleQuest1Text { get; set; } = string.Empty;
 
 		[UIValue("desc-quest-1")]
-		public string DescQuest1Text
-		{
-			get => _descQuest1Text;
-			private set
-			{
-				_descQuest1Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _currentProgressQuest1Text = "";
+		internal string DescQuest1Text { get; set; } = string.Empty;
 
 		[UIValue("current-progress-quest-1")]
-		public string CurrentProgressQuest1Text
-		{
-			get => _currentProgressQuest1Text;
-			private set
-			{
-				_currentProgressQuest1Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _hoverQuest1Progress = "";
+		internal string CurrentProgressQuest1Text { get; set; } = string.Empty;
 
 		[UIValue("hover-quest-1-progress")]
-		public string HoverQuest1Progress
-		{
-			get => _hoverQuest1Progress;
-			private set
-			{
-				_hoverQuest1Progress = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string HoverQuest1Progress { get; set; } = string.Empty;
+
 
 		[UIComponent("progress-bar-quest-2-img")]
-		private Image _progressBarImageQuest2;
+#pragma warning disable 414
+		internal Image ProgressBarImageQuest2 = null!;
+#pragma warning restore 414
 
 		[UIComponent("progress-bg-bar-quest-2-img")]
-		private Image _progressBgBarImageQuest2;
+#pragma warning disable 414
+		internal Image ProgressBgBarImageQuest2 = null!;
+#pragma warning restore 414
 
 		[UIComponent("current-progress-quest-2-text")]
-		private TextMeshProUGUI _currentProgressQuest2TextComp;
-
-		private bool _quest2ContainerState;
+#pragma warning disable 414
+		internal TextMeshProUGUI CurrentProgressQuest2TextComp = null!;
+#pragma warning restore 414
 
 		[UIValue("quest-2-container-state")]
-		public bool Quest2ContainerState
-		{
-			get => _quest2ContainerState;
-			private set
-			{
-				_quest2ContainerState = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _titleQuest2Text = "";
+		internal bool Quest2ContainerState { get; set; }
 
 		[UIValue("title-quest-2")]
-		public string TitleQuest2Text
-		{
-			get => _titleQuest2Text;
-			private set
-			{
-				_titleQuest2Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _descQuest2Text = "";
+		internal string TitleQuest2Text { get; set; } = string.Empty;
 
 		[UIValue("desc-quest-2")]
-		public string DescQuest2Text
-		{
-			get => _descQuest2Text;
-			private set
-			{
-				_descQuest2Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _currentProgressQuest2Text = "";
+		internal string DescQuest2Text { get; set; } = string.Empty;
 
 		[UIValue("current-progress-quest-2")]
-		public string CurrentProgressQuest2Text
-		{
-			get => _currentProgressQuest2Text;
-			private set
-			{
-				_currentProgressQuest2Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _hoverQuest2Progress = "";
+		internal string CurrentProgressQuest2Text { get; set; } = string.Empty;
 
 		[UIValue("hover-quest-2-progress")]
-		public string HoverQuest2Progress
-		{
-			get => _hoverQuest2Progress;
-			private set
-			{
-				_hoverQuest2Progress = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string HoverQuest2Progress { get; set; } = string.Empty;
+
 
 		[UIComponent("progress-bar-quest-3-img")]
-		private Image _progressBarImageQuest3;
+#pragma warning disable 414
+		internal Image ProgressBarImageQuest3 = null!;
+#pragma warning restore 414
 
 		[UIComponent("progress-bg-bar-quest-3-img")]
-		private Image _progressBgBarImageQuest3;
+#pragma warning disable 414
+		internal Image ProgressBgBarImageQuest3= null!;
+#pragma warning restore 414
 
 		[UIComponent("current-progress-quest-3-text")]
-		private TextMeshProUGUI _currentProgressQuest3TextComp;
-
-		private bool _quest3ContainerState;
+#pragma warning disable 414
+		internal TextMeshProUGUI CurrentProgressQuest3TextComp = null!;
+#pragma warning restore 414
 
 		[UIValue("quest-3-container-state")]
-		public bool Quest3ContainerState
-		{
-			get => _quest3ContainerState;
-			private set
-			{
-				_quest3ContainerState = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _titleQuest3Text = "";
+		internal bool Quest3ContainerState { get; set; }
 
 		[UIValue("title-quest-3")]
-		public string TitleQuest3Text
-		{
-			get => _titleQuest3Text;
-			private set
-			{
-				_titleQuest3Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _descQuest3Text = "";
+		internal string TitleQuest3Text { get; set; } = string.Empty;
 
 		[UIValue("desc-quest-3")]
-		public string DescQuest3Text
-		{
-			get => _descQuest3Text;
-			private set
-			{
-				_descQuest3Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _currentProgressQuest3Text = "";
+		internal string DescQuest3Text { get; set; } = string.Empty;
 
 		[UIValue("current-progress-quest-3")]
-		public string CurrentProgressQuest3Text
-		{
-			get => _currentProgressQuest3Text;
-			private set
-			{
-				_currentProgressQuest3Text = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private string _hoverQuest3Progress = "";
+		internal string CurrentProgressQuest3Text { get; set; } = string.Empty;
 
 		[UIValue("hover-quest-3-progress")]
-		public string HoverQuest3Progress
-		{
-			get => _hoverQuest3Progress;
-			private set
-			{
-				_hoverQuest3Progress = value;
-				NotifyPropertyChanged();
-			}
-		}
+		internal string HoverQuest3Progress { get; set; } = string.Empty;
+
 
 		[UIAction("quest-1-cancel-act")]
-		private void Quest1Canceled()
+		internal void Quest1Canceled()
 		{
-			QuestManager.instance.CancelQuest(0);
+			_questManager.CancelQuest(0);
 		}
 
 		[UIAction("quest-2-cancel-act")]
-		private void Quest2Canceled()
+		internal void Quest2Canceled()
 		{
-			QuestManager.instance.CancelQuest(1);
+			_questManager.CancelQuest(1);
 		}
 
 		[UIAction("quest-3-cancel-act")]
-		private void Quest3Canceled()
+		internal void Quest3Canceled()
 		{
-			QuestManager.instance.CancelQuest(2);
+			_questManager.CancelQuest(2);
 		}
 
 		protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 		{
 			base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-
-			instance = this;
-			if (firstActivation)
-			{
-				QuestManager.instance.QuestPicked += OnQuestPicked;
-				QuestManager.instance.QuestCanceled += OnQuestCanceled;
-				QuestManager.instance.QuestCompleted += OnQuestCompleted;
-				QuestManager.instance.QuestProgressChanged += OnQuestProgressChanged;
-			}
 
 			RefreshWholeUI();
 		}
@@ -282,23 +173,11 @@ namespace FightSabers.UI.Controllers
 		private void OnQuestCanceled(object self, Quest quest)
 		{
 			RefreshWholeUI();
-			if (QuestManager.instance.CanPickQuest)
-			{
-				QuestPickerPageController.instance.ChangePickingStatus(true);
-			}
-
-			QuestPickerPageController.instance.RefreshPickStatusText();
 		}
 
 		private void OnQuestCompleted(object self, Quest quest)
 		{
 			RefreshWholeUI();
-			if (QuestManager.instance.CanPickQuest)
-			{
-				QuestPickerPageController.instance.ChangePickingStatus(true);
-			}
-
-			QuestPickerPageController.instance.RefreshPickStatusText();
 		}
 
 		private void OnQuestProgressChanged(object self, Quest quest)
@@ -313,18 +192,18 @@ namespace FightSabers.UI.Controllers
 				return;
 			}
 
-			_logger.log.Debug($"CurrentQuests.Count: {QuestManager.instance.CurrentQuests.Count}");
+			_logger.Debug($"CurrentQuests.Count: {_questManager.CurrentQuests.Count.ToString()}");
 			for (var i = 0; i < 3; ++i)
 			{
-				if (QuestManager.instance.CurrentQuests.Count > i && QuestManager.instance.CurrentQuests[i] is IQuest quest)
+				if (_questManager.CurrentQuests.Count > i && _questManager.CurrentQuests[i] is { } quest)
 				{
-					RefreshQuestUI(this.GetPrivateField<Image>($"_progressBgBarImageQuest{i + 1}"),
-						this.GetPrivateField<Image>($"_progressBarImageQuest{i + 1}"),
+					RefreshQuestUI(this.GetField<Image, CurrentQuestPageController>($"_progressBgBarImageQuest{(i + 1).ToString()}"),
+						this.GetField<Image, CurrentQuestPageController>($"_progressBarImageQuest{(i + 1).ToString()}"),
 						i + 1, quest);
 				}
 				else
 				{
-					this.SetProperty($"Quest{i + 1}ContainerState", false);
+					this.SetProperty($"Quest{(i + 1).ToString()}ContainerState", false);
 				}
 			}
 		}
@@ -362,13 +241,15 @@ namespace FightSabers.UI.Controllers
 			progressBar.fillMethod = Image.FillMethod.Horizontal;
 			progressBar.color = new Color32(0, 255, 0, 80);
 			progressBar.material = null;
+
 			//Title
-			this.SetProperty($"TitleQuest{questIdx}Text", quest.Title);
-			this.SetProperty($"DescQuest{questIdx}Text", quest.Description);
-			this.SetProperty($"CurrentProgressQuest{questIdx}Text", quest.ProgressHint);
-			this.SetProperty($"HoverQuest{questIdx}Progress", $"Reward: <color=#FFA500>{quest.ExpReward} EXP</color>");
+			this.SetProperty($"TitleQuest{questIdx.ToString()}Text", quest.Title);
+			this.SetProperty($"DescQuest{questIdx.ToString()}Text", quest.Description);
+			this.SetProperty($"CurrentProgressQuest{questIdx.ToString()}Text", quest.ProgressHint);
+			this.SetProperty($"HoverQuest{questIdx.ToString()}Progress", $"Reward: <color=#FFA500>{quest.ExpReward.ToString()} EXP</color>");
+
 			//UI state
-			this.SetProperty($"Quest{questIdx}ContainerState", true);
+			this.SetProperty($"Quest{questIdx.ToString()}ContainerState", true);
 		}
 	}
 }
