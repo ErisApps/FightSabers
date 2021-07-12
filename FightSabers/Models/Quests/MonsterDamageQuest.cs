@@ -1,65 +1,70 @@
 ﻿using System;
 using FightSabers.Core;
 using FightSabers.Models.Abstracts;
+using SiraUtil.Tools;
 
 namespace FightSabers.Models.Quests
 {
-    public class MonsterDamageQuest : Quest
-    {
-	    public uint currentDamageCount;
-        public uint toDamageCount;
+	internal class MonsterDamageQuest : Quest
+	{
+		public uint currentDamageCount;
+		public uint toDamageCount;
 
-        private void OnMonsterHurt(object self, int damage)
-        {
-            currentDamageCount += (uint)damage;
-            Progress = currentDamageCount / (float)toDamageCount;
-            if (currentDamageCount > toDamageCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-            {
-	            Complete();
-            }
-        }
+		public MonsterDamageQuest(SiraLog logger, ExperienceSystem experienceSystem) : base(logger, experienceSystem)
+		{
+		}
 
-        protected override void Refresh()
-        {
-            ProgressHint = $"{currentDamageCount} / {toDamageCount}";
-        }
+		private void OnMonsterHurt(object self, int damage)
+		{
+			currentDamageCount += (uint) damage;
+			Progress = currentDamageCount / (float) toDamageCount;
+			if (currentDamageCount > toDamageCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
+			{
+				Complete();
+			}
+		}
 
-        public override void Complete()
-        {
-            UnlinkGameEvents();
-            base.Complete();
-        }
+		protected override void Refresh()
+		{
+			ProgressHint = $"{currentDamageCount} / {toDamageCount}";
+		}
 
-        public override void LinkGameEvents()
-        {
-            if (IsCompleted && !HasGameEventsActivated)
-            {
-	            return;
-            }
+		public override void Complete()
+		{
+			UnlinkGameEvents();
+			base.Complete();
+		}
 
-            MonsterGenerator.instance.MonsterHurt += OnMonsterHurt;
-            base.LinkGameEvents();
-        }
+		public override void LinkGameEvents()
+		{
+			if (IsCompleted && !HasGameEventsActivated)
+			{
+				return;
+			}
 
-        public override void UnlinkGameEvents()
-        {
-            if (IsCompleted && HasGameEventsActivated)
-            {
-	            return;
-            }
+			MonsterGenerator.instance.MonsterHurt += OnMonsterHurt;
+			base.LinkGameEvents();
+		}
 
-            MonsterGenerator.instance.MonsterHurt -= OnMonsterHurt;
-            base.UnlinkGameEvents();
-        }
+		public override void UnlinkGameEvents()
+		{
+			if (IsCompleted && HasGameEventsActivated)
+			{
+				return;
+			}
 
-        public void Prepare(uint currentDamageCount = 0, uint toDamageCount = 35000)
-        {
-            this.currentDamageCount = currentDamageCount;
-            this.toDamageCount = toDamageCount;
-            base.Prepare("Frenzy slicer", $"Make a total of <color=#ffa500ff>{toDamageCount}</color> damage to a monster!",
-                         $"{currentDamageCount} / {toDamageCount}",
-                         GetType().ToString(), toDamageCount / 1000,
-                         currentDamageCount / (float)toDamageCount);
-        }
-    }
+			MonsterGenerator.instance.MonsterHurt -= OnMonsterHurt;
+			base.UnlinkGameEvents();
+		}
+
+		public void Prepare(uint currentDamageCount = 0, uint toDamageCount = 35000)
+		{
+			this.currentDamageCount = currentDamageCount;
+			this.toDamageCount = toDamageCount;
+			base.Prepare("Frenzy slicer", $"Make a total of <color=#ffa500ff>{toDamageCount}</color> damage to a monster!",
+				$"{currentDamageCount} / {toDamageCount}",
+				GetType().ToString(), toDamageCount / 1000,
+				currentDamageCount / (float) toDamageCount);
+		}
+	}
 }

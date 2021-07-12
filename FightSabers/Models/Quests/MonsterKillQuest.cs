@@ -1,70 +1,75 @@
 ﻿using System;
 using FightSabers.Core;
 using FightSabers.Models.Abstracts;
+using SiraUtil.Tools;
 
 namespace FightSabers.Models.Quests
 {
-    public class MonsterKillQuest : Quest
-    {
-	    public uint currentKillCount;
-        public uint toKillCount;
+	internal class MonsterKillQuest : Quest
+	{
+		public uint currentKillCount;
+		public uint toKillCount;
 
-        private void OnMonsterRemoved(object self, MonsterStatus status)
-        {
-            if (status != MonsterStatus.Killed)
-            {
-	            return;
-            }
+		public MonsterKillQuest(SiraLog logger, ExperienceSystem experienceSystem) : base(logger, experienceSystem)
+		{
+		}
 
-            currentKillCount += 1;
-            Progress = currentKillCount / (float)toKillCount;
-            if (currentKillCount > toKillCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-            {
-	            Complete();
-            }
-        }
+		private void OnMonsterRemoved(object self, MonsterStatus status)
+		{
+			if (status != MonsterStatus.Killed)
+			{
+				return;
+			}
 
-        protected override void Refresh()
-        {
-            ProgressHint = $"{currentKillCount} / {toKillCount}";
-        }
+			currentKillCount += 1;
+			Progress = currentKillCount / (float) toKillCount;
+			if (currentKillCount > toKillCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
+			{
+				Complete();
+			}
+		}
 
-        public override void Complete()
-        {
-            UnlinkGameEvents();
-            base.Complete();
-        }
+		protected override void Refresh()
+		{
+			ProgressHint = $"{currentKillCount} / {toKillCount}";
+		}
 
-        public override void LinkGameEvents()
-        {
-            if (IsCompleted && !HasGameEventsActivated)
-            {
-	            return;
-            }
+		public override void Complete()
+		{
+			UnlinkGameEvents();
+			base.Complete();
+		}
 
-            MonsterGenerator.instance.MonsterRemoved += OnMonsterRemoved;
-            base.LinkGameEvents();
-        }
+		public override void LinkGameEvents()
+		{
+			if (IsCompleted && !HasGameEventsActivated)
+			{
+				return;
+			}
 
-        public override void UnlinkGameEvents()
-        {
-            if (IsCompleted && HasGameEventsActivated)
-            {
-	            return;
-            }
+			MonsterGenerator.instance.MonsterRemoved += OnMonsterRemoved;
+			base.LinkGameEvents();
+		}
 
-            MonsterGenerator.instance.MonsterRemoved -= OnMonsterRemoved;
-            base.UnlinkGameEvents();
-        }
+		public override void UnlinkGameEvents()
+		{
+			if (IsCompleted && HasGameEventsActivated)
+			{
+				return;
+			}
 
-        public void Prepare(uint currentKillCount = 0, uint toKillCount = 10)
-        {
-            this.currentKillCount = currentKillCount;
-            this.toKillCount = toKillCount;
-            base.Prepare("Demon slayer", $"Kill a total of <color=#ffa500ff>{toKillCount}</color> monsters!",
-                         $"{currentKillCount} / {toKillCount}",
-                         GetType().ToString(), toKillCount * 6,
-                         currentKillCount                  / (float)toKillCount);
-        }
-    }
+			MonsterGenerator.instance.MonsterRemoved -= OnMonsterRemoved;
+			base.UnlinkGameEvents();
+		}
+
+		public void Prepare(uint currentKillCount = 0, uint toKillCount = 10)
+		{
+			this.currentKillCount = currentKillCount;
+			this.toKillCount = toKillCount;
+			base.Prepare("Demon slayer", $"Kill a total of <color=#ffa500ff>{toKillCount}</color> monsters!",
+				$"{currentKillCount} / {toKillCount}",
+				GetType().ToString(), toKillCount * 6,
+				currentKillCount / (float) toKillCount);
+		}
+	}
 }

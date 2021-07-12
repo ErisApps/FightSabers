@@ -2,20 +2,30 @@
 using FightSabers.Core;
 using FightSabers.Models.Interfaces;
 using Newtonsoft.Json;
+using SiraUtil.Tools;
 
 namespace FightSabers.Models.Abstracts
 {
-    public abstract class Quest : IQuest
+    internal abstract class Quest : IQuest
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string ProgressHint { get; set; }
-        public string QuestType { get; set; }
-        public uint ExpReward { get; set; }
+	    protected readonly SiraLog Logger;
+	    protected readonly ExperienceSystem ExperienceSystem;
+
+	    public string Title { get; set; } = null!;
+	    public string Description { get; set; } = null!;
+	    public string ProgressHint { get; set; } = null!;
+	    public string QuestType { get; set; } = null!;
+	    public uint ExpReward { get; set; }
         public bool IsInitialized { get; set; }
         public bool IsActivated { get; set; }
         public bool IsCompleted { get; set; }
         public bool HasGameEventsActivated { get; set; }
+
+        public Quest(SiraLog logger, ExperienceSystem experienceSystem)
+        {
+	        Logger = logger;
+	        ExperienceSystem = experienceSystem;
+        }
 
         private float _progress { get; set; }
         [JsonProperty("progress")]
@@ -88,7 +98,7 @@ namespace FightSabers.Models.Abstracts
 	            return;
             }
 
-            Logger.log.Debug(">>> Base quest activated!");
+            Logger.Debug(">>> Base quest activated!");
             IsActivated = true;
         }
 
@@ -105,7 +115,7 @@ namespace FightSabers.Models.Abstracts
 
         public virtual void Complete()
         {
-            ExperienceSystem.instance.AddFightExperience(ExpReward);
+            ExperienceSystem.AddFightExperience(ExpReward);
             OnQuestCompleted();
         }
 

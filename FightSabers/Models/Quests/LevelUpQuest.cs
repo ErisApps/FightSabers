@@ -1,71 +1,76 @@
 ﻿using System;
 using FightSabers.Core;
 using FightSabers.Models.Abstracts;
+using SiraUtil.Tools;
 
 namespace FightSabers.Models.Quests
 {
-    public class LevelUpQuest : Quest
-    {
-	    public uint currentLevelUpCount;
-        public uint toLevelUpCount;
+	internal class LevelUpQuest : Quest
+	{
+		public uint currentLevelUpCount;
+		public uint toLevelUpCount;
 
-        private void OnLeveledUp(object self)
-        {
-            currentLevelUpCount += 1;
-            Progress = currentLevelUpCount / (float)toLevelUpCount;
-            if (currentLevelUpCount >= toLevelUpCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
-            {
-	            Complete();
-            }
-        }
+		public LevelUpQuest(SiraLog logger, ExperienceSystem experienceSystem) : base(logger, experienceSystem)
+		{
+		}
 
-        protected override void Refresh()
-        {
-            ProgressHint = $"{currentLevelUpCount} / {toLevelUpCount}";
-        }
+		private void OnLeveledUp(object self)
+		{
+			currentLevelUpCount += 1;
+			Progress = currentLevelUpCount / (float) toLevelUpCount;
+			if (currentLevelUpCount >= toLevelUpCount || Math.Abs(Progress - 1) < 0.001f) //Double security here
+			{
+				Complete();
+			}
+		}
 
-        public override void Activate(bool forceInitialize = false)
-        {
-            if (!IsInitialized && forceInitialize)
-            {
-	            IsInitialized = true;
-            }
+		protected override void Refresh()
+		{
+			ProgressHint = $"{currentLevelUpCount} / {toLevelUpCount}";
+		}
 
-            if (!IsInitialized || IsActivated)
-            {
-	            return;
-            }
+		public override void Activate(bool forceInitialize = false)
+		{
+			if (!IsInitialized && forceInitialize)
+			{
+				IsInitialized = true;
+			}
 
-            Logger.log.Debug(">>> Specific quest activated!");
-            ExperienceSystem.instance.LeveledUp += OnLeveledUp;
-        }
+			if (!IsInitialized || IsActivated)
+			{
+				return;
+			}
 
-        public override void Deactivate()
-        {
-            if (!IsInitialized || !IsActivated)
-            {
-	            return;
-            }
+			Logger.Debug(">>> Specific quest activated!");
+			ExperienceSystem.LeveledUp += OnLeveledUp;
+		}
 
-            ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
-            base.Deactivate();
-        }
+		public override void Deactivate()
+		{
+			if (!IsInitialized || !IsActivated)
+			{
+				return;
+			}
 
-        public override void Complete()
-        {
-            ExperienceSystem.instance.LeveledUp -= OnLeveledUp;
-            base.Complete();
-            ExperienceSystem.instance.ApplyExperience();
-        }
+			ExperienceSystem.LeveledUp -= OnLeveledUp;
+			base.Deactivate();
+		}
 
-        public void Prepare(uint currentLevelUpCount = 0, uint toLevelUpCount = 1)
-        {
-            this.currentLevelUpCount = currentLevelUpCount;
-            this.toLevelUpCount = toLevelUpCount;
-            base.Prepare("Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!",
-                         $"{currentLevelUpCount} / {toLevelUpCount}",
-                         GetType().ToString(), 15 * toLevelUpCount,
-                         currentLevelUpCount / (float)toLevelUpCount);
-        }
-    }
+		public override void Complete()
+		{
+			ExperienceSystem.LeveledUp -= OnLeveledUp;
+			base.Complete();
+			ExperienceSystem.ApplyExperience();
+		}
+
+		public void Prepare(uint currentLevelUpCount = 0, uint toLevelUpCount = 1)
+		{
+			this.currentLevelUpCount = currentLevelUpCount;
+			this.toLevelUpCount = toLevelUpCount;
+			base.Prepare("Raise up", $"Level up <color=#ffa500ff>{toLevelUpCount}</color> level{(toLevelUpCount != 1 ? "s" : "")}!",
+				$"{currentLevelUpCount} / {toLevelUpCount}",
+				GetType().ToString(), 15 * toLevelUpCount,
+				currentLevelUpCount / (float) toLevelUpCount);
+		}
+	}
 }

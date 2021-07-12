@@ -5,7 +5,6 @@ using FightSabers.Models.Abstracts;
 using FightSabers.Models.Interfaces;
 using FightSabers.Models.Quests;
 using FightSabers.Settings;
-using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -15,10 +14,12 @@ namespace FightSabers.Core
 	internal class QuestManager : IInitializable
 	{
 		private readonly SaveDataManager _saveDataManager;
+		private readonly DiContainer _diContainer;
 
-		public QuestManager(SaveDataManager saveDataManager)
+		public QuestManager(SaveDataManager saveDataManager, DiContainer diContainer)
 		{
 			_saveDataManager = saveDataManager;
+			_diContainer = diContainer;
 
 			PossibleQuestTypes = new[]
 			{
@@ -43,6 +44,8 @@ namespace FightSabers.Core
 					continue;
 				}
 
+				_diContainer.Inject(quest);
+
 				quest.QuestCanceled += OnQuestCanceled;
 				quest.QuestCompleted += OnQuestCompleted;
 				quest.ProgressChanged += OnQuestProgressChanged;
@@ -55,6 +58,8 @@ namespace FightSabers.Core
 				{
 					continue;
 				}
+
+				_diContainer.Inject(quest);
 
 				quest.ForceInitialize();
 				quest.QuestCompleted += OnQuestCompleted;
@@ -140,6 +145,8 @@ namespace FightSabers.Core
 				return;
 			}
 
+			_diContainer.Inject(quest);
+
 			switch (quest)
 			{
 				case LevelUpQuest levelUpQuest:
@@ -185,7 +192,7 @@ namespace FightSabers.Core
 			CancelQuest(quest);
 		}
 
-		public void CancelQuest([NotNull] IQuest quest)
+		public void CancelQuest(IQuest quest)
 		{
 			if (quest == null)
 			{
@@ -214,7 +221,7 @@ namespace FightSabers.Core
 			PickQuest(quest);
 		}
 
-		public void PickQuest([NotNull] IQuest quest)
+		public void PickQuest(IQuest quest)
 		{
 			if (quest == null)
 			{
